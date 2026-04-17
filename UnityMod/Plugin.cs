@@ -98,6 +98,9 @@ public class Plugin : BaseUnityPlugin
         HoldingArea.mmf = MemoryMappedFile.CreateOrOpen("uk.lum.livnyan.cameradata.v1.0", (sizeof(float) * 8)+sizeof(int));
         HoldingArea.mmfView = HoldingArea.mmf.CreateViewAccessor(0, (sizeof(float) * 8)+sizeof(int), MemoryMappedFileAccess.Read);
 
+        HoldingArea.shm = new LComms();
+        HoldingArea.shm.Open();
+
     }
 
     void Update() {
@@ -160,6 +163,8 @@ static class HoldingArea{
     public static MemoryMappedFile mmf;
     public static MemoryMappedViewAccessor mmfView;
     public static float[] cameraData = new float[9];
+
+    public static LComms shm;
 }
 
 
@@ -183,19 +188,32 @@ class Patches {
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge), "UpdateInputFrame")]
     [HarmonyPrefix]
     static void SetInputFrame(ref SDKBridge.SDKInjection<SDKInputFrame> ____injection_SDKInputFrame) {
-        HoldingArea.mmfView.ReadArray<float>(0,HoldingArea.cameraData,0,8);
-        ____injection_SDKInputFrame.data.pose.localPosition.x = HoldingArea.cameraData[0];
-        ____injection_SDKInputFrame.data.pose.localPosition.y = HoldingArea.cameraData[1];
-        ____injection_SDKInputFrame.data.pose.localPosition.z = HoldingArea.cameraData[2];
+        //HoldingArea.mmfView.ReadArray<float>(0,HoldingArea.cameraData,0,8);
+        //____injection_SDKInputFrame.data.pose.localPosition.x = HoldingArea.cameraData[0];
+        //____injection_SDKInputFrame.data.pose.localPosition.y = HoldingArea.cameraData[1];
+        //____injection_SDKInputFrame.data.pose.localPosition.z = HoldingArea.cameraData[2];
 
-        ____injection_SDKInputFrame.data.pose.localRotation.w = HoldingArea.cameraData[3];
-        ____injection_SDKInputFrame.data.pose.localRotation.x = HoldingArea.cameraData[4];
-        ____injection_SDKInputFrame.data.pose.localRotation.y = HoldingArea.cameraData[5];
-        ____injection_SDKInputFrame.data.pose.localRotation.z = HoldingArea.cameraData[6];
+        //____injection_SDKInputFrame.data.pose.localRotation.w = HoldingArea.cameraData[3];
+        //____injection_SDKInputFrame.data.pose.localRotation.x = HoldingArea.cameraData[4];
+        //____injection_SDKInputFrame.data.pose.localRotation.y = HoldingArea.cameraData[5];
+        //____injection_SDKInputFrame.data.pose.localRotation.z = HoldingArea.cameraData[6];
 
 
-        float vfov = HoldingArea.cameraData[7];
-        ____injection_SDKInputFrame.data.pose.projectionMatrix = SDKMatrix4x4.Perspective(vfov, 1920f/1080, 0.01f, 1000f);
+        //float vfov = HoldingArea.cameraData[7];
+        //____injection_SDKInputFrame.data.pose.projectionMatrix = SDKMatrix4x4.Perspective(vfov, 1920f/1080, 0.01f, 1000f);
+
+        LIVnyan_dat camDat = HoldingArea.shm.Read();
+        ____injection_SDKInputFrame.data.pose.localPosition.x = camDat.x;
+        ____injection_SDKInputFrame.data.pose.localPosition.y = camDat.y;
+        ____injection_SDKInputFrame.data.pose.localPosition.z = camDat.z;
+
+        ____injection_SDKInputFrame.data.pose.localRotation.w = camDat.qw;
+        ____injection_SDKInputFrame.data.pose.localRotation.x = camDat.qx;
+        ____injection_SDKInputFrame.data.pose.localRotation.y = camDat.qy;
+        ____injection_SDKInputFrame.data.pose.localRotation.z = camDat.qz;
+
+        ____injection_SDKInputFrame.data.pose.projectionMatrix = SDKMatrix4x4.Perspective(camDat.fov, 1920f/1080, 0.01f, 1000f);
+
 
     }
 
