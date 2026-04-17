@@ -15,18 +15,23 @@
     <RootNamespace>OnAirTap</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <GameDataDirectory>../../Beat Saber_Data</GameDataDirectory>
+    <Deterministic>false</Deterministic>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
     <PackageReference Include="BepInEx.Core" Version="5.*" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
     <Reference Include="UnityEngine">
-      <HintPath>../../Beat Saber_Data/Managed/UnityEngine.dll</HintPath>
+      <HintPath>$(GameDataDirectory)/Managed/UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>../../Beat Saber_Data/Managed/UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(GameDataDirectory)/Managed/UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="LIV">
-      <HintPath>../../Beat Saber_Data/Managed/LIV.dll</HintPath>
+      <HintPath>$(GameDataDirectory)/Managed/LIV.dll</HintPath>
     </Reference>
   </ItemGroup>
   
