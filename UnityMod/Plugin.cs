@@ -98,8 +98,12 @@ public class Plugin : BaseUnityPlugin
         HoldingArea.mmf = MemoryMappedFile.CreateOrOpen("uk.lum.livnyan.cameradata.v1.0", (sizeof(float) * 8)+sizeof(int));
         HoldingArea.mmfView = HoldingArea.mmf.CreateViewAccessor(0, (sizeof(float) * 8)+sizeof(int), MemoryMappedFileAccess.Read);
 
-        HoldingArea.shm = new LComms();
-        HoldingArea.shm.Open();
+        if (NativeMethods.GetPlatform() == "Wine"){HoldingArea.shm = new LComms();}
+        else {HoldingArea.shm = new WComms();}
+
+
+
+        HoldingArea.shm.Open("uk.lum.livnyan.cameradata.v1.0");
 
     }
 
@@ -164,7 +168,7 @@ static class HoldingArea{
     public static MemoryMappedViewAccessor mmfView;
     public static float[] cameraData = new float[9];
 
-    public static LComms shm;
+    public static AbComms shm;
 }
 
 

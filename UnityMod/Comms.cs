@@ -22,20 +22,20 @@ abstract class AbComms{
     abstract public LIVnyan_dat Read();
 }
 
-class WComms {
+class WComms : AbComms {
     private MemoryMappedFile mmf;
     private MemoryMappedViewAccessor mmfView;
 
     private float[] cameraData = new float[9];
 
-    public bool Open(string targetName){
-        mmf = MemoryMappedFile.CreateOrOpen("uk.lum.livnyan.cameradata.v1.0", (sizeof(float) * 8)+sizeof(int));
+    public override bool Open(string targetName){
+        mmf = MemoryMappedFile.CreateOrOpen(targetName, (sizeof(float) * 8)+sizeof(int));
         mmfView = HoldingArea.mmf.CreateViewAccessor(0, (sizeof(float) * 8)+sizeof(int), MemoryMappedFileAccess.Read);
 
         return true;
     }
 
-    public LIVnyan_dat Read() {
+    public override LIVnyan_dat Read() {
         LIVnyan_dat dat = new LIVnyan_dat();
 
         mmfView.ReadArray<float>(0,cameraData,0,8);
@@ -55,13 +55,30 @@ class WComms {
     }
 }
 
-public static class liblincomm{
 
-    [DllImport("lincomm")]
-    public static extern int open(ref dataBlock dst);
+public static class NativeMethods{
 
-    [DllImport("lincomm")]
-    public static extern int close(ref dataBlock dst);
+    [DllImport("lincomm", EntryPoint="open")]
+    public static extern int LOpen(ref dataBlock dst);
+
+    [DllImport("lincomm", EntryPoint="close")]
+    public static extern int LClose(ref dataBlock dst);
+
+    [DllImport("ntdll",CallingConvention = CallingConvention.Cdecl)]
+    private static extern IntPtr wine_get_version();
+
+    public static string GetPlatform(){
+        try{
+            wine_get_version();
+            return "Wine";
+        }
+        catch (EntryPointNotFoundException){
+            return "Windows";
+        }
+        catch (DllNotFoundException){
+            return "Unix";
+        }
+    }
 }
 
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
@@ -72,7 +89,7 @@ public struct dataBlock{
     public int fd;
 };
 
-class LComms {
+class LComms : AbComms {
 
     dataBlock shm;
 
@@ -83,7 +100,7 @@ class LComms {
         shm = new dataBlock();
     }
 
-    public LIVnyan_dat Read() {
+    public override LIVnyan_dat Read() {
         LIVnyan_dat dat = new LIVnyan_dat();
 
         Marshal.Copy(shm.data, cameraData, 0, 8);
@@ -102,13 +119,13 @@ class LComms {
         return dat;
     }
 
-    public bool Open() {
+    public override bool Open(string targetName) {
         if (shm.fd != 0 || shm.data != IntPtr.Zero) { return false;}
 
-        shm.name = "/uk.lum.livnyan.cameradata.v1.0";
+        shm.name = "/" + targetName;
         shm.length = (sizeof(float) * 8)+sizeof(int);
 
-        return liblincomm.open(ref shm) == 0;
+        return NativeMethods.LOpen(ref shm) == 0;
     }
 
 }
