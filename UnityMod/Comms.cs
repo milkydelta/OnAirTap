@@ -17,6 +17,12 @@ public struct LIVnyan_dat {
     public int cfg;
 };
 
+public enum LIVnyan_cfg {
+    CAM_ON = 0x01,
+    LOG_ON = 0x02,
+    LOGSPM = 0x04
+}
+
 public abstract class AbComms{
     abstract public bool Open(string targetName);
     abstract public LIVnyan_dat Read();

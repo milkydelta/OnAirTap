@@ -28,6 +28,8 @@ public class Plugin : BaseUnityPlugin
     FieldInfo BrDisableCreateFrame;
 
     SDKInputFrame inFrame;
+
+    bool isActive;
         
     void DummyFunction(){}
 
@@ -120,7 +122,22 @@ public class Plugin : BaseUnityPlugin
                 });
             }
         }
+    }
 
+    void LateUpdate() {
+        HoldingArea.camDat = HoldingArea.shm.Read();
+
+        bool CAM_ON = (HoldingArea.camDat.cfg & 0x01) > 0;
+
+        //I've heard reflection is expensive, so I'll put it behind an if.
+        if (CAM_ON != isActive){
+            isActive = CAM_ON;
+            BrIsActive.SetValue(null, new SDKBridge.SDKInjection<bool>{
+                    active = true,
+                    action = null,
+                    data = CAM_ON
+            });
+        }
 
     }
 }
@@ -133,6 +150,8 @@ static class HoldingArea{
     public static AbComms shm;
 
     public static Matrix4x4 clip;
+
+    public static LIVnyan_dat camDat;
 }
 
 
@@ -156,7 +175,7 @@ class Patches {
     [HarmonyPrefix]
     static void SetInputFrame(ref SDKBridge.SDKInjection<SDKInputFrame> ____injection_SDKInputFrame) {
 
-        LIVnyan_dat camDat = HoldingArea.shm.Read();
+        LIVnyan_dat camDat = HoldingArea.camDat;
         ____injection_SDKInputFrame.data.pose.localPosition.x = camDat.x;
         ____injection_SDKInputFrame.data.pose.localPosition.y = camDat.y;
         ____injection_SDKInputFrame.data.pose.localPosition.z = camDat.z;
