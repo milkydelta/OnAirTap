@@ -17,12 +17,12 @@ public struct LIVnyan_dat {
     public int cfg;
 };
 
-abstract class AbComms{
+public abstract class AbComms{
     abstract public bool Open(string targetName);
     abstract public LIVnyan_dat Read();
 }
 
-class WComms : AbComms {
+public class WComms : AbComms {
     private MemoryMappedFile mmf;
     private MemoryMappedViewAccessor mmfView;
 
@@ -30,7 +30,7 @@ class WComms : AbComms {
 
     public override bool Open(string targetName){
         mmf = MemoryMappedFile.CreateOrOpen(targetName, (sizeof(float) * 8)+sizeof(int));
-        mmfView = HoldingArea.mmf.CreateViewAccessor(0, (sizeof(float) * 8)+sizeof(int), MemoryMappedFileAccess.Read);
+        mmfView = mmf.CreateViewAccessor(0, (sizeof(float) * 8)+sizeof(int), MemoryMappedFileAccess.Read);
 
         return true;
     }
@@ -89,7 +89,7 @@ public struct dataBlock{
     public int fd;
 };
 
-class LComms : AbComms {
+public class LComms : AbComms {
 
     dataBlock shm;
 
