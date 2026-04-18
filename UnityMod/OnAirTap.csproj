@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <GameDataDirectory>../../Beat Saber_Data</GameDataDirectory>
+    <GameDataDirectory>../../../Beat Saber_Data</GameDataDirectory>
     <Deterministic>false</Deterministic>
   </PropertyGroup>
 

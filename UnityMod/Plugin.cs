@@ -19,11 +19,6 @@ public class Plugin : BaseUnityPlugin
 {
     internal static new ManualLogSource Logger;
 
-    //Klak.Spout.Sender spout;
-    //Klak.Spout.SpoutSender spoutsend;
-
-    GameObject LivObject;
-
     FieldInfo BrInputFrame;
     FieldInfo BrResolution;
     FieldInfo BrIsActive;
@@ -95,13 +90,11 @@ public class Plugin : BaseUnityPlugin
 
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
 
-        HoldingArea.mmf = MemoryMappedFile.CreateOrOpen("uk.lum.livnyan.cameradata.v1.0", (sizeof(float) * 8)+sizeof(int));
-        HoldingArea.mmfView = HoldingArea.mmf.CreateViewAccessor(0, (sizeof(float) * 8)+sizeof(int), MemoryMappedFileAccess.Read);
+        //HoldingArea.mmf = MemoryMappedFile.CreateOrOpen("uk.lum.livnyan.cameradata.v1.0", (sizeof(float) * 8)+sizeof(int));
+        //HoldingArea.mmfView = HoldingArea.mmf.CreateViewAccessor(0, (sizeof(float) * 8)+sizeof(int), MemoryMappedFileAccess.Read);
 
         if (NativeMethods.GetPlatform() == "Wine"){HoldingArea.shm = new LComms();}
         else {HoldingArea.shm = new WComms();}
-
-
 
         HoldingArea.shm.Open("uk.lum.livnyan.cameradata.v1.0");
 
@@ -164,11 +157,13 @@ static class HoldingArea{
     public static SpoutSender fg;
     public static SpoutSender bg;
 
-    public static MemoryMappedFile mmf;
-    public static MemoryMappedViewAccessor mmfView;
-    public static float[] cameraData = new float[9];
+    //public static MemoryMappedFile mmf;
+    //public static MemoryMappedViewAccessor mmfView;
+    //public static float[] cameraData = new float[9];
 
     public static AbComms shm;
+
+    public static Matrix4x4 clip;
 }
 
 
@@ -218,6 +213,8 @@ class Patches {
 
         ____injection_SDKInputFrame.data.pose.projectionMatrix = SDKMatrix4x4.Perspective(camDat.fov, 1920f/1080, 0.01f, 1000f);
 
+        ____injection_SDKInputFrame.data.clipPlane.transform = HoldingArea.clip;
+
 
     }
 
@@ -227,5 +224,15 @@ class Patches {
         HoldingArea.bg.CaptureFrame();
         HoldingArea.fg.CaptureFrame();
 
+    }
+
+    //[HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "UpdateBridgeInputFrame")]
+    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "RenderForeground")]
+    [HarmonyPrefix]
+    static void GetCameraForClipPlane( ref SDKRender __instance, ref Camera ____cameraInstance) {
+        HoldingArea.spoutObject.transform.position = __instance.liv.HMDCamera.transform.position;
+        HoldingArea.spoutObject.transform.LookAt(____cameraInstance.transform);
+
+        HoldingArea.clip = HoldingArea.spoutObject.transform.localToWorldMatrix * __instance.liv.stageWorldToLocalMatrix;
     }
 }
