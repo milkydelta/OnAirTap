@@ -10,7 +10,7 @@ I'm bad at naming things.
 
 ### BepInEx
 
-Download the latest windows version of (BepInEx 5)[https://https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.5] and extract it to the game directory. Run the game once, to make some initial files.
+Download the latest windows version of [BepInEx 5](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.5) and extract it to the game directory. Run the game once, to make some initial files.
 
 ### Unity Mod
 
