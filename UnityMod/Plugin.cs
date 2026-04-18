@@ -87,11 +87,7 @@ public class Plugin : BaseUnityPlugin
         BrDisableAddTex.SetValue(null, true);
         BrDisableCreateFrame.SetValue(null, true);
 
-
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
-
-        //HoldingArea.mmf = MemoryMappedFile.CreateOrOpen("uk.lum.livnyan.cameradata.v1.0", (sizeof(float) * 8)+sizeof(int));
-        //HoldingArea.mmfView = HoldingArea.mmf.CreateViewAccessor(0, (sizeof(float) * 8)+sizeof(int), MemoryMappedFileAccess.Read);
 
         if (NativeMethods.GetPlatform() == "Wine"){HoldingArea.shm = new LComms();}
         else {HoldingArea.shm = new WComms();}
@@ -102,10 +98,10 @@ public class Plugin : BaseUnityPlugin
 
     void Update() {
         if (!HoldingArea.spoutObject){
+
             HoldingArea.spoutObject = new GameObject();
             HoldingArea.spoutObject.name = "Acrylobutadiene Styrene";
             GameObject.DontDestroyOnLoad(HoldingArea.spoutObject);
-
 
             if (HoldingArea.spoutObject)
             {
@@ -127,39 +123,12 @@ public class Plugin : BaseUnityPlugin
 
 
     }
-
-//    void Update() {
-//        if (!LivObject){
-//            Logger.LogInfo("Finding LivObject");
-//            LivObject = GameObject.Find("LIV");
-//
-//            if (LivObject){
-//                HoldingArea.bg = LivObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
-//                HoldingArea.bg.enabled=false;
-//                HoldingArea.bg.spoutName="OnAirTap Background";
-//                HoldingArea.fg = LivObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
-//                HoldingArea.fg.enabled=false;
-//                HoldingArea.fg.spoutName = "OnAirTap Foreground";
-//                BrIsActive.SetValue(null, new SDKBridge.SDKInjection<bool>{
-//                    active = true,
-//                    action = null,
-//                    data = true
-//                });
-//            }
-//        }
-//
-//
-//    }
 }
 
 static class HoldingArea{
     public static GameObject spoutObject;
     public static SpoutSender fg;
     public static SpoutSender bg;
-
-    //public static MemoryMappedFile mmf;
-    //public static MemoryMappedViewAccessor mmfView;
-    //public static float[] cameraData = new float[9];
 
     public static AbComms shm;
 
@@ -172,7 +141,6 @@ class Patches {
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateBackgroundTexture")]
     [HarmonyPostfix]
     static void HookSpoutBG(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____backgroundRenderTexture) {
-        //var bg = __instance.liv.gameObject.GetComponent<SpoutSender>();
         HoldingArea.bg.sourceTexture = ____backgroundRenderTexture;
         HoldingArea.bg.captureMethod = CaptureMethod.Texture;
     }
@@ -187,19 +155,6 @@ class Patches {
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge), "UpdateInputFrame")]
     [HarmonyPrefix]
     static void SetInputFrame(ref SDKBridge.SDKInjection<SDKInputFrame> ____injection_SDKInputFrame) {
-        //HoldingArea.mmfView.ReadArray<float>(0,HoldingArea.cameraData,0,8);
-        //____injection_SDKInputFrame.data.pose.localPosition.x = HoldingArea.cameraData[0];
-        //____injection_SDKInputFrame.data.pose.localPosition.y = HoldingArea.cameraData[1];
-        //____injection_SDKInputFrame.data.pose.localPosition.z = HoldingArea.cameraData[2];
-
-        //____injection_SDKInputFrame.data.pose.localRotation.w = HoldingArea.cameraData[3];
-        //____injection_SDKInputFrame.data.pose.localRotation.x = HoldingArea.cameraData[4];
-        //____injection_SDKInputFrame.data.pose.localRotation.y = HoldingArea.cameraData[5];
-        //____injection_SDKInputFrame.data.pose.localRotation.z = HoldingArea.cameraData[6];
-
-
-        //float vfov = HoldingArea.cameraData[7];
-        //____injection_SDKInputFrame.data.pose.projectionMatrix = SDKMatrix4x4.Perspective(vfov, 1920f/1080, 0.01f, 1000f);
 
         LIVnyan_dat camDat = HoldingArea.shm.Read();
         ____injection_SDKInputFrame.data.pose.localPosition.x = camDat.x;
@@ -215,7 +170,6 @@ class Patches {
 
         ____injection_SDKInputFrame.data.clipPlane.transform = HoldingArea.clip;
 
-
     }
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "Render")]
@@ -223,10 +177,8 @@ class Patches {
     static void UpdateSpoutSenders( ref SDKRender __instance) {
         HoldingArea.bg.CaptureFrame();
         HoldingArea.fg.CaptureFrame();
-
     }
 
-    //[HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "UpdateBridgeInputFrame")]
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "RenderForeground")]
     [HarmonyPrefix]
     static void GetCameraForClipPlane( ref SDKRender __instance, ref Camera ____cameraInstance) {
