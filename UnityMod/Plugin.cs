@@ -29,7 +29,7 @@ public class Plugin : BaseUnityPlugin
 
     SDKInputFrame inFrame;
 
-    bool isActive;
+    bool isActive=false;
         
     void DummyFunction(){}
 
@@ -40,9 +40,11 @@ public class Plugin : BaseUnityPlugin
 
         Harmony.CreateAndPatchAll(typeof(Patches));
 
+        // Even if we're only using optimised, we still need foreground. Rendering optimised without foreground changes the results of the optimised render.
         inFrame = SDKInputFrame.empty;
         inFrame.features = inFrame.features | FEATURES.BACKGROUND_RENDER;
         inFrame.features = inFrame.features | FEATURES.FOREGROUND_RENDER;
+        inFrame.features = inFrame.features | FEATURES.OPTIMIZED_RENDER;
 
         // I cannot, for the life of me, tell what complex clip does.
         //inFrame.features = inFrame.features | FEATURES.COMPLEX_CLIP_PLANE;
@@ -78,11 +80,11 @@ public class Plugin : BaseUnityPlugin
             data = new SDKResolution{width=1920, height=1080}
         });
 
-        //BrIsActive.SetValue(null, new SDKBridge.SDKInjection<bool>{
-        //    active = true,
-        //    action = null,
-        //    data = true
-        //});
+        BrIsActive.SetValue(null, new SDKBridge.SDKInjection<bool>{
+            active = true,
+            action = null,
+            data = isActive
+        });
 
         BrDisableSubmit.SetValue(null, true);
         BrDisableSubmitAppOut.SetValue(null, true);
@@ -115,11 +117,9 @@ public class Plugin : BaseUnityPlugin
                 HoldingArea.fg.enabled=false;
                 HoldingArea.fg.spoutName = "OnAirTap Foreground";
 
-                BrIsActive.SetValue(null, new SDKBridge.SDKInjection<bool>{
-                    active = true,
-                    action = null,
-                    data = true
-                });
+                HoldingArea.optimised = HoldingArea.spoutObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
+                HoldingArea.optimised.enabled=false;
+                HoldingArea.optimised.spoutName = "OnAirTap Foreground [Optimised]";
             }
         }
     }
@@ -131,12 +131,12 @@ public class Plugin : BaseUnityPlugin
 
         //I've heard reflection is expensive, so I'll put it behind an if.
         if (CAM_ON != isActive){
-            isActive = CAM_ON;
             BrIsActive.SetValue(null, new SDKBridge.SDKInjection<bool>{
                     active = true,
                     action = null,
                     data = CAM_ON
             });
+            isActive = CAM_ON;
         }
 
     }
@@ -146,6 +146,8 @@ static class HoldingArea{
     public static GameObject spoutObject;
     public static SpoutSender fg;
     public static SpoutSender bg;
+    public static SpoutSender optimised;
+
 
     public static AbComms shm;
 
@@ -169,6 +171,13 @@ class Patches {
     static void HookSpoutFG(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____foregroundRenderTexture) {
         HoldingArea.fg.sourceTexture = ____foregroundRenderTexture;
         HoldingArea.fg.captureMethod = CaptureMethod.Texture;
+    }
+
+    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateOptimizedTexture")]
+    [HarmonyPostfix]
+    static void HookSpoutOp(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____optimizedRenderTexture) {
+        HoldingArea.optimised.sourceTexture = ____optimizedRenderTexture;
+        HoldingArea.optimised.captureMethod = CaptureMethod.Texture;
     }
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge), "UpdateInputFrame")]
@@ -195,7 +204,8 @@ class Patches {
     [HarmonyPostfix]
     static void UpdateSpoutSenders( ref SDKRender __instance) {
         HoldingArea.bg.CaptureFrame();
-        HoldingArea.fg.CaptureFrame();
+        //HoldingArea.fg.CaptureFrame();
+        HoldingArea.optimised.CaptureFrame();
     }
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "RenderForeground")]
