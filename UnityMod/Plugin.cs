@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
+using BepInEx.Configuration;
 
 using UnityEngine;
 using LIV.SDK.Unity;
@@ -7,9 +8,6 @@ using Klak.Spout;
 
 using HarmonyLib;
 using System.Reflection;
-
-using System.IO;
-using System.IO.MemoryMappedFiles;
 
 
 namespace OnAirTap;
@@ -27,21 +25,45 @@ public class Plugin : BaseUnityPlugin
     FieldInfo BrDisableAddTex;
     FieldInfo BrDisableCreateFrame;
 
-    SDKInputFrame inFrame;
+    private ConfigEntry<int> configResX;
+    private ConfigEntry<int> configResY;
+    private ConfigEntry<bool> configRenderBG;
+    private ConfigEntry<bool> configRenderFG;
+    private ConfigEntry<bool> configRenderOP;
+    private ConfigEntry<bool> configGroundPlaneOn;
+    private ConfigEntry<float> configGroundPlaneHeight;
+
 
     bool isActive=false;
         
     void DummyFunction(){}
+
+    private void BindConfigs(){
+        configResX = Config.Bind("Resolution","X",1920);
+        configResY = Config.Bind("Resolution","Y",1080);
+
+        if (configResX.Value <= 0){configResX.Value = 1920;}
+        if (configResY.Value <= 0){configResY.Value = 1080;}
+
+        configRenderBG = Config.Bind("RenderPasses","Background",true);
+        configRenderFG = Config.Bind("RenderPasses","Foreground",true);
+        configRenderOP = Config.Bind("RenderPasses","Optimised",true);
+
+        configGroundPlaneOn = Config.Bind("GroundPlane","Enabled",true);
+        configGroundPlaneHeight = Config.Bind("GroundPlane","Elevation",0.01f, "This is in metres, I think.");
+    }
 
     private void Awake()
     {
         // Plugin startup logic
         Logger = base.Logger;
 
+        BindConfigs();
+
         Harmony.CreateAndPatchAll(typeof(Patches));
 
         // Even if we're only using optimised, we still need foreground. Rendering optimised without foreground changes the results of the optimised render.
-        inFrame = SDKInputFrame.empty;
+        SDKInputFrame inFrame = SDKInputFrame.empty;
         inFrame.features = inFrame.features | FEATURES.BACKGROUND_RENDER;
         inFrame.features = inFrame.features | FEATURES.FOREGROUND_RENDER;
         inFrame.features = inFrame.features | FEATURES.OPTIMIZED_RENDER;
@@ -104,7 +126,7 @@ public class Plugin : BaseUnityPlugin
         if (!HoldingArea.spoutObject){
 
             HoldingArea.spoutObject = new GameObject();
-            HoldingArea.spoutObject.name = "Acrylobutadiene Styrene";
+            HoldingArea.spoutObject.name = "Acrylonitrile Butadiene Styrene";
             GameObject.DontDestroyOnLoad(HoldingArea.spoutObject);
 
             if (HoldingArea.spoutObject)
