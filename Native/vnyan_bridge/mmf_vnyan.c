@@ -11,20 +11,24 @@ LIVnyan_dat* LumMmf;
 dataBlock shm_dat;
 LIVnyan_dat* LumShm;
 
+int shouldExit = 0;
 
 typedef int (__stdcall *shmFunc)(dataBlock*);
+
+shmFunc lopen;
+shmFunc lclose;
 
 int ConnectMMF()
 {
     if ((LumMappingHandle = CreateFileMapping(INVALID_HANDLE_VALUE, 0, PAGE_READWRITE, 0, sizeof(LIVnyan_dat), "Local\\uk.lum.livnyan.cameradata.v1.0")) == 0)
     {
-        printf("made filemapping\n");
+        printf("Couldn't make filemapping\n");
         return -11;
     }
 
     if ((LumMmf = (LIVnyan_dat*)MapViewOfFile(LumMappingHandle, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(LIVnyan_dat))) == 0)
     {
-        printf("made view\n");
+        printf("Couldn't make view\n");
         return -12;
     }
 
@@ -40,13 +44,13 @@ int ConnectSHM(){
         return -21;
     }
 
-    shmFunc lopen = (shmFunc)GetProcAddress(dllHandle, "open");
+    lopen = (shmFunc)GetProcAddress(dllHandle, "open");
     if (!lopen) {
         printf("Couldn't find lincomm open()'\n");
         return -22;
     }
 
-    shmFunc lclose = (shmFunc)GetProcAddress(dllHandle, "close");
+    lclose = (shmFunc)GetProcAddress(dllHandle, "close");
     if (!lclose) {
         printf("Couldn't find lincomm close()\n");
         return -23;
@@ -66,10 +70,25 @@ int ConnectSHM(){
     LumShm = (LIVnyan_dat*)shm_dat.data;
 }
 
+int DisconnectMMF(){
+    UnmapViewOfFile(LumMmf);
+    CloseHandle(LumMappingHandle);
+
+}
+int DisconnectSHM(){
+    lclose(&shm_dat);
+}
+
+BOOL WINAPI ctrl_handler(DWORD dwCtrlType){
+    shouldExit = 1;
+    return TRUE;
+}
 
 int main()
 {
     int res;
+
+    SetConsoleCtrlHandler(ctrl_handler, TRUE);
 
     res = ConnectMMF();
     if (res < 0) {return res;}
@@ -80,6 +99,12 @@ int main()
     while (true) {
         *LumShm = *LumMmf;
         Sleep(1);
+        if (shouldExit >0){break;}
+
     };
+    printf("EXITING LIVNYAN SHM BRIDGE\n");
+
+    DisconnectMMF();
+    DisconnectSHM();
     return 0;
 }
