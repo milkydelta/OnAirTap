@@ -127,7 +127,7 @@ public class Plugin : BaseUnityPlugin
     void LateUpdate() {
         HoldingArea.camDat = HoldingArea.shm.Read();
 
-        bool CAM_ON = (HoldingArea.camDat.cfg & 0x01) > 0;
+        bool CAM_ON = (HoldingArea.camDat.cfg & LIVnyan_cfg.CAM_ON) > 0;
 
         //I've heard reflection is expensive, so I'll put it behind an if.
         if (CAM_ON != isActive){

@@ -14,9 +14,10 @@ public struct LIVnyan_dat {
     public float qy;
     public float qz;
     public float fov;
-    public int cfg;
+    public LIVnyan_cfg cfg;
 };
 
+[Flags]
 public enum LIVnyan_cfg {
     CAM_ON = 0x01,
     LOG_ON = 0x02,
@@ -55,7 +56,7 @@ public class WComms : AbComms {
         dat.qz = cameraData[6];
         dat.fov = cameraData[7];
 
-        dat.cfg = mmfView.ReadInt32(sizeof(float)*8);
+        dat.cfg = (LIVnyan_cfg)mmfView.ReadInt32(sizeof(float)*8);
 
         return dat;
     }
@@ -120,7 +121,7 @@ public class LComms : AbComms {
         dat.qz = cameraData[6];
         dat.fov = cameraData[7];
 
-        dat.cfg = Marshal.ReadInt32(shm.data, sizeof(float)*8);
+        dat.cfg = (LIVnyan_cfg)Marshal.ReadInt32(shm.data, sizeof(float)*8);
 
         return dat;
     }
