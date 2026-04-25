@@ -25,13 +25,13 @@ public class Plugin : BaseUnityPlugin
     FieldInfo BrDisableAddTex;
     FieldInfo BrDisableCreateFrame;
 
-    private ConfigEntry<int> configResX;
-    private ConfigEntry<int> configResY;
-    private ConfigEntry<bool> configRenderBG;
-    private ConfigEntry<bool> configRenderFG;
-    private ConfigEntry<bool> configRenderOP;
-    private ConfigEntry<bool> configGroundPlaneOn;
-    private ConfigEntry<float> configGroundPlaneHeight;
+    ConfigEntry<int> configResX;
+    ConfigEntry<int> configResY;
+    ConfigEntry<bool> configRenderBG;
+    ConfigEntry<bool> configRenderFG;
+    ConfigEntry<bool> configRenderOP;
+    ConfigEntry<bool> configGroundPlaneOn;
+    ConfigEntry<float> configGroundPlaneHeight;
 
 
     bool isActive=false;
@@ -64,9 +64,9 @@ public class Plugin : BaseUnityPlugin
 
         // Even if we're only using optimised, we still need foreground. Rendering optimised without foreground changes the results of the optimised render.
         SDKInputFrame inFrame = SDKInputFrame.empty;
-        inFrame.features = inFrame.features | FEATURES.BACKGROUND_RENDER;
-        inFrame.features = inFrame.features | FEATURES.FOREGROUND_RENDER;
-        inFrame.features = inFrame.features | FEATURES.OPTIMIZED_RENDER;
+        if (configRenderBG.Value) {inFrame.features = inFrame.features | FEATURES.BACKGROUND_RENDER;}
+        if (configRenderFG.Value) {inFrame.features = inFrame.features | FEATURES.FOREGROUND_RENDER;}
+        if (configRenderOP.Value) {inFrame.features = inFrame.features | FEATURES.OPTIMIZED_RENDER;}
 
         // I cannot, for the life of me, tell what complex clip does.
         //inFrame.features = inFrame.features | FEATURES.COMPLEX_CLIP_PLANE;
@@ -75,10 +75,12 @@ public class Plugin : BaseUnityPlugin
         //inFrame.clipPlane.height = 2056;
         //inFrame.clipPlane.tesselation = 100.0f;
 
-        inFrame.features = inFrame.features | FEATURES.GROUND_CLIP_PLANE;
+        if (configGroundPlaneOn.Value){
+            inFrame.features = inFrame.features | FEATURES.GROUND_CLIP_PLANE;
 
-        inFrame.groundClipPlane.transform = SDKMatrix4x4.Translate(SDKVector3.up * 0.01f)
-        * SDKMatrix4x4.Rotate(SDKQuaternion.Euler(1.5708f,0,0));
+            inFrame.groundClipPlane.transform = SDKMatrix4x4.Translate(SDKVector3.up * configGroundPlaneHeight.Value)
+            * SDKMatrix4x4.Rotate(SDKQuaternion.Euler(1.5708f,0,0));
+        }
 
         var t = typeof(SDKBridge);
 
@@ -99,7 +101,7 @@ public class Plugin : BaseUnityPlugin
         BrResolution.SetValue(null, new SDKBridge.SDKInjection<SDKResolution>{
             active = true,
             action = DummyFunction,
-            data = new SDKResolution{width=1920, height=1080}
+            data = new SDKResolution{width=configResX.Value, height=configResY.Value}
         });
 
         BrIsActive.SetValue(null, new SDKBridge.SDKInjection<bool>{
@@ -205,7 +207,6 @@ class Patches {
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge), "UpdateInputFrame")]
     [HarmonyPrefix]
     static void SetInputFrame(ref SDKBridge.SDKInjection<SDKInputFrame> ____injection_SDKInputFrame) {
-
         LIVnyan_dat camDat = HoldingArea.camDat;
         ____injection_SDKInputFrame.data.pose.localPosition.x = camDat.x;
         ____injection_SDKInputFrame.data.pose.localPosition.y = camDat.y;
