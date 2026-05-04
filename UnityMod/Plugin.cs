@@ -25,13 +25,16 @@ public class Plugin : BaseUnityPlugin
     FieldInfo BrDisableAddTex;
     FieldInfo BrDisableCreateFrame;
 
-    ConfigEntry<int> configResX;
-    ConfigEntry<int> configResY;
-    ConfigEntry<bool> configRenderBG;
-    ConfigEntry<bool> configRenderFG;
-    ConfigEntry<bool> configRenderOP;
-    ConfigEntry<bool> configGroundPlaneOn;
-    ConfigEntry<float> configGroundPlaneHeight;
+    internal static ConfigEntry<int> configResX;
+    internal static ConfigEntry<int> configResY;
+    internal static ConfigEntry<bool> configRenderBG;
+    internal static ConfigEntry<bool> configRenderFG;
+    internal static ConfigEntry<bool> configRenderOP;
+    internal static ConfigEntry<bool> configGroundPlaneOn;
+    internal static ConfigEntry<float> configGroundPlaneHeight;
+    internal static ConfigEntry<bool> configReadResFromShm;
+    internal static ConfigEntry<bool> configReadClipFromShm;
+    internal static ConfigEntry<bool> configVerticalClipPlane;
 
 
     bool isActive=false;
@@ -49,8 +52,12 @@ public class Plugin : BaseUnityPlugin
         configRenderFG = Config.Bind("RenderPasses","Foreground",true);
         configRenderOP = Config.Bind("RenderPasses","Optimised",true);
 
-        configGroundPlaneOn = Config.Bind("GroundPlane","Enabled",true);
-        configGroundPlaneHeight = Config.Bind("GroundPlane","Elevation",0.01f, "This is in metres, I think.");
+        configGroundPlaneOn = Config.Bind("ClipPlanes","GroundEnabled",true);
+        configGroundPlaneHeight = Config.Bind("ClipPlanes","GroundElevation",0.01f, "This is in metres, I think.");
+        configVerticalClipPlane = Config.Bind("ClipPlanes", "ClipShouldBeVertical", true);
+
+        configReadResFromShm = Config.Bind("OAT_MMF_Data","ReadWindowResolution", false);
+        configReadClipFromShm = Config.Bind("OAT_MMF_Data","ReadClipPlaneLocation", false);
     }
 
     private void Awake()
@@ -172,10 +179,9 @@ static class HoldingArea{
     public static SpoutSender bg;
     public static SpoutSender optimised;
 
-
     public static AbComms shm;
 
-    public static Matrix4x4 clip;
+    public static Vector3 hmdPos;
 
     public static LIVnyan_dat camDat;
 }
@@ -206,7 +212,7 @@ class Patches {
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge), "UpdateInputFrame")]
     [HarmonyPrefix]
-    static void SetInputFrame(ref SDKBridge.SDKInjection<SDKInputFrame> ____injection_SDKInputFrame) {
+    static void SetInputFrame(ref SDKBridge.SDKInjection<SDKInputFrame> ____injection_SDKInputFrame, ref SDKBridge.SDKInjection<SDKResolution> ____injection_SDKResolution) {
         LIVnyan_dat camDat = HoldingArea.camDat;
         ____injection_SDKInputFrame.data.pose.localPosition.x = camDat.x;
         ____injection_SDKInputFrame.data.pose.localPosition.y = camDat.y;
@@ -217,11 +223,45 @@ class Patches {
         ____injection_SDKInputFrame.data.pose.localRotation.y = camDat.qy;
         ____injection_SDKInputFrame.data.pose.localRotation.z = camDat.qz;
 
-        ____injection_SDKInputFrame.data.pose.projectionMatrix = SDKMatrix4x4.Perspective(camDat.fov, 1920f/1080, 0.01f, 1000f);
+        SDKResolution res = ____injection_SDKResolution.data;
 
-        ____injection_SDKInputFrame.data.clipPlane.transform = HoldingArea.clip;
+        ____injection_SDKInputFrame.data.pose.projectionMatrix = SDKMatrix4x4.Perspective(camDat.fov, ((float)res.width)/res.height, 0.01f, 1000f);
+
+
+        Vector3 clipPos;
+        Vector3 camPos = ____injection_SDKInputFrame.data.pose.localPosition;
+
+        if (Plugin.configReadClipFromShm.Value){
+            //TODO: this is to be implemented later, if livnyan is modified to transmit a tracker down the MMF.
+            clipPos = Vector3.zero;
+        }else {
+            clipPos = HoldingArea.hmdPos;
+        }
+
+        if (Plugin.configVerticalClipPlane.Value){
+            camPos.y = clipPos.y;
+        }
+
+        Quaternion quat = Quaternion.LookRotation(camPos - clipPos);
+
+        ____injection_SDKInputFrame.data.clipPlane.transform = SDKMatrix4x4.Translate(clipPos) * SDKMatrix4x4.Rotate(quat);
 
     }
+
+    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge), "GetResolution")]
+    [HarmonyPrefix]
+    static void UpdateResolution(ref SDKBridge.SDKInjection<SDKResolution> ____injection_SDKResolution) {
+        if (Plugin.configReadResFromShm.Value != true) {return;}
+
+        //TODO: this is to be implemented later, if livnyan is modified to transmit window resolution down the MMF.
+        Vector2Int Resolution = new Vector2Int();
+        Resolution.x=1280;
+        Resolution.y=720;
+
+        ____injection_SDKResolution.data.width = Resolution.x;
+        ____injection_SDKResolution.data.height = Resolution.y;
+    }
+
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "Render")]
     [HarmonyPostfix]
@@ -233,10 +273,7 @@ class Patches {
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "RenderForeground")]
     [HarmonyPrefix]
-    static void GetCameraForClipPlane( ref SDKRender __instance, ref Camera ____cameraInstance) {
-        HoldingArea.spoutObject.transform.position = __instance.liv.HMDCamera.transform.position;
-        HoldingArea.spoutObject.transform.LookAt(____cameraInstance.transform);
-
-        HoldingArea.clip = HoldingArea.spoutObject.transform.localToWorldMatrix * __instance.liv.stageWorldToLocalMatrix;
+    static void GetCameraForClipPlane( ref SDKRender __instance) {
+        HoldingArea.hmdPos = __instance.liv.stageWorldToLocalMatrix.MultiplyPoint3x4(__instance.liv.HMDCamera.transform.position);
     }
 }
