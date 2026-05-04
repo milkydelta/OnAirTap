@@ -36,6 +36,14 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> configReadClipFromShm;
     internal static ConfigEntry<bool> configVerticalClipPlane;
 
+    internal static GameObject spoutObject;
+    internal static SpoutSender spoutFG;
+    internal static SpoutSender spoutBG;
+    internal static SpoutSender spoutOptimised;
+    internal static AbComms nyanShm;
+    internal static LIVnyan_dat camDat;
+    internal static Vector3 hmdPos;
+
 
     bool isActive=false;
         
@@ -122,43 +130,43 @@ public class Plugin : BaseUnityPlugin
         BrDisableAddTex.SetValue(null, true);
         BrDisableCreateFrame.SetValue(null, true);
 
+
+        if (NativeMethods.GetPlatform() == "Wine"){nyanShm = new LComms();}
+        else {nyanShm = new WComms();}
+
+        nyanShm.Open("uk.lum.livnyan.cameradata.v1.0");
+
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
-
-        if (NativeMethods.GetPlatform() == "Wine"){HoldingArea.shm = new LComms();}
-        else {HoldingArea.shm = new WComms();}
-
-        HoldingArea.shm.Open("uk.lum.livnyan.cameradata.v1.0");
-
     }
 
     void Update() {
-        if (!HoldingArea.spoutObject){
+        if (!spoutObject){
 
-            HoldingArea.spoutObject = new GameObject();
-            HoldingArea.spoutObject.name = "Acrylonitrile Butadiene Styrene";
-            GameObject.DontDestroyOnLoad(HoldingArea.spoutObject);
+            spoutObject = new GameObject();
+            spoutObject.name = "Acrylonitrile Butadiene Styrene";
+            GameObject.DontDestroyOnLoad(spoutObject);
 
-            if (HoldingArea.spoutObject)
+            if (spoutObject)
             {
-                HoldingArea.bg = HoldingArea.spoutObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
-                HoldingArea.bg.enabled=false;
-                HoldingArea.bg.spoutName="OnAirTap Background";
+                spoutBG = spoutObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
+                spoutBG.enabled=false;
+                spoutBG.spoutName="OnAirTap Background";
 
-                HoldingArea.fg = HoldingArea.spoutObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
-                HoldingArea.fg.enabled=false;
-                HoldingArea.fg.spoutName = "OnAirTap Foreground";
+                spoutFG = spoutObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
+                spoutFG.enabled=false;
+                spoutFG.spoutName = "OnAirTap Foreground";
 
-                HoldingArea.optimised = HoldingArea.spoutObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
-                HoldingArea.optimised.enabled=false;
-                HoldingArea.optimised.spoutName = "OnAirTap Foreground [Optimised]";
+                spoutOptimised = spoutObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
+                spoutOptimised.enabled=false;
+                spoutOptimised.spoutName = "OnAirTap Foreground [Optimised]";
             }
         }
     }
 
     void LateUpdate() {
-        HoldingArea.camDat = HoldingArea.shm.Read();
+        camDat = nyanShm.Read();
 
-        bool CAM_ON = (HoldingArea.camDat.cfg & LIVnyan_cfg.CAM_ON) > 0;
+        bool CAM_ON = (camDat.cfg & LIVnyan_cfg.CAM_ON) > 0;
 
         //I've heard reflection is expensive, so I'll put it behind an if.
         if (CAM_ON != isActive){
@@ -173,47 +181,34 @@ public class Plugin : BaseUnityPlugin
     }
 }
 
-static class HoldingArea{
-    public static GameObject spoutObject;
-    public static SpoutSender fg;
-    public static SpoutSender bg;
-    public static SpoutSender optimised;
-
-    public static AbComms shm;
-
-    public static Vector3 hmdPos;
-
-    public static LIVnyan_dat camDat;
-}
-
 
 class Patches {
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateBackgroundTexture")]
     [HarmonyPostfix]
     static void HookSpoutBG(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____backgroundRenderTexture) {
-        HoldingArea.bg.sourceTexture = ____backgroundRenderTexture;
-        HoldingArea.bg.captureMethod = CaptureMethod.Texture;
+        Plugin.spoutBG.sourceTexture = ____backgroundRenderTexture;
+        Plugin.spoutBG.captureMethod = CaptureMethod.Texture;
     }
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateForegroundTexture")]
     [HarmonyPostfix]
     static void HookSpoutFG(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____foregroundRenderTexture) {
-        HoldingArea.fg.sourceTexture = ____foregroundRenderTexture;
-        HoldingArea.fg.captureMethod = CaptureMethod.Texture;
+        Plugin.spoutFG.sourceTexture = ____foregroundRenderTexture;
+        Plugin.spoutFG.captureMethod = CaptureMethod.Texture;
     }
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateOptimizedTexture")]
     [HarmonyPostfix]
     static void HookSpoutOp(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____optimizedRenderTexture) {
-        HoldingArea.optimised.sourceTexture = ____optimizedRenderTexture;
-        HoldingArea.optimised.captureMethod = CaptureMethod.Texture;
+        Plugin.spoutOptimised.sourceTexture = ____optimizedRenderTexture;
+        Plugin.spoutOptimised.captureMethod = CaptureMethod.Texture;
     }
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge), "UpdateInputFrame")]
     [HarmonyPrefix]
     static void SetInputFrame(ref SDKBridge.SDKInjection<SDKInputFrame> ____injection_SDKInputFrame, ref SDKBridge.SDKInjection<SDKResolution> ____injection_SDKResolution) {
-        LIVnyan_dat camDat = HoldingArea.camDat;
+        LIVnyan_dat camDat = Plugin.camDat;
         ____injection_SDKInputFrame.data.pose.localPosition.x = camDat.x;
         ____injection_SDKInputFrame.data.pose.localPosition.y = camDat.y;
         ____injection_SDKInputFrame.data.pose.localPosition.z = camDat.z;
@@ -235,7 +230,7 @@ class Patches {
             //TODO: this is to be implemented later, if livnyan is modified to transmit a tracker down the MMF.
             clipPos = Vector3.zero;
         }else {
-            clipPos = HoldingArea.hmdPos;
+            clipPos = Plugin.hmdPos;
         }
 
         if (Plugin.configVerticalClipPlane.Value){
@@ -266,14 +261,14 @@ class Patches {
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "Render")]
     [HarmonyPostfix]
     static void UpdateSpoutSenders( ref SDKRender __instance) {
-        HoldingArea.bg.CaptureFrame();
-        //HoldingArea.fg.CaptureFrame();
-        HoldingArea.optimised.CaptureFrame();
+        Plugin.spoutBG.CaptureFrame();
+        //Plugin.spoutFG.CaptureFrame();
+        Plugin.spoutOptimised.CaptureFrame();
     }
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "RenderForeground")]
     [HarmonyPrefix]
     static void GetCameraForClipPlane( ref SDKRender __instance) {
-        HoldingArea.hmdPos = __instance.liv.stageWorldToLocalMatrix.MultiplyPoint3x4(__instance.liv.HMDCamera.transform.position);
+        Plugin.hmdPos = __instance.liv.stageWorldToLocalMatrix.MultiplyPoint3x4(__instance.liv.HMDCamera.transform.position);
     }
 }
