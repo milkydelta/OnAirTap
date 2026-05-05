@@ -16,9 +16,14 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <GameDataDirectory>../../../Beat Saber_Data</GameDataDirectory>
+    <GameDataDirectory>../../../../Beat Saber_Data</GameDataDirectory>
     <Deterministic>false</Deterministic>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include = "../Common/*.cs"/>
+    <Compile Include = "../Common/KlakSpout/*.cs"/>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />

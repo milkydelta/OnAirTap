@@ -1,6 +1,6 @@
-﻿using BepInEx;
-using BepInEx.Logging;
-using BepInEx.Configuration;
+﻿//using BepInEx;
+//using BepInEx.Logging;
+//using BepInEx.Configuration;
 
 using UnityEngine;
 using LIV.SDK.Unity;
@@ -12,10 +12,10 @@ using System.Reflection;
 
 namespace OnAirTap;
 
-[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-public class Plugin : BaseUnityPlugin
+//[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
+public class Plugin //: BaseUnityPlugin
 {
-    internal static new ManualLogSource Logger;
+    //internal static new ManualLogSource Logger;
 
     FieldInfo BrInputFrame;
     FieldInfo BrResolution;
@@ -25,16 +25,16 @@ public class Plugin : BaseUnityPlugin
     FieldInfo BrDisableAddTex;
     FieldInfo BrDisableCreateFrame;
 
-    internal static ConfigEntry<int> configResX;
-    internal static ConfigEntry<int> configResY;
-    internal static ConfigEntry<bool> configRenderBG;
-    internal static ConfigEntry<bool> configRenderFG;
-    internal static ConfigEntry<bool> configRenderOP;
-    internal static ConfigEntry<bool> configGroundPlaneOn;
-    internal static ConfigEntry<float> configGroundPlaneHeight;
-    internal static ConfigEntry<bool> configReadResFromShm;
-    internal static ConfigEntry<bool> configReadClipFromShm;
-    internal static ConfigEntry<bool> configVerticalClipPlane;
+    internal static int configResX;
+    internal static int configResY;
+    internal static bool configRenderBG;
+    internal static bool configRenderFG;
+    internal static bool configRenderOP;
+    internal static bool configGroundPlaneOn;
+    internal static float configGroundPlaneHeight;
+    internal static bool configReadResFromShm;
+    internal static bool configReadClipFromShm;
+    internal static bool configVerticalClipPlane;
 
     internal static GameObject spoutObject;
     internal static SpoutSender spoutFG;
@@ -49,39 +49,16 @@ public class Plugin : BaseUnityPlugin
         
     void DummyFunction(){}
 
-    private void BindConfigs(){
-        configResX = Config.Bind("Resolution","X",1920);
-        configResY = Config.Bind("Resolution","Y",1080);
-
-        if (configResX.Value <= 0){configResX.Value = 1920;}
-        if (configResY.Value <= 0){configResY.Value = 1080;}
-
-        configRenderBG = Config.Bind("RenderPasses","Background",true);
-        configRenderFG = Config.Bind("RenderPasses","Foreground",true);
-        configRenderOP = Config.Bind("RenderPasses","Optimised",true);
-
-        configGroundPlaneOn = Config.Bind("ClipPlanes","GroundEnabled",true);
-        configGroundPlaneHeight = Config.Bind("ClipPlanes","GroundElevation",0.01f, "This is in metres, I think.");
-        configVerticalClipPlane = Config.Bind("ClipPlanes", "ClipShouldBeVertical", true);
-
-        configReadResFromShm = Config.Bind("OAT_MMF_Data","ReadWindowResolution", false);
-        configReadClipFromShm = Config.Bind("OAT_MMF_Data","ReadClipPlaneLocation", false);
-    }
-
-    private void Awake()
+    internal void Awake()
     {
-        // Plugin startup logic
-        Logger = base.Logger;
-
-        BindConfigs();
 
         Harmony.CreateAndPatchAll(typeof(Patches));
 
         // Even if we're only using optimised, we still need foreground. Rendering optimised without foreground changes the results of the optimised render.
         SDKInputFrame inFrame = SDKInputFrame.empty;
-        if (configRenderBG.Value) {inFrame.features = inFrame.features | FEATURES.BACKGROUND_RENDER;}
-        if (configRenderFG.Value) {inFrame.features = inFrame.features | FEATURES.FOREGROUND_RENDER;}
-        if (configRenderOP.Value) {inFrame.features = inFrame.features | FEATURES.OPTIMIZED_RENDER;}
+        if (configRenderBG) {inFrame.features = inFrame.features | FEATURES.BACKGROUND_RENDER;}
+        if (configRenderFG) {inFrame.features = inFrame.features | FEATURES.FOREGROUND_RENDER;}
+        if (configRenderOP) {inFrame.features = inFrame.features | FEATURES.OPTIMIZED_RENDER;}
 
         // I cannot, for the life of me, tell what complex clip does.
         //inFrame.features = inFrame.features | FEATURES.COMPLEX_CLIP_PLANE;
@@ -90,10 +67,10 @@ public class Plugin : BaseUnityPlugin
         //inFrame.clipPlane.height = 2056;
         //inFrame.clipPlane.tesselation = 100.0f;
 
-        if (configGroundPlaneOn.Value){
+        if (configGroundPlaneOn){
             inFrame.features = inFrame.features | FEATURES.GROUND_CLIP_PLANE;
 
-            inFrame.groundClipPlane.transform = SDKMatrix4x4.Translate(SDKVector3.up * configGroundPlaneHeight.Value)
+            inFrame.groundClipPlane.transform = SDKMatrix4x4.Translate(SDKVector3.up * configGroundPlaneHeight)
             * SDKMatrix4x4.Rotate(SDKQuaternion.Euler(1.5708f,0,0));
         }
 
@@ -116,7 +93,7 @@ public class Plugin : BaseUnityPlugin
         BrResolution.SetValue(null, new SDKBridge.SDKInjection<SDKResolution>{
             active = true,
             action = DummyFunction,
-            data = new SDKResolution{width=configResX.Value, height=configResY.Value}
+            data = new SDKResolution{width=configResX, height=configResY}
         });
 
         BrIsActive.SetValue(null, new SDKBridge.SDKInjection<bool>{
@@ -136,10 +113,9 @@ public class Plugin : BaseUnityPlugin
 
         nyanShm.Open("uk.lum.livnyan.cameradata.v1.0");
 
-        Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
     }
 
-    void Update() {
+    internal void Update() {
         if (!spoutObject){
 
             spoutObject = new GameObject();
@@ -163,7 +139,7 @@ public class Plugin : BaseUnityPlugin
         }
     }
 
-    void LateUpdate() {
+    internal void LateUpdate() {
         camDat = nyanShm.Read();
 
         bool CAM_ON = (camDat.cfg & LIVnyan_cfg.CAM_ON) > 0;
@@ -226,14 +202,14 @@ class Patches {
         Vector3 clipPos;
         Vector3 camPos = ____injection_SDKInputFrame.data.pose.localPosition;
 
-        if (Plugin.configReadClipFromShm.Value){
+        if (Plugin.configReadClipFromShm){
             //TODO: this is to be implemented later, if livnyan is modified to transmit a tracker down the MMF.
             clipPos = Vector3.zero;
         }else {
             clipPos = Plugin.hmdPos;
         }
 
-        if (Plugin.configVerticalClipPlane.Value){
+        if (Plugin.configVerticalClipPlane){
             camPos.y = clipPos.y;
         }
 
@@ -246,7 +222,7 @@ class Patches {
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge), "GetResolution")]
     [HarmonyPrefix]
     static void UpdateResolution(ref SDKBridge.SDKInjection<SDKResolution> ____injection_SDKResolution) {
-        if (Plugin.configReadResFromShm.Value != true) {return;}
+        if (Plugin.configReadResFromShm != true) {return;}
 
         //TODO: this is to be implemented later, if livnyan is modified to transmit window resolution down the MMF.
         Vector2Int Resolution = new Vector2Int();
