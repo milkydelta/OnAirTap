@@ -4,3 +4,4 @@ obj
 *.exe
 *.dll
 *.so
+*.pdb
