@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include = "../Common/*.cs"/>
     <Compile Include = "../Common/KlakSpout/*.cs"/>
+    <Compile Include = "../Common/Comms/*.cs"/>
   </ItemGroup>
 
   <ItemGroup>
