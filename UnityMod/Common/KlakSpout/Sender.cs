@@ -25,16 +25,16 @@ sealed class Sender : System.IDisposable
         // Plugin object allocation
         _plugin = Plugin.CreateSender(target, texture.width, texture.height);
         if (_plugin == IntPtr.Zero) return;
-        System.Console.WriteLine("Made plugin Sender!");
+        OnAirTap.Plugin.logger.Info("KlakSpout: Made plugin Sender!");
 
         // Event kicker (heap block for interop communication)
         _event = new EventKicker
           (new EventData(_plugin, texture.GetNativeTexturePtr()));
-        System.Console.WriteLine("Made Eventkicker, EventData");
+        OnAirTap.Plugin.logger.Info("KlakSpout: Made Eventkicker, EventData");
 
         // Initial update event
         _event.IssuePluginEvent(EventID.UpdateSender);
-        System.Console.WriteLine("Sent initial update");
+        OnAirTap.Plugin.logger.Info("KlakSpout: Sent initial update");
     }
 
     public void Dispose()

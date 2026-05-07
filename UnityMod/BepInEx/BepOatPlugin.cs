@@ -71,6 +71,8 @@ public class BepOatPlugin : BaseUnityPlugin
         // Plugin startup logic
         Logger = base.Logger;
 
+        Plugin.logger = new BepLogger(Logger);
+
         plug = new Plugin();
 
         BindConfigs();

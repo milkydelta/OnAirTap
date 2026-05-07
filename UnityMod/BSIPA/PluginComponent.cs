@@ -36,12 +36,15 @@ internal class BSIPA_OatComponent: MonoBehaviour
     private void Awake()
     {
         if (instance != null){
+            BSIPAPlugin.Log.Warn("The OatComponent already exists.");
             DestroyImmediate(this);
             return;
         }
 
         DontDestroyOnLoad(this.gameObject);
         instance = this;
+
+        Plugin.logger = new BSIPALogger(BSIPAPlugin.Log);
 
         plug = new Plugin();
 

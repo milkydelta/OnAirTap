@@ -17,6 +17,8 @@ public class Plugin //: BaseUnityPlugin
 {
     //internal static new ManualLogSource Logger;
 
+    internal static AbLogger logger;
+
     FieldInfo BrInputFrame;
     FieldInfo BrResolution;
     FieldInfo BrIsActive;
@@ -113,6 +115,8 @@ public class Plugin //: BaseUnityPlugin
 
         nyanShm.Open("uk.lum.livnyan.cameradata.v1.0");
 
+        logger.Info("Core Plugin has completed Awake().");
+
     }
 
     internal void Update() {
@@ -135,6 +139,8 @@ public class Plugin //: BaseUnityPlugin
                 spoutOptimised = spoutObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
                 spoutOptimised.enabled=false;
                 spoutOptimised.spoutName = "OnAirTap Foreground [Optimised]";
+
+                logger.Info("Successfully made Spout Holding Object.");
             }
         }
     }
