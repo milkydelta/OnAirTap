@@ -2,7 +2,7 @@ using System;
 
 namespace OnAirTap;
 
-public class BepLogger : AbLogger{
+public class ConLogger : AbLogger{
 
     public override void Info(string message)
     {
