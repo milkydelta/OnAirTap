@@ -12,6 +12,16 @@ public struct LIVnyan_dat {
     public float qz;
     public float fov;
     public LIVnyan_cfg cfg;
+
+    public override string ToString()
+    {
+        return String.Concat(
+            "P: ", x, ",", y, ",",  z,
+            " R: ", qw,",", qx,",", qy,",", qz,
+            " F: ",fov,
+            " C: ", (int)cfg
+        );
+    }
 };
 
 [Flags]

@@ -109,10 +109,12 @@ public class Plugin //: BaseUnityPlugin
         BrDisableAddTex.SetValue(null, true);
         BrDisableCreateFrame.SetValue(null, true);
 
-
-        if (NativeMethods.GetPlatform() == "Wine"){nyanShm = new LComms();}
+        string plat = NativeMethods.GetPlatform();
+        logger.Info("Detected platform: "+plat+". Making Comms.");
+        if (plat == "Wine"){nyanShm = new LComms();}
         else {nyanShm = new WComms();}
 
+        logger.Info("Opening Comms.");
         nyanShm.Open("uk.lum.livnyan.cameradata.v1.0");
 
         logger.Info("Core Plugin has completed Awake().");
@@ -148,7 +150,7 @@ public class Plugin //: BaseUnityPlugin
     internal void LateUpdate() {
         camDat = nyanShm.Read();
 
-        bool CAM_ON = (camDat.cfg & LIVnyan_cfg.CAM_ON) > 0;
+        bool CAM_ON = (camDat.cfg & LIVnyan_cfg.CAM_ON) != 0;
 
         //I've heard reflection is expensive, so I'll put it behind an if.
         if (CAM_ON != isActive){
@@ -159,6 +161,9 @@ public class Plugin //: BaseUnityPlugin
             });
             isActive = CAM_ON;
         }
+
+        logger.enabled = (camDat.cfg & LIVnyan_cfg.LOG_ON) != 0;
+        if ((camDat.cfg & LIVnyan_cfg.LOGSPM) != 0) {logger.Info(camDat.ToString());}
 
     }
 }
