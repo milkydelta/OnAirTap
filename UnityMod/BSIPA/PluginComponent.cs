@@ -31,6 +31,11 @@ internal class BSIPA_OatComponent: MonoBehaviour
 
         Plugin.configReadResFromShm = PluginConfig.Instance.ShouldReadResolutionFromMMF;
         Plugin.configReadClipFromShm = PluginConfig.Instance.ShouldReadTrackerFromMMF;
+
+        Plugin.configSpoutSendBG = PluginConfig.Instance.ShouldSendBG;
+        Plugin.configSpoutSendFG = PluginConfig.Instance.ShouldSendFG;
+        Plugin.configSpoutSendOP = PluginConfig.Instance.ShouldSendOptimised;
+        Plugin.configDisposeSpoutSenders = PluginConfig.Instance.DisposeSpoutOnRenderDispose;
     }
 
     private void Awake()

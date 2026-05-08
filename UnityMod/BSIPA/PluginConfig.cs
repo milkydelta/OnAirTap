@@ -24,4 +24,12 @@ public class PluginConfig
     public bool ShouldReadResolutionFromMMF { get; set; } = false;
 
     public bool ShouldReadTrackerFromMMF { get; set; } = false;
+
+    public bool ShouldSendBG { get; set; } = true;
+
+    public bool ShouldSendFG { get; set; } = false;
+
+    public bool ShouldSendOptimised { get; set; } = true;
+
+    public bool DisposeSpoutOnRenderDispose { get; set; } = false;
 }

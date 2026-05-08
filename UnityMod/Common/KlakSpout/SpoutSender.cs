@@ -140,7 +140,7 @@ public sealed partial class SpoutSender : MonoBehaviour
         StartCoroutine(CaptureCoroutine());
     }
 
-    void OnDisable()
+    public void OnDisable()
     {
         StopAllCoroutines();
         ReleaseSender();

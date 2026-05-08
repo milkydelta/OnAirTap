@@ -28,6 +28,11 @@ public class BepOatPlugin : BaseUnityPlugin
     internal static ConfigEntry<bool> configReadClipFromShm;
     internal static ConfigEntry<bool> configVerticalClipPlane;
 
+    internal static ConfigEntry<bool> configSpoutSendBG;
+    internal static ConfigEntry<bool> configSpoutSendFG;
+    internal static ConfigEntry<bool> configSpoutSendOP;
+    internal static ConfigEntry<bool> configDisposeSpoutSenders;
+
     Plugin plug;
 
     private void BindConfigs(){
@@ -37,9 +42,9 @@ public class BepOatPlugin : BaseUnityPlugin
         if (configResX.Value <= 0){configResX.Value = 1920;}
         if (configResY.Value <= 0){configResY.Value = 1080;}
 
-        configRenderBG = Config.Bind("RenderPasses","Background",true);
-        configRenderFG = Config.Bind("RenderPasses","Foreground",true);
-        configRenderOP = Config.Bind("RenderPasses","Optimised",true);
+        configRenderBG = Config.Bind("RenderPasses","RenderBackground",true);
+        configRenderFG = Config.Bind("RenderPasses","RenderForeground",true);
+        configRenderOP = Config.Bind("RenderPasses","RenderOptimised",true);
 
         configGroundPlaneOn = Config.Bind("ClipPlanes","GroundEnabled",true);
         configGroundPlaneHeight = Config.Bind("ClipPlanes","GroundElevation",0.01f, "This is in metres, I think.");
@@ -47,6 +52,11 @@ public class BepOatPlugin : BaseUnityPlugin
 
         configReadResFromShm = Config.Bind("OAT_MMF_Data","ReadWindowResolution", false);
         configReadClipFromShm = Config.Bind("OAT_MMF_Data","ReadClipPlaneLocation", false);
+
+        configSpoutSendBG = Config.Bind("RenderPasses","SendBackground",true);
+        configSpoutSendFG = Config.Bind("RenderPasses","SendForeground",false);
+        configSpoutSendOP = Config.Bind("RenderPasses","SendOptimised",true);
+        configDisposeSpoutSenders = Config.Bind("RenderPasses","DisposeSendersOnRenderDispose",true);
     }
 
     private void SendConfigs(){
@@ -63,6 +73,11 @@ public class BepOatPlugin : BaseUnityPlugin
 
         Plugin.configReadResFromShm = configReadResFromShm.Value;
         Plugin.configReadClipFromShm = configReadClipFromShm.Value;
+
+        Plugin.configSpoutSendBG = configSpoutSendBG.Value;
+        Plugin.configSpoutSendFG = configSpoutSendFG.Value;
+        Plugin.configSpoutSendOP = configSpoutSendOP.Value;
+        Plugin.configDisposeSpoutSenders = configDisposeSpoutSenders.Value;
         
     }
 

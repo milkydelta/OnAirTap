@@ -38,6 +38,11 @@ public class Plugin //: BaseUnityPlugin
     internal static bool configReadClipFromShm;
     internal static bool configVerticalClipPlane;
 
+    internal static bool configSpoutSendBG;
+    internal static bool configSpoutSendFG;
+    internal static bool configSpoutSendOP;
+    internal static bool configDisposeSpoutSenders;
+
     internal static GameObject spoutObject;
     internal static SpoutSender spoutFG;
     internal static SpoutSender spoutBG;

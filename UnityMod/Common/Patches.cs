@@ -11,6 +11,7 @@ class Patches {
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateBackgroundTexture")]
     [HarmonyPostfix]
     static void HookSpoutBG(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____backgroundRenderTexture) {
+        if (Plugin.configSpoutSendBG == false) {return;}
         Plugin.spoutBG.sourceTexture = ____backgroundRenderTexture;
         Plugin.spoutBG.captureMethod = CaptureMethod.Texture;
     }
@@ -18,6 +19,7 @@ class Patches {
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateForegroundTexture")]
     [HarmonyPostfix]
     static void HookSpoutFG(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____foregroundRenderTexture) {
+        if (Plugin.configSpoutSendFG == false) {return;}
         Plugin.spoutFG.sourceTexture = ____foregroundRenderTexture;
         Plugin.spoutFG.captureMethod = CaptureMethod.Texture;
     }
@@ -25,6 +27,7 @@ class Patches {
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateOptimizedTexture")]
     [HarmonyPostfix]
     static void HookSpoutOp(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____optimizedRenderTexture) {
+        if (Plugin.configSpoutSendOP == false) {return;}
         Plugin.spoutOptimised.sourceTexture = ____optimizedRenderTexture;
         Plugin.spoutOptimised.captureMethod = CaptureMethod.Texture;
     }
@@ -86,7 +89,7 @@ class Patches {
     [HarmonyPostfix]
     static void UpdateSpoutSenders( ref SDKRender __instance) {
         Plugin.spoutBG.CaptureFrame();
-        //Plugin.spoutFG.CaptureFrame();
+        Plugin.spoutFG.CaptureFrame();
         Plugin.spoutOptimised.CaptureFrame();
     }
 
@@ -94,5 +97,19 @@ class Patches {
     [HarmonyPrefix]
     static void GetCameraForClipPlane( ref SDKRender __instance) {
         Plugin.hmdPos = __instance.liv.stageWorldToLocalMatrix.MultiplyPoint3x4(__instance.liv.HMDCamera.transform.position);
+    }
+
+    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "Dispose")]
+    [HarmonyPrefix]
+    static void DisposeSpoutSenders() {
+        if (Plugin.configDisposeSpoutSenders == false) {return;}
+
+        Plugin.spoutBG.OnDisable();
+        Plugin.spoutFG.OnDisable();
+        Plugin.spoutOptimised.OnDisable();
+
+        Plugin.spoutBG.sourceTexture = null;
+        Plugin.spoutFG.sourceTexture = null;
+        Plugin.spoutOptimised.sourceTexture = null;
     }
 }
