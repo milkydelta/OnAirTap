@@ -31,5 +31,5 @@ public class PluginConfig
 
     public bool ShouldSendOptimised { get; set; } = true;
 
-    public bool DisposeSpoutOnRenderDispose { get; set; } = false;
+    public bool BlankSpoutOnRenderDispose { get; set; } = false;
 }

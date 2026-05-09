@@ -35,7 +35,7 @@ internal class BSIPA_OatComponent: MonoBehaviour
         Plugin.configSpoutSendBG = PluginConfig.Instance.ShouldSendBG;
         Plugin.configSpoutSendFG = PluginConfig.Instance.ShouldSendFG;
         Plugin.configSpoutSendOP = PluginConfig.Instance.ShouldSendOptimised;
-        Plugin.configDisposeSpoutSenders = PluginConfig.Instance.DisposeSpoutOnRenderDispose;
+        Plugin.configBlankSpoutSenders = PluginConfig.Instance.BlankSpoutOnRenderDispose;
     }
 
     private void Awake()

@@ -41,7 +41,7 @@ public class Plugin //: BaseUnityPlugin
     internal static bool configSpoutSendBG;
     internal static bool configSpoutSendFG;
     internal static bool configSpoutSendOP;
-    internal static bool configDisposeSpoutSenders;
+    internal static bool configBlankSpoutSenders;
 
     internal static GameObject spoutObject;
     internal static SpoutSender spoutFG;

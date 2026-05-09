@@ -102,14 +102,23 @@ class Patches {
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "Dispose")]
     [HarmonyPrefix]
     static void DisposeSpoutSenders() {
-        if (Plugin.configDisposeSpoutSenders == false) {return;}
+        if (Plugin.configBlankSpoutSenders == false) {return;}
 
-        Plugin.spoutBG.OnDisable();
-        Plugin.spoutFG.OnDisable();
-        Plugin.spoutOptimised.OnDisable();
+        //Plugin.spoutBG.OnDisable();
+        //Plugin.spoutFG.OnDisable();
+        //Plugin.spoutOptimised.OnDisable();
 
-        Plugin.spoutBG.sourceTexture = null;
-        Plugin.spoutFG.sourceTexture = null;
-        Plugin.spoutOptimised.sourceTexture = null;
+        /*For some reason, the Spout senders just stop working permanently if I disable them.
+        The senders still appear in OBS, but there's no frames.
+        I've used RUE to check the internal buffer rendertexture. That's still being copied to, but it's not sending.*/
+
+        //For now, the only solution I can think of is keeping the senders around and just blanking them out.
+        Plugin.spoutBG.sourceTexture = new RenderTexture(1920,1080,24);
+        Plugin.spoutFG.sourceTexture = new RenderTexture(1920,1080,24);
+        Plugin.spoutOptimised.sourceTexture = new RenderTexture(1920,1080,24);
+
+        Plugin.spoutBG.CaptureFrame();
+        Plugin.spoutFG.CaptureFrame();
+        Plugin.spoutOptimised.CaptureFrame();
     }
 }

@@ -98,6 +98,7 @@ public sealed partial class SpoutSender : MonoBehaviour
 
     public void CaptureFrame()
     {
+        if (_captureMethod == CaptureMethod.GameView){return;}
         // GameView capture mode
         //if (_captureMethod == CaptureMethod.GameView)
         //{
@@ -142,7 +143,7 @@ public sealed partial class SpoutSender : MonoBehaviour
 
     public void OnDisable()
     {
-        StopAllCoroutines();
+        //StopAllCoroutines();
         ReleaseSender();
         PrepareBuffer(0, 0);
         PrepareCameraCapture(null);

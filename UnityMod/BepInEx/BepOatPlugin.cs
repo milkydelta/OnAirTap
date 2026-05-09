@@ -31,7 +31,7 @@ public class BepOatPlugin : BaseUnityPlugin
     internal static ConfigEntry<bool> configSpoutSendBG;
     internal static ConfigEntry<bool> configSpoutSendFG;
     internal static ConfigEntry<bool> configSpoutSendOP;
-    internal static ConfigEntry<bool> configDisposeSpoutSenders;
+    internal static ConfigEntry<bool> configBlankSpoutSenders;
 
     Plugin plug;
 
@@ -56,7 +56,7 @@ public class BepOatPlugin : BaseUnityPlugin
         configSpoutSendBG = Config.Bind("RenderPasses","SendBackground",true);
         configSpoutSendFG = Config.Bind("RenderPasses","SendForeground",false);
         configSpoutSendOP = Config.Bind("RenderPasses","SendOptimised",true);
-        configDisposeSpoutSenders = Config.Bind("RenderPasses","DisposeSendersOnRenderDispose",true);
+        configBlankSpoutSenders = Config.Bind("RenderPasses","BlankSendersOnRenderDispose",true);
     }
 
     private void SendConfigs(){
@@ -77,7 +77,7 @@ public class BepOatPlugin : BaseUnityPlugin
         Plugin.configSpoutSendBG = configSpoutSendBG.Value;
         Plugin.configSpoutSendFG = configSpoutSendFG.Value;
         Plugin.configSpoutSendOP = configSpoutSendOP.Value;
-        Plugin.configDisposeSpoutSenders = configDisposeSpoutSenders.Value;
+        Plugin.configBlankSpoutSenders = configBlankSpoutSenders.Value;
         
     }
 
