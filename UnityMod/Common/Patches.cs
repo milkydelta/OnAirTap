@@ -45,6 +45,7 @@ class Patches {
         ____injection_SDKInputFrame.data.pose.localRotation.y = camDat.qy;
         ____injection_SDKInputFrame.data.pose.localRotation.z = camDat.qz;
 
+        ____injection_SDKInputFrame.data.pose.farClipPlane = Plugin.configFarClip;
         SDKResolution res = ____injection_SDKResolution.data;
 
         ____injection_SDKInputFrame.data.pose.projectionMatrix = SDKMatrix4x4.Perspective(camDat.fov, ((float)res.width)/res.height, 0.01f, Plugin.configFarClip);
