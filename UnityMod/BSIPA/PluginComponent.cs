@@ -36,6 +36,8 @@ internal class BSIPA_OatComponent: MonoBehaviour
         Plugin.configSpoutSendFG = PluginConfig.Instance.ShouldSendFG;
         Plugin.configSpoutSendOP = PluginConfig.Instance.ShouldSendOptimised;
         Plugin.configBlankSpoutSenders = PluginConfig.Instance.BlankSpoutOnRenderDispose;
+
+        Plugin.configFarClip = PluginConfig.Instance.CameraFarClip;
     }
 
     private void Awake()

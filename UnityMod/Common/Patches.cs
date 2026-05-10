@@ -47,7 +47,7 @@ class Patches {
 
         SDKResolution res = ____injection_SDKResolution.data;
 
-        ____injection_SDKInputFrame.data.pose.projectionMatrix = SDKMatrix4x4.Perspective(camDat.fov, ((float)res.width)/res.height, 0.01f, 1000f);
+        ____injection_SDKInputFrame.data.pose.projectionMatrix = SDKMatrix4x4.Perspective(camDat.fov, ((float)res.width)/res.height, 0.01f, Plugin.configFarClip);
 
 
         Vector3 clipPos;

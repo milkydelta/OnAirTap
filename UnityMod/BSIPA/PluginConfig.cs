@@ -32,4 +32,6 @@ public class PluginConfig
     public bool ShouldSendOptimised { get; set; } = true;
 
     public bool BlankSpoutOnRenderDispose { get; set; } = false;
+
+    public float CameraFarClip { get; set; } = 5000f;
 }

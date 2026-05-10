@@ -33,6 +33,8 @@ public class BepOatPlugin : BaseUnityPlugin
     internal static ConfigEntry<bool> configSpoutSendOP;
     internal static ConfigEntry<bool> configBlankSpoutSenders;
 
+    internal static ConfigEntry<float> configFarClip;
+
     Plugin plug;
 
     private void BindConfigs(){
@@ -57,6 +59,8 @@ public class BepOatPlugin : BaseUnityPlugin
         configSpoutSendFG = Config.Bind("RenderPasses","SendForeground",false);
         configSpoutSendOP = Config.Bind("RenderPasses","SendOptimised",true);
         configBlankSpoutSenders = Config.Bind("RenderPasses","BlankSendersOnRenderDispose",true);
+
+        configFarClip = Config.Bind("ClipPlanes", "CameraFarClip", 1000f);
     }
 
     private void SendConfigs(){
@@ -78,6 +82,8 @@ public class BepOatPlugin : BaseUnityPlugin
         Plugin.configSpoutSendFG = configSpoutSendFG.Value;
         Plugin.configSpoutSendOP = configSpoutSendOP.Value;
         Plugin.configBlankSpoutSenders = configBlankSpoutSenders.Value;
+
+        Plugin.configFarClip = configFarClip.Value;
         
     }
 
