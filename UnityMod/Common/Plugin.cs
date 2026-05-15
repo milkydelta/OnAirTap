@@ -53,6 +53,8 @@ public class Plugin //: BaseUnityPlugin
     internal static LIVnyan_dat camDat;
     internal static Vector3 hmdPos;
 
+    internal static Vector2Int resolution;
+
 
     bool isActive=false;
         
@@ -62,6 +64,9 @@ public class Plugin //: BaseUnityPlugin
     {
 
         Harmony.CreateAndPatchAll(typeof(Patches));
+
+        resolution.x = configResX;
+        resolution.y = configResY;
 
         // Even if we're only using optimised, we still need foreground. Rendering optimised without foreground changes the results of the optimised render.
         SDKInputFrame inFrame = SDKInputFrame.empty;
@@ -122,7 +127,7 @@ public class Plugin //: BaseUnityPlugin
         else {nyanShm = new WComms();}
 
         logger.Info("Opening Comms.");
-        nyanShm.Open("uk.lum.livnyan.cameradata.v1.0");
+        nyanShm.Open("uk.lum.livnyan.cameradata.v1.1");
 
         logger.Info("Core Plugin has completed Awake().");
 
@@ -171,6 +176,7 @@ public class Plugin //: BaseUnityPlugin
 
         logger.enabled = (camDat.cfg & LIVnyan_cfg.LOG_ON) != 0;
         if ((camDat.cfg & LIVnyan_cfg.LOGSPM) != 0) {logger.Info(camDat.ToString());}
+        //logger.Info("LOGSPAM: "+camDat.ToString());;
 
     }
 }

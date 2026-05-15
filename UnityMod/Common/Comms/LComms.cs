@@ -30,6 +30,12 @@ public class LComms : AbComms {
 
         dat.cfg = (LIVnyan_cfg)Marshal.ReadInt32(shm.data, sizeof(float)*8);
 
+        //New data - Should probably have an if 
+        //somewhere to set this to zero if the protocolversion is lower than needed.
+
+        dat.resX = Marshal.ReadInt32(shm.data, sizeof(float)*8 + sizeof(int));
+        dat.resY = Marshal.ReadInt32(shm.data, sizeof(float)*8 + sizeof(int)*2);
+
         return dat;
     }
 
@@ -38,6 +44,8 @@ public class LComms : AbComms {
 
         shm.name = "/" + targetName;
         shm.length = (sizeof(float) * 8)+sizeof(int);
+
+        shm.length += sizeof(int) * 2;
 
         return NativeMethods.LOpen(ref shm) == 0;
     }

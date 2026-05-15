@@ -20,7 +20,7 @@ shmFunc lclose;
 
 int ConnectMMF()
 {
-    if ((LumMappingHandle = CreateFileMapping(INVALID_HANDLE_VALUE, 0, PAGE_READWRITE, 0, sizeof(LIVnyan_dat), "Local\\uk.lum.livnyan.cameradata.v1.0")) == 0)
+    if ((LumMappingHandle = CreateFileMapping(INVALID_HANDLE_VALUE, 0, PAGE_READWRITE, 0, sizeof(LIVnyan_dat), "Local\\uk.lum.livnyan.cameradata.v1.1")) == 0)
     {
         printf("Couldn't make filemapping\n");
         return -11;
@@ -56,7 +56,7 @@ int ConnectSHM(){
         return -23;
     }
 
-    char* strr = "/uk.lum.livnyan.cameradata.v1.0";
+    char* strr = "/uk.lum.livnyan.cameradata.v1.1";
 
     shm_dat.name = strr;
     shm_dat.length = sizeof(LIVnyan_dat);
@@ -68,6 +68,8 @@ int ConnectSHM(){
     }
 
     LumShm = (LIVnyan_dat*)shm_dat.data;
+
+    return 0;
 }
 
 int DisconnectMMF(){
@@ -95,6 +97,8 @@ int main()
 
     res = ConnectSHM();
     if (res < 0) {return res;}
+
+    printf("Made MMF and SHM\n");
 
     while (true) {
         *LumShm = *LumMmf;

@@ -14,6 +14,9 @@ typedef struct _LIVnyan_dat {
     float qz;
     float fov;
     int cfg;
+    
+    int rx;
+    int ry;
 } LIVnyan_dat;
 
 typedef struct _dataBlock{

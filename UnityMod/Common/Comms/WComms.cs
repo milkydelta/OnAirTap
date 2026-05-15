@@ -9,8 +9,11 @@ public class WComms : AbComms {
     private float[] cameraData = new float[9];
 
     public override bool Open(string targetName){
-        mmf = MemoryMappedFile.CreateOrOpen(targetName, (sizeof(float) * 8)+sizeof(int));
-        mmfView = mmf.CreateViewAccessor(0, (sizeof(float) * 8)+sizeof(int), MemoryMappedFileAccess.Read);
+        int size = (sizeof(float) * 8)+sizeof(int);
+        size += sizeof(int) * 2;
+
+        mmf = MemoryMappedFile.CreateOrOpen(targetName, size);
+        mmfView = mmf.CreateViewAccessor(0, size, MemoryMappedFileAccess.Read);
 
         return true;
     }
@@ -31,6 +34,13 @@ public class WComms : AbComms {
 
         dat.cfg = (LIVnyan_cfg)mmfView.ReadInt32(sizeof(float)*8);
 
+        //New data - Should probably have an if 
+        //somewhere to set this to zero if the protocolversion is lower than needed.
+        
+        dat.resX = mmfView.ReadInt32(sizeof(float)*8 + sizeof(int));
+        dat.resY = mmfView.ReadInt32(sizeof(float)*8 + sizeof(int)*2);
+        
+        
         return dat;
     }
 }

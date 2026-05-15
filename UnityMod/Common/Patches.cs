@@ -76,13 +76,18 @@ class Patches {
     static void UpdateResolution(ref SDKBridge.SDKInjection<SDKResolution> ____injection_SDKResolution) {
         if (Plugin.configReadResFromShm != true) {return;}
 
-        //TODO: this is to be implemented later, if livnyan is modified to transmit window resolution down the MMF.
-        Vector2Int Resolution = new Vector2Int();
-        Resolution.x=1280;
-        Resolution.y=720;
+        LIVnyan_dat camDat = Plugin.camDat;
 
-        ____injection_SDKResolution.data.width = Resolution.x;
-        ____injection_SDKResolution.data.height = Resolution.y;
+        if ( camDat.resX == 0 || camDat.resY == 0){
+            Plugin.resolution.x = Plugin.configResX;
+            Plugin.resolution.y = Plugin.configResY;
+        } else {
+            Plugin.resolution.x = camDat.resX;
+            Plugin.resolution.y = camDat.resY;
+        }
+
+        ____injection_SDKResolution.data.width = Plugin.resolution.x;
+        ____injection_SDKResolution.data.height = Plugin.resolution.y;
     }
 
 

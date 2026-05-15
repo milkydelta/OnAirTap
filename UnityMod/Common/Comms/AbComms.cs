@@ -12,6 +12,13 @@ public struct LIVnyan_dat {
     public float qz;
     public float fov;
     public LIVnyan_cfg cfg;
+    //New data
+    public int resX;
+    public int resY;
+    //TBD
+    //public float clipX;
+    //public float clipY;
+    //public float clipZ;
 
     public override string ToString()
     {
@@ -19,7 +26,8 @@ public struct LIVnyan_dat {
             "P: ", x, ",", y, ",",  z,
             " R: ", qw,",", qx,",", qy,",", qz,
             " F: ",fov,
-            " C: ", (int)cfg
+            " C: ", (int)cfg,
+            " Rs: ", resX, ",",resY
         );
     }
 };
