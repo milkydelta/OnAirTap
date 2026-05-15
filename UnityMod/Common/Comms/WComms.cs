@@ -39,7 +39,10 @@ public class WComms : AbComms {
         
         dat.resX = mmfView.ReadInt32(sizeof(float)*8 + sizeof(int));
         dat.resY = mmfView.ReadInt32(sizeof(float)*8 + sizeof(int)*2);
-        
+
+        dat.clipX = mmfView.ReadSingle(sizeof(float)*8 + sizeof(int)*3);
+        dat.clipY = mmfView.ReadSingle(sizeof(float)*9 + sizeof(int)*3);
+        dat.clipZ = mmfView.ReadSingle(sizeof(float)*10 + sizeof(int)*3);        
         
         return dat;
     }

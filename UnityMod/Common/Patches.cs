@@ -55,8 +55,7 @@ class Patches {
         Vector3 camPos = ____injection_SDKInputFrame.data.pose.localPosition;
 
         if (Plugin.configReadClipFromShm){
-            //TODO: this is to be implemented later, if livnyan is modified to transmit a tracker down the MMF.
-            clipPos = Vector3.zero;
+            clipPos = new Vector3(camDat.clipX, camDat.clipY, camDat.clipZ);
         }else {
             clipPos = Plugin.hmdPos;
         }

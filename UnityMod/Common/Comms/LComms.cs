@@ -9,8 +9,11 @@ public class LComms : AbComms {
 
     private float[] cameraData;
 
+    private float[] clipVec;
+
     public LComms(){
         cameraData = new float[9];
+        clipVec = new float[3];
         shm = new dataBlock();
     }
 
@@ -36,6 +39,12 @@ public class LComms : AbComms {
         dat.resX = Marshal.ReadInt32(shm.data, sizeof(float)*8 + sizeof(int));
         dat.resY = Marshal.ReadInt32(shm.data, sizeof(float)*8 + sizeof(int)*2);
 
+        Marshal.Copy(shm.data, clipVec, (8 + 3), 3);
+
+        dat.clipX = clipVec[0];
+        dat.clipY = clipVec[1];
+        dat.clipZ = clipVec[2];
+
         return dat;
     }
 
@@ -46,6 +55,7 @@ public class LComms : AbComms {
         shm.length = (sizeof(float) * 8)+sizeof(int);
 
         shm.length += sizeof(int) * 2;
+        shm.length += sizeof(float) * 3;
 
         return NativeMethods.LOpen(ref shm) == 0;
     }
