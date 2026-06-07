@@ -11,6 +11,7 @@ public class WComms : AbComms {
     public override bool Open(string targetName){
         int size = (sizeof(float) * 8)+sizeof(int);
         size += sizeof(int) * 2;
+        size += sizeof(float) * 3;
 
         mmf = MemoryMappedFile.CreateOrOpen(targetName, size);
         mmfView = mmf.CreateViewAccessor(0, size, MemoryMappedFileAccess.Read);
