@@ -35,6 +35,8 @@ public class BepOatPlugin : BaseUnityPlugin
 
     internal static ConfigEntry<float> configFarClip;
 
+    internal static ConfigEntry<ushort> configProtoMinorVer;
+
     Plugin plug;
 
     private void BindConfigs(){
@@ -61,6 +63,8 @@ public class BepOatPlugin : BaseUnityPlugin
         configBlankSpoutSenders = Config.Bind("RenderPasses","BlankSendersOnRenderDispose",true);
 
         configFarClip = Config.Bind("ClipPlanes", "CameraFarClip", 1000f);
+
+        configProtoMinorVer = Config.Bind("OAT_MMF_Data","ProtocolMinorVersion", (ushort)1);
     }
 
     private void SendConfigs(){
@@ -85,6 +89,7 @@ public class BepOatPlugin : BaseUnityPlugin
 
         Plugin.configFarClip = configFarClip.Value;
         
+        Plugin.configProtoMinorVer = configProtoMinorVer.Value;
     }
 
     private void Awake()

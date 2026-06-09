@@ -27,11 +27,13 @@ public class PluginConfig
 
     public bool ShouldSendBG { get; set; } = true;
 
-    public bool ShouldSendFG { get; set; } = false;
+    public bool ShouldSendFG { get; set; } = true;
 
     public bool ShouldSendOptimised { get; set; } = true;
 
     public bool BlankSpoutOnRenderDispose { get; set; } = false;
 
     public float CameraFarClip { get; set; } = 5000f;
+
+    public ushort MMFProtocolMinorVersion { get; set; } = 1;
 }

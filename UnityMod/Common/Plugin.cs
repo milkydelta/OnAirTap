@@ -45,6 +45,8 @@ public class Plugin //: BaseUnityPlugin
 
     internal static float configFarClip;
 
+    internal static ushort configProtoMinorVer;
+
     internal static GameObject spoutObject;
     internal static SpoutSender spoutFG;
     internal static SpoutSender spoutBG;
@@ -127,7 +129,7 @@ public class Plugin //: BaseUnityPlugin
         else {nyanShm = new WComms();}
 
         logger.Info("Opening Comms.");
-        nyanShm.Open("uk.lum.livnyan.cameradata", 1);
+        nyanShm.Open("uk.lum.livnyan.cameradata", configProtoMinorVer);
 
         logger.Info("Core Plugin has completed Awake().");
 

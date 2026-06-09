@@ -38,6 +38,7 @@ internal class BSIPA_OatComponent: MonoBehaviour
         Plugin.configBlankSpoutSenders = PluginConfig.Instance.BlankSpoutOnRenderDispose;
 
         Plugin.configFarClip = PluginConfig.Instance.CameraFarClip;
+        Plugin.configProtoMinorVer = PluginConfig.Instance.MMFProtocolMinorVersion;
     }
 
     private void Awake()
