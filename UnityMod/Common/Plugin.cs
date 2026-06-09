@@ -127,7 +127,7 @@ public class Plugin //: BaseUnityPlugin
         else {nyanShm = new WComms();}
 
         logger.Info("Opening Comms.");
-        nyanShm.Open("uk.lum.livnyan.cameradata.v1.1");
+        nyanShm.Open("uk.lum.livnyan.cameradata", 1);
 
         logger.Info("Core Plugin has completed Awake().");
 

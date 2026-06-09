@@ -8,12 +8,19 @@ public class WComms : AbComms {
 
     private float[] cameraData = new float[9];
 
-    public override bool Open(string targetName){
-        int size = (sizeof(float) * 8)+sizeof(int);
-        size += sizeof(int) * 2;
-        size += sizeof(float) * 3;
+    private ushort pMV;
 
-        mmf = MemoryMappedFile.CreateOrOpen(targetName, size);
+    public override bool Open(string targetName, ushort protocolMinorVersion){
+        string name = targetName + ".v1." + protocolMinorVersion.ToString();
+        pMV = protocolMinorVersion;
+
+        int size = (sizeof(float) * 8)+sizeof(int);
+        if (protocolMinorVersion >= 1) {
+            size += sizeof(int) * 2;
+            size += sizeof(float) * 3;
+        }
+
+        mmf = MemoryMappedFile.CreateOrOpen(name, size);
         mmfView = mmf.CreateViewAccessor(0, size, MemoryMappedFileAccess.Read);
 
         return true;
@@ -35,15 +42,15 @@ public class WComms : AbComms {
 
         dat.cfg = (LIVnyan_cfg)mmfView.ReadInt32(sizeof(float)*8);
 
-        //New data - Should probably have an if 
-        //somewhere to set this to zero if the protocolversion is lower than needed.
         
-        dat.resX = mmfView.ReadInt32(sizeof(float)*8 + sizeof(int));
-        dat.resY = mmfView.ReadInt32(sizeof(float)*8 + sizeof(int)*2);
+        if (pMV >= 1) {
+            dat.resX = mmfView.ReadInt32(sizeof(float)*8 + sizeof(int));
+            dat.resY = mmfView.ReadInt32(sizeof(float)*8 + sizeof(int)*2);
 
-        dat.clipX = mmfView.ReadSingle(sizeof(float)*8 + sizeof(int)*3);
-        dat.clipY = mmfView.ReadSingle(sizeof(float)*9 + sizeof(int)*3);
-        dat.clipZ = mmfView.ReadSingle(sizeof(float)*10 + sizeof(int)*3);        
+            dat.clipX = mmfView.ReadSingle(sizeof(float)*8 + sizeof(int)*3);
+            dat.clipY = mmfView.ReadSingle(sizeof(float)*9 + sizeof(int)*3);
+            dat.clipZ = mmfView.ReadSingle(sizeof(float)*10 + sizeof(int)*3);
+        }       
         
         return dat;
     }

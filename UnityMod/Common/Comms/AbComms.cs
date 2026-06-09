@@ -40,6 +40,6 @@ public enum LIVnyan_cfg {
 }
 
 public abstract class AbComms{
-    abstract public bool Open(string targetName);
+    abstract public bool Open(string targetName, ushort protocolMinorVersion);
     abstract public LIVnyan_dat Read();
 }
