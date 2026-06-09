@@ -35,5 +35,5 @@ public class PluginConfig
 
     public float CameraFarClip { get; set; } = 5000f;
 
-    public ushort MMFProtocolMinorVersion { get; set; } = 1;
+    public ushort MMFProtocolMinorVersion { get; set; } = 0;
 }

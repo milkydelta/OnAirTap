@@ -39,7 +39,7 @@ public class LComms : AbComms {
             dat.resX = Marshal.ReadInt32(shm.data, sizeof(float)*8 + sizeof(int));
             dat.resY = Marshal.ReadInt32(shm.data, sizeof(float)*8 + sizeof(int)*2);
 
-            Marshal.Copy(shm.data, clipVec, (8 + 3), 3);
+            Marshal.Copy(shm.data + (sizeof(float)*8 + sizeof(int)*3), clipVec, 0, 3);
 
             dat.clipX = clipVec[0];
             dat.clipY = clipVec[1];
