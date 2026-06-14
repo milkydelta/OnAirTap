@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Klak.Spout {
+namespace OnAirTap.Spout {
 
 // Texture format enumeration
 // Should match with KlakSpout::Format (Receiver.h)
@@ -40,4 +40,4 @@ static class FormatUtil
     }
 }
 
-} // namespace Klak.Spout
+} // namespace OnAirTap.Spout

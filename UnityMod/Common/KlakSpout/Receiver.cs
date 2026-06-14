@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Runtime.InteropServices;
 using IntPtr = System.IntPtr;
 
-namespace Klak.Spout {
+namespace OnAirTap.Spout {
 
 //
 // Wrapper class for receiver instances on the native plugin side
@@ -96,4 +96,4 @@ sealed class Receiver : System.IDisposable
     #endregion
 }
 
-} // namespace Klak.Spout
+} // namespace OnAirTap.Spout

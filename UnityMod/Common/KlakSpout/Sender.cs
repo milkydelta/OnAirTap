@@ -4,7 +4,7 @@ using IntPtr = System.IntPtr;
 
 using System;
 
-namespace Klak.Spout {
+namespace OnAirTap.Spout {
 
 //
 // Wrapper class for sender instances on the native plugin side
@@ -67,4 +67,4 @@ sealed class Sender : System.IDisposable
     #endregion
 }
 
-} // namespace Klak.Spout
+} // namespace OnAirTap.Spout

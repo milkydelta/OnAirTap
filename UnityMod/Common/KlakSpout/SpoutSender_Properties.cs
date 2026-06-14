@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Klak.Spout {
+namespace OnAirTap.Spout {
 
 // Sender capture methods
 public enum CaptureMethod { GameView, Camera, Texture }
@@ -70,4 +70,4 @@ partial class SpoutSender
     #endregion
 }
 
-} // namespace Klak.Spout
+} // namespace OnAirTap.Spout

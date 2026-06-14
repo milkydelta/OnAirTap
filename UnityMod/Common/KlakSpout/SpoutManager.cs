@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using IntPtr = System.IntPtr;
 
-namespace Klak.Spout {
+namespace OnAirTap.Spout {
 
 public static class SpoutManager
 {
@@ -30,4 +30,4 @@ public static class SpoutManager
     }
 }
 
-} // namespace Klak.Spout
+} // namespace OnAirTap.Spout

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace Klak.Spout {
+namespace OnAirTap.Spout {
 
 //
 // "Memory pool" class without actual memory pool functionality
@@ -67,4 +67,4 @@ static class MemoryPool
     #endregion
 }
 
-} // namespace Klak.Spout
+} // namespace OnAirTap.Spout

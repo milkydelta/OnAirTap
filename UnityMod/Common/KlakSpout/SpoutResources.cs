@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Klak.Spout {
+namespace OnAirTap.Spout {
 
 //
 // Spout "Resources" class
@@ -14,4 +14,4 @@ public sealed class SpoutResources : ScriptableObject
     public Shader blitShader;
 }
 
-} // namespace Klak.Spout
+} // namespace OnAirTap.Spout

@@ -3,7 +3,7 @@ using UnityEngine.Rendering;
 
 using System;
 
-namespace Klak.Spout {
+namespace OnAirTap.Spout {
 
 //
 // Spout sender class (main implementation)
@@ -152,4 +152,4 @@ public sealed partial class SpoutSender : MonoBehaviour
     #endregion
 }
 
-} // namespace Klak.Spout
+} // namespace OnAirTap.Spout
