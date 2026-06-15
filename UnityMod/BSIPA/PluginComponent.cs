@@ -39,6 +39,7 @@ internal class BSIPA_OatComponent: MonoBehaviour
 
         Plugin.configFarClip = PluginConfig.Instance.CameraFarClip;
         Plugin.configProtoMinorVer = PluginConfig.Instance.MMFProtocolMinorVersion;
+        Plugin.configLayerMask = PluginConfig.Instance.LayerMaskOverride;
     }
 
     private void Awake()

@@ -46,6 +46,7 @@ public class Plugin //: BaseUnityPlugin
     internal static float configFarClip;
 
     internal static ushort configProtoMinorVer;
+    internal static int configLayerMask;
 
     internal static GameObject spoutObject;
     internal static SpoutSender spoutFG;

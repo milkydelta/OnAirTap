@@ -127,4 +127,17 @@ class Patches {
         Plugin.spoutFG.CaptureFrame();
         Plugin.spoutOptimised.CaptureFrame();
     }
+
+    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "Render")]
+    [HarmonyPrefix]
+    static void DoLayerMasks( ref SDKRender __instance) {
+        if (Plugin.configLayerMask == 0){return;}
+
+        __instance.liv.spectatorLayerMask = Plugin.configLayerMask;
+        //1979644927
+
+        //Plugin.logger.Info(
+        //Convert.ToString((int)__instance.liv.spectatorLayerMask)
+        //);
+    }
 }
