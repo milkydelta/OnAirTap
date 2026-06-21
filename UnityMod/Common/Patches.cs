@@ -12,7 +12,7 @@ class Patches {
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateBackgroundTexture")]
     [HarmonyPostfix]
     static void HookSpoutBG(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____backgroundRenderTexture) {
-        if (Plugin.configSpoutSendBG == false) {return;}
+        if (Plugin.cfg.SpoutSendBG == false) {return;}
         Plugin.spoutBG.sourceTexture = ____backgroundRenderTexture;
         Plugin.spoutBG.captureMethod = CaptureMethod.Texture;
     }
@@ -20,7 +20,7 @@ class Patches {
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateForegroundTexture")]
     [HarmonyPostfix]
     static void HookSpoutFG(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____foregroundRenderTexture) {
-        if (Plugin.configSpoutSendFG == false) {return;}
+        if (Plugin.cfg.SpoutSendFG == false) {return;}
         Plugin.spoutFG.sourceTexture = ____foregroundRenderTexture;
         Plugin.spoutFG.captureMethod = CaptureMethod.Texture;
     }
@@ -28,7 +28,7 @@ class Patches {
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateOptimizedTexture")]
     [HarmonyPostfix]
     static void HookSpoutOp(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____optimizedRenderTexture) {
-        if (Plugin.configSpoutSendOP == false) {return;}
+        if (Plugin.cfg.SpoutSendOP == false) {return;}
         Plugin.spoutOptimised.sourceTexture = ____optimizedRenderTexture;
         Plugin.spoutOptimised.captureMethod = CaptureMethod.Texture;
     }
@@ -46,22 +46,22 @@ class Patches {
         ____injection_SDKInputFrame.data.pose.localRotation.y = camDat.qy;
         ____injection_SDKInputFrame.data.pose.localRotation.z = camDat.qz;
 
-        ____injection_SDKInputFrame.data.pose.farClipPlane = Plugin.configFarClip;
+        ____injection_SDKInputFrame.data.pose.farClipPlane = Plugin.cfg.FarClip;
         SDKResolution res = ____injection_SDKResolution.data;
 
-        ____injection_SDKInputFrame.data.pose.projectionMatrix = SDKMatrix4x4.Perspective(camDat.fov, ((float)res.width)/res.height, 0.01f, Plugin.configFarClip);
+        ____injection_SDKInputFrame.data.pose.projectionMatrix = SDKMatrix4x4.Perspective(camDat.fov, ((float)res.width)/res.height, 0.01f, Plugin.cfg.FarClip);
 
 
         Vector3 clipPos;
         Vector3 camPos = ____injection_SDKInputFrame.data.pose.localPosition;
 
-        if (Plugin.configReadClipFromShm){
+        if (Plugin.cfg.ReadClipFromShm){
             clipPos = new Vector3(camDat.clipX, camDat.clipY, camDat.clipZ);
         }else {
             clipPos = Plugin.hmdPos;
         }
 
-        if (Plugin.configVerticalClipPlane){
+        if (Plugin.cfg.VerticalClipPlane){
             camPos.y = clipPos.y;
         }
 
@@ -74,13 +74,13 @@ class Patches {
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge), "GetResolution")]
     [HarmonyPrefix]
     static void UpdateResolution(ref SDKBridge.SDKInjection<SDKResolution> ____injection_SDKResolution) {
-        if (Plugin.configReadResFromShm != true) {return;}
+        if (Plugin.cfg.ReadResFromShm != true) {return;}
 
         LIVnyan_dat camDat = Plugin.camDat;
 
         if ( camDat.resX == 0 || camDat.resY == 0){
-            Plugin.resolution.x = Plugin.configResX;
-            Plugin.resolution.y = Plugin.configResY;
+            Plugin.resolution.x = Plugin.cfg.ResX;
+            Plugin.resolution.y = Plugin.cfg.ResY;
         } else {
             Plugin.resolution.x = camDat.resX;
             Plugin.resolution.y = camDat.resY;
@@ -108,7 +108,7 @@ class Patches {
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "Dispose")]
     [HarmonyPrefix]
     static void DisposeSpoutSenders() {
-        if (Plugin.configBlankSpoutSenders == false) {return;}
+        if (Plugin.cfg.BlankSpoutSenders == false) {return;}
 
         //Plugin.spoutBG.OnDisable();
         //Plugin.spoutFG.OnDisable();
@@ -131,9 +131,9 @@ class Patches {
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "Render")]
     [HarmonyPrefix]
     static void DoLayerMasks( ref SDKRender __instance) {
-        if (Plugin.configLayerMask == 0){return;}
+        if (Plugin.cfg.LayerMask == 0){return;}
 
-        __instance.liv.spectatorLayerMask = Plugin.configLayerMask;
+        __instance.liv.spectatorLayerMask = Plugin.cfg.LayerMask;
         //1979644927
 
         //Plugin.logger.Info(

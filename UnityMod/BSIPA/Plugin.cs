@@ -13,10 +13,10 @@ internal class BSIPAPlugin
 {
     internal static IpaLogger Log { get; private set; } = null!;
 
-    internal static Config cfg { get; private set; }
+    internal static IPA.Config.Config cfg { get; private set; }
 
     [Init]
-    public BSIPAPlugin(IpaLogger ipaLogger,Config config, PluginMetadata pluginMetadata)
+    public BSIPAPlugin(IpaLogger ipaLogger,IPA.Config.Config config, PluginMetadata pluginMetadata)
     {
         Log = ipaLogger;
         cfg = config;

@@ -27,27 +27,8 @@ public class Plugin //: BaseUnityPlugin
     FieldInfo BrDisableAddTex;
     FieldInfo BrDisableCreateFrame;
 
-    internal static int configResX;
-    internal static int configResY;
-    internal static bool configRenderBG;
-    internal static bool configRenderFG;
-    internal static bool configRenderOP;
-    internal static bool configGroundPlaneOn;
-    internal static float configGroundPlaneHeight;
-    internal static bool configReadResFromShm;
-    internal static bool configReadClipFromShm;
-    internal static bool configVerticalClipPlane;
-
-    internal static bool configSpoutSendBG;
-    internal static bool configSpoutSendFG;
-    internal static bool configSpoutSendOP;
-    internal static bool configBlankSpoutSenders;
-
-    internal static float configFarClip;
-
-    internal static ushort configProtoMinorVer;
-    internal static int configLayerMask;
-
+    internal static Config cfg = new Config();
+    
     internal static GameObject spoutObject;
     internal static SpoutSender spoutFG;
     internal static SpoutSender spoutBG;
@@ -68,14 +49,14 @@ public class Plugin //: BaseUnityPlugin
 
         Harmony.CreateAndPatchAll(typeof(Patches));
 
-        resolution.x = configResX;
-        resolution.y = configResY;
+        resolution.x = cfg.ResX;
+        resolution.y = cfg.ResY;
 
         // Even if we're only using optimised, we still need foreground. Rendering optimised without foreground changes the results of the optimised render.
         SDKInputFrame inFrame = SDKInputFrame.empty;
-        if (configRenderBG) {inFrame.features = inFrame.features | FEATURES.BACKGROUND_RENDER;}
-        if (configRenderFG) {inFrame.features = inFrame.features | FEATURES.FOREGROUND_RENDER;}
-        if (configRenderOP) {inFrame.features = inFrame.features | FEATURES.OPTIMIZED_RENDER;}
+        if (cfg.RenderBG) {inFrame.features = inFrame.features | FEATURES.BACKGROUND_RENDER;}
+        if (cfg.RenderFG) {inFrame.features = inFrame.features | FEATURES.FOREGROUND_RENDER;}
+        if (cfg.RenderOP) {inFrame.features = inFrame.features | FEATURES.OPTIMIZED_RENDER;}
 
         // I cannot, for the life of me, tell what complex clip does.
         //inFrame.features = inFrame.features | FEATURES.COMPLEX_CLIP_PLANE;
@@ -84,22 +65,22 @@ public class Plugin //: BaseUnityPlugin
         //inFrame.clipPlane.height = 2056;
         //inFrame.clipPlane.tesselation = 100.0f;
 
-        if (configGroundPlaneOn){
+        if (cfg.GroundPlaneOn){
             inFrame.features = inFrame.features | FEATURES.GROUND_CLIP_PLANE;
 
-            inFrame.groundClipPlane.transform = SDKMatrix4x4.Translate(SDKVector3.up * configGroundPlaneHeight)
+            inFrame.groundClipPlane.transform = SDKMatrix4x4.Translate(SDKVector3.up * cfg.GroundPlaneHeight)
             * SDKMatrix4x4.Rotate(SDKQuaternion.Euler(1.5708f,0,0));
         }
 
         var t = typeof(SDKBridge);
 
-        BrInputFrame= t.GetField("_injection_SDKInputFrame", System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Static);
-        BrResolution= t.GetField("_injection_SDKResolution", System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Static);
-        BrIsActive= t.GetField("_injection_IsActive", System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Static);
-        BrDisableSubmit= t.GetField("_injection_DisableSubmit", System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Static);
-        BrDisableSubmitAppOut= t.GetField("_injection_DisableSubmitApplicationOutput", System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Static);
-        BrDisableAddTex= t.GetField("_injection_DisableAddTexture", System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Static);
-        BrDisableCreateFrame= t.GetField("_injection_DisableCreateFrame", System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Static);
+        BrInputFrame= t.GetField("_injection_SDKInputFrame", BindingFlags.NonPublic|BindingFlags.Static);
+        BrResolution= t.GetField("_injection_SDKResolution", BindingFlags.NonPublic|BindingFlags.Static);
+        BrIsActive= t.GetField("_injection_IsActive", BindingFlags.NonPublic|BindingFlags.Static);
+        BrDisableSubmit= t.GetField("_injection_DisableSubmit", BindingFlags.NonPublic|BindingFlags.Static);
+        BrDisableSubmitAppOut= t.GetField("_injection_DisableSubmitApplicationOutput", BindingFlags.NonPublic|BindingFlags.Static);
+        BrDisableAddTex= t.GetField("_injection_DisableAddTexture", BindingFlags.NonPublic|BindingFlags.Static);
+        BrDisableCreateFrame= t.GetField("_injection_DisableCreateFrame", BindingFlags.NonPublic|BindingFlags.Static);
 
         BrInputFrame.SetValue(null, new SDKBridge.SDKInjection<SDKInputFrame>{
             active = true,
@@ -110,7 +91,7 @@ public class Plugin //: BaseUnityPlugin
         BrResolution.SetValue(null, new SDKBridge.SDKInjection<SDKResolution>{
             active = true,
             action = DummyFunction,
-            data = new SDKResolution{width=configResX, height=configResY}
+            data = new SDKResolution{width=cfg.ResX, height=cfg.ResY}
         });
 
         BrIsActive.SetValue(null, new SDKBridge.SDKInjection<bool>{
@@ -130,7 +111,7 @@ public class Plugin //: BaseUnityPlugin
         else {nyanShm = new WComms();}
 
         logger.Info("Opening Comms.");
-        nyanShm.Open("uk.lum.livnyan.cameradata", configProtoMinorVer);
+        nyanShm.Open("uk.lum.livnyan.cameradata", cfg.ProtoMinorVer);
 
         logger.Info("Core Plugin has completed Awake().");
 

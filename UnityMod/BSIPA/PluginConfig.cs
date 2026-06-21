@@ -36,6 +36,5 @@ public class PluginConfig
     public float CameraFarClip { get; set; } = 5000f;
 
     public ushort MMFProtocolMinorVersion { get; set; } = 0;
-
-    public int LayerMaskOverride { get; set; } = 0;
+    public string LayerMaskString {get; set;} = "";
 }

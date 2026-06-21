@@ -1,6 +1,7 @@
 using UnityEngine;
 using IPA.Config;
 using IPA.Config.Stores;
+using System;
 
 
 namespace OnAirTap;
@@ -16,30 +17,54 @@ internal class BSIPA_OatComponent: MonoBehaviour
         PluginConfig.Instance = BSIPAPlugin.cfg.Generated<PluginConfig>();
     }
 
+    private void ValidateConfigs()
+    {
+        PluginConfig defaultValues = new PluginConfig();
+
+        if (!ConfigValidation.Resolution(PluginConfig.Instance.ResolutionX, PluginConfig.Instance.ResolutionY))
+        {
+            PluginConfig.Instance.ResolutionX = defaultValues.ResolutionX;
+            PluginConfig.Instance.ResolutionY = defaultValues.ResolutionY;
+        }
+        if (!ConfigValidation.LayerMaskString(PluginConfig.Instance.LayerMaskString))
+        {
+            PluginConfig.Instance.LayerMaskString = defaultValues.LayerMaskString;
+        }
+    }
+
     private void SendConfigs()
     {
-        Plugin.configResX = PluginConfig.Instance.ResolutionX;
-        Plugin.configResY = PluginConfig.Instance.ResolutionY;
+        Plugin.cfg.ResX = PluginConfig.Instance.ResolutionX;
+        Plugin.cfg.ResY = PluginConfig.Instance.ResolutionY;
 
-        Plugin.configRenderBG = PluginConfig.Instance.ShouldRenderBG;
-        Plugin.configRenderFG = PluginConfig.Instance.ShouldRenderFG;
-        Plugin.configRenderOP = PluginConfig.Instance.ShouldRenderOptimised;
+        Plugin.cfg.RenderBG = PluginConfig.Instance.ShouldRenderBG;
+        Plugin.cfg.RenderFG = PluginConfig.Instance.ShouldRenderFG;
+        Plugin.cfg.RenderOP = PluginConfig.Instance.ShouldRenderOptimised;
 
-        Plugin.configGroundPlaneOn = PluginConfig.Instance.GroundClipPlaneEnabled;
-        Plugin.configGroundPlaneHeight = PluginConfig.Instance.GroundClipPlaneElevation;
-        Plugin.configVerticalClipPlane = PluginConfig.Instance.ClipPlaneShouldBeVertical;
+        Plugin.cfg.GroundPlaneOn = PluginConfig.Instance.GroundClipPlaneEnabled;
+        Plugin.cfg.GroundPlaneHeight = PluginConfig.Instance.GroundClipPlaneElevation;
+        Plugin.cfg.VerticalClipPlane = PluginConfig.Instance.ClipPlaneShouldBeVertical;
 
-        Plugin.configReadResFromShm = PluginConfig.Instance.ShouldReadResolutionFromMMF;
-        Plugin.configReadClipFromShm = PluginConfig.Instance.ShouldReadTrackerFromMMF;
+        Plugin.cfg.ReadResFromShm = PluginConfig.Instance.ShouldReadResolutionFromMMF;
+        Plugin.cfg.ReadClipFromShm = PluginConfig.Instance.ShouldReadTrackerFromMMF;
 
-        Plugin.configSpoutSendBG = PluginConfig.Instance.ShouldSendBG;
-        Plugin.configSpoutSendFG = PluginConfig.Instance.ShouldSendFG;
-        Plugin.configSpoutSendOP = PluginConfig.Instance.ShouldSendOptimised;
-        Plugin.configBlankSpoutSenders = PluginConfig.Instance.BlankSpoutOnRenderDispose;
+        Plugin.cfg.SpoutSendBG = PluginConfig.Instance.ShouldSendBG;
+        Plugin.cfg.SpoutSendFG = PluginConfig.Instance.ShouldSendFG;
+        Plugin.cfg.SpoutSendOP = PluginConfig.Instance.ShouldSendOptimised;
+        Plugin.cfg.BlankSpoutSenders = PluginConfig.Instance.BlankSpoutOnRenderDispose;
 
-        Plugin.configFarClip = PluginConfig.Instance.CameraFarClip;
-        Plugin.configProtoMinorVer = PluginConfig.Instance.MMFProtocolMinorVersion;
-        Plugin.configLayerMask = PluginConfig.Instance.LayerMaskOverride;
+        Plugin.cfg.FarClip = PluginConfig.Instance.CameraFarClip;
+        Plugin.cfg.ProtoMinorVer = PluginConfig.Instance.MMFProtocolMinorVersion;
+        
+        if (PluginConfig.Instance.LayerMaskString == "")
+        {
+            Plugin.cfg.LayerMask = 0;
+        }
+        else
+        {
+            Plugin.cfg.LayerMask = Convert.ToInt32(PluginConfig.Instance.LayerMaskString,2);
+        }
+        
     }
 
     private void Awake()
@@ -58,6 +83,9 @@ internal class BSIPA_OatComponent: MonoBehaviour
         plug = new Plugin();
 
         BindConfigs();
+
+        ValidateConfigs();
+
         SendConfigs();
 
         plug.Awake();

@@ -1,6 +1,8 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Configuration;
+using System.Xml.Schema;
+using System;
 
 //using UnityEngine;
 //using LIV.SDK.Unity;
@@ -38,14 +40,13 @@ public class BepOatPlugin : BaseUnityPlugin
     internal static ConfigEntry<ushort> configProtoMinorVer;
     internal static ConfigEntry<int> configLayerMask;
 
+    internal static ConfigEntry<string> configLayerMaskString;
+
     Plugin plug;
 
     private void BindConfigs(){
         configResX = Config.Bind("Resolution","X",1920);
         configResY = Config.Bind("Resolution","Y",1080);
-
-        if (configResX.Value <= 0){configResX.Value = 1920;}
-        if (configResY.Value <= 0){configResY.Value = 1080;}
 
         configRenderBG = Config.Bind("RenderPasses","RenderBackground",true);
         configRenderFG = Config.Bind("RenderPasses","RenderForeground",true);
@@ -67,33 +68,57 @@ public class BepOatPlugin : BaseUnityPlugin
 
         configProtoMinorVer = Config.Bind("OAT_MMF_Data","ProtocolMinorVersion", (ushort)1);
         configLayerMask = Config.Bind("RenderPasses", "LayerMaskOverride", 0);
+        configLayerMaskString = Config.Bind("RenderPasses", "LayerMaskString", "");
+    }
+
+    private void ValidateConfigs()
+    {
+        if (!ConfigValidation.Resolution(configResX.Value, configResY.Value))
+        {
+            configResX.Value = (int) configResX.DefaultValue;
+            configResY.Value = (int) configResY.DefaultValue;
+        }
+
+        if (!ConfigValidation.LayerMaskString(configLayerMaskString.Value))
+        {
+            configLayerMaskString.Value = (string) configLayerMaskString.DefaultValue;
+        }
     }
 
     private void SendConfigs(){
-        Plugin.configResX = configResX.Value;
-        Plugin.configResY = configResY.Value;
-
-        Plugin.configRenderBG = configRenderBG.Value;
-        Plugin.configRenderFG = configRenderFG.Value;
-        Plugin.configRenderOP = configRenderOP.Value;
-
-        Plugin.configGroundPlaneOn = configGroundPlaneOn.Value;
-        Plugin.configGroundPlaneHeight = configGroundPlaneHeight.Value;
-        Plugin.configVerticalClipPlane = configVerticalClipPlane.Value;
-
-        Plugin.configReadResFromShm = configReadResFromShm.Value;
-        Plugin.configReadClipFromShm = configReadClipFromShm.Value;
-
-        Plugin.configSpoutSendBG = configSpoutSendBG.Value;
-        Plugin.configSpoutSendFG = configSpoutSendFG.Value;
-        Plugin.configSpoutSendOP = configSpoutSendOP.Value;
-        Plugin.configBlankSpoutSenders = configBlankSpoutSenders.Value;
-
-        Plugin.configFarClip = configFarClip.Value;
+        OnAirTap.Config cfg = Plugin.cfg;
         
-        Plugin.configProtoMinorVer = configProtoMinorVer.Value;
+        cfg.ResX = configResX.Value;
+        cfg.ResY = configResY.Value;
 
-        Plugin.configLayerMask = configLayerMask.Value;
+        cfg.RenderBG = configRenderBG.Value;
+        cfg.RenderFG = configRenderFG.Value;
+        cfg.RenderOP = configRenderOP.Value;
+
+        cfg.GroundPlaneOn = configGroundPlaneOn.Value;
+        cfg.GroundPlaneHeight = configGroundPlaneHeight.Value;
+        cfg.VerticalClipPlane = configVerticalClipPlane.Value;
+
+        cfg.ReadResFromShm = configReadResFromShm.Value;
+        cfg.ReadClipFromShm = configReadClipFromShm.Value;
+
+        cfg.SpoutSendBG = configSpoutSendBG.Value;
+        cfg.SpoutSendFG = configSpoutSendFG.Value;
+        cfg.SpoutSendOP = configSpoutSendOP.Value;
+        cfg.BlankSpoutSenders = configBlankSpoutSenders.Value;
+
+        cfg.FarClip = configFarClip.Value;
+        
+        cfg.ProtoMinorVer = configProtoMinorVer.Value;
+        
+        if (configLayerMaskString.Value == "")
+        {
+            cfg.LayerMask = 0;
+        }
+        else
+        {
+            cfg.LayerMask = Convert.ToInt32(configLayerMaskString.Value, 2);
+        }
     }
 
     private void Awake()
@@ -106,6 +131,8 @@ public class BepOatPlugin : BaseUnityPlugin
         plug = new Plugin();
 
         BindConfigs();
+
+        ValidateConfigs();
 
         SendConfigs();
 
