@@ -47,7 +47,8 @@ There are some that could use a bit of background information.
 
  - GroundClipPlaneElevation - How far off the playspace ground is the ground plane? The default value is 1cm, to prevent Z-fighting at 0cm.
  - ClipPlaneShouldBeVertical - An actual mesh plane is used to divide the foreground from the background. I couldn't decide what the rotation behaviour should be, so this chooses between the two easiest options.
-![csbv](/docs/imgs/clip.jpg)
+<img width="4000" height="2320" alt="clip" src="https://github.com/user-attachments/assets/11ae052a-a797-4e28-82ad-c8d639612452" />
+
 
 
  - CameraFarClip - This sets the far clip distance of the camera. Default value in BepInEx builds is 1000. That is raised to 5000 for BSIPA builds.
@@ -75,17 +76,20 @@ There are some extra steps needed for limit the influence of the foreground, so 
 **Uses Plugin, Uses Groups**<br>
 To composite this config:
 
-![C_FG1](/docs/imgs/CompFGBG1.png)
+<img width="368" height="115" alt="CompFGBG1" src="https://github.com/user-attachments/assets/caa1432c-e178-47af-9473-2a4705eb9935" />
+
 
 **Uses Plugin, No Groups**<br>
 To composite this config:
 
-![C_FG2](/docs/imgs/CompFGBG2.png)
+<img width="464" height="107" alt="CompFGBG2" src="https://github.com/user-attachments/assets/3d961077-ae27-4eed-8bb6-02e0302d1c4a" />
+
 
 **No Plugin, No Groups**<br>
 To composite this config:
 
-![C_FG3](/docs/imgs/CompFGBG3.png)
+<img width="368" height="115" alt="CompFGBG3" src="https://github.com/user-attachments/assets/3c26ba82-ac45-4daa-bfd0-d6272677a544" />
+
 
 
 ### Just Optimised
@@ -94,7 +98,8 @@ If there are no emissive objects between you and the camera, this is the way to 
 
 The OBS layout for compositing Optimised configs is very simple.
 
-![C_OP1](/docs/imgs/CompOP1.png)
+<img width="338" height="92" alt="CompOP1" src="https://github.com/user-attachments/assets/6d2dfc00-52f8-4f96-b352-d83b6601d2d7" />
+
 
 That's it. You don't even need any filters.
 
@@ -106,7 +111,8 @@ In Beat Saber, the alpha channel is overwritten during post-processing. For reas
 
 To composite this config:
 
-![C_ALL3](/docs/imgs/CompALL1.png)
+<img width="464" height="107" alt="CompALL1" src="https://github.com/user-attachments/assets/dde189ac-200d-4e1d-a1e3-4c7cfab73fac" />
+
 
 You only need a single filter here. The Foreground source must be masked to the Alpha channel of the VNyan source, so that foreground objects don't have double-strength glow.
 
