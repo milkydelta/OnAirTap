@@ -5,6 +5,13 @@ namespace OnAirTap;
 
 public static class NativeMethods{
 
+    public enum Platform
+    {
+        Wine,
+        Windows,
+        Unix
+    }
+
     [DllImport("lincomm", EntryPoint="open")]
     public static extern int LOpen(ref dataBlock dst);
 
@@ -14,16 +21,16 @@ public static class NativeMethods{
     [DllImport("ntdll",CallingConvention = CallingConvention.Cdecl)]
     private static extern IntPtr wine_get_version();
 
-    public static string GetPlatform(){
+    public static Platform GetPlatform(){
         try{
             wine_get_version();
-            return "Wine";
+            return Platform.Wine;
         }
         catch (EntryPointNotFoundException){
-            return "Windows";
+            return Platform.Windows;
         }
         catch (DllNotFoundException){
-            return "Unix";
+            return Platform.Unix;
         }
     }
 }

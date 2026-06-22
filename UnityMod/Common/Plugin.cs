@@ -79,9 +79,9 @@ public class Plugin //: BaseUnityPlugin
         BrDisableAddTex.SetValue(null, true);
         BrDisableCreateFrame.SetValue(null, true);
 
-        string plat = NativeMethods.GetPlatform();
-        logger.Info("Detected platform: "+plat+". Making Comms.");
-        if (plat == "Wine"){nyanShm = new LComms();}
+        NativeMethods.Platform plat = NativeMethods.GetPlatform();
+        logger.Info("Detected platform: "+plat.ToString()+". Making Comms.");
+        if (plat == NativeMethods.Platform.Wine){nyanShm = new LComms();}
         else {nyanShm = new WComms();}
 
         logger.Info("Opening Comms.");
