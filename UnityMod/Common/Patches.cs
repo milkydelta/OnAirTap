@@ -119,9 +119,10 @@ class Patches {
         I've used RUE to check the internal buffer rendertexture. That's still being copied to, but it's not sending.*/
 
         //For now, the only solution I can think of is keeping the senders around and just blanking them out.
-        Plugin.spoutBG.sourceTexture = new RenderTexture(1920,1080,24);
-        Plugin.spoutFG.sourceTexture = new RenderTexture(1920,1080,24);
-        Plugin.spoutOptimised.sourceTexture = new RenderTexture(1920,1080,24);
+        Vector2Int res = Plugin.resolution;
+        Plugin.spoutBG.sourceTexture = new RenderTexture(res.x,res.y,24);
+        Plugin.spoutFG.sourceTexture = new RenderTexture(res.x,res.y,24);
+        Plugin.spoutOptimised.sourceTexture = new RenderTexture(res.x,res.y,24);
 
         Plugin.spoutBG.CaptureFrame();
         Plugin.spoutFG.CaptureFrame();
