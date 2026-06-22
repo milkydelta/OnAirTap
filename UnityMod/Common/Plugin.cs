@@ -46,32 +46,6 @@ public class Plugin //: BaseUnityPlugin
 
     internal void Awake()
     {
-
-        Harmony.CreateAndPatchAll(typeof(Patches));
-
-        resolution.x = cfg.ResX;
-        resolution.y = cfg.ResY;
-
-        // Even if we're only using optimised, we still need foreground. Rendering optimised without foreground changes the results of the optimised render.
-        SDKInputFrame inFrame = SDKInputFrame.empty;
-        if (cfg.RenderBG) {inFrame.features = inFrame.features | FEATURES.BACKGROUND_RENDER;}
-        if (cfg.RenderFG) {inFrame.features = inFrame.features | FEATURES.FOREGROUND_RENDER;}
-        if (cfg.RenderOP) {inFrame.features = inFrame.features | FEATURES.OPTIMIZED_RENDER;}
-
-        // I cannot, for the life of me, tell what complex clip does.
-        //inFrame.features = inFrame.features | FEATURES.COMPLEX_CLIP_PLANE;
-
-        //inFrame.clipPlane.width = 2056;
-        //inFrame.clipPlane.height = 2056;
-        //inFrame.clipPlane.tesselation = 100.0f;
-
-        if (cfg.GroundPlaneOn){
-            inFrame.features = inFrame.features | FEATURES.GROUND_CLIP_PLANE;
-
-            inFrame.groundClipPlane.transform = SDKMatrix4x4.Translate(SDKVector3.up * cfg.GroundPlaneHeight)
-            * SDKMatrix4x4.Rotate(SDKQuaternion.Euler(1.5708f,0,0));
-        }
-
         var t = typeof(SDKBridge);
 
         BrInputFrame= t.GetField("_injection_SDKInputFrame", BindingFlags.NonPublic|BindingFlags.Static);
@@ -85,13 +59,13 @@ public class Plugin //: BaseUnityPlugin
         BrInputFrame.SetValue(null, new SDKBridge.SDKInjection<SDKInputFrame>{
             active = true,
             action = DummyFunction,
-            data = inFrame
+            data = SDKInputFrame.empty
         });
 
         BrResolution.SetValue(null, new SDKBridge.SDKInjection<SDKResolution>{
             active = true,
             action = DummyFunction,
-            data = new SDKResolution{width=cfg.ResX, height=cfg.ResY}
+            data = SDKResolution.zero
         });
 
         BrIsActive.SetValue(null, new SDKBridge.SDKInjection<bool>{
@@ -113,8 +87,50 @@ public class Plugin //: BaseUnityPlugin
         logger.Info("Opening Comms.");
         nyanShm.Open("uk.lum.livnyan.cameradata", cfg.ProtoMinorVer);
 
+        ReloadConfig(false);
+
+        Harmony.CreateAndPatchAll(typeof(Patches));
+
         logger.Info("Core Plugin has completed Awake().");
 
+    }
+
+    internal void ReloadConfig( bool notInitial = false)
+    {
+        resolution.x = cfg.ResX;
+        resolution.y = cfg.ResY;
+
+        SDKInputFrame inFrame = SDKInputFrame.empty;
+        if (cfg.RenderBG) {inFrame.features = inFrame.features | FEATURES.BACKGROUND_RENDER;}
+        if (cfg.RenderFG) {inFrame.features = inFrame.features | FEATURES.FOREGROUND_RENDER;}
+        if (cfg.RenderOP) {inFrame.features = inFrame.features | FEATURES.OPTIMIZED_RENDER;}
+
+        inFrame.features = inFrame.features | FEATURES.FIX_FOREGROUND_ALPHA;
+
+        if (cfg.GroundPlaneOn){
+            inFrame.features = inFrame.features | FEATURES.GROUND_CLIP_PLANE;
+
+            inFrame.groundClipPlane.transform = SDKMatrix4x4.Translate(SDKVector3.up * cfg.GroundPlaneHeight)
+            * SDKMatrix4x4.Rotate(SDKQuaternion.Euler(1.5708f,0,0));
+        }
+
+        BrInputFrame.SetValue(null, new SDKBridge.SDKInjection<SDKInputFrame>{
+            active = true,
+            action = DummyFunction,
+            data = inFrame
+        });
+
+        BrResolution.SetValue(null, new SDKBridge.SDKInjection<SDKResolution>{
+            active = true,
+            action = DummyFunction,
+            data = new SDKResolution{width=cfg.ResX, height=cfg.ResY}
+        });
+
+        if (notInitial){
+            if (!cfg.SpoutSendBG){spoutBG.captureMethod = CaptureMethod.GameView;}
+            if (!cfg.SpoutSendFG){spoutFG.captureMethod = CaptureMethod.GameView;}
+            if (!cfg.SpoutSendOP){spoutOptimised.captureMethod = CaptureMethod.GameView;}
+        }
     }
 
     internal void Update() {

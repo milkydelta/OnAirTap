@@ -21,6 +21,7 @@ public class LComms : AbComms {
 
     public override LIVnyan_dat Read() {
         LIVnyan_dat dat = new LIVnyan_dat();
+        if (!isOpen){dat.cfg = LIVnyan_cfg.LOG_ON; return dat;}
 
         Marshal.Copy(shm.data, cameraData, 0, 8);
 
@@ -50,6 +51,7 @@ public class LComms : AbComms {
     }
 
     public override bool Open(string targetName, ushort protocolMinorVersion) {
+        if (isOpen){return false;}
         if (shm.fd != 0 || shm.data != IntPtr.Zero) { return false;}
 
         shm.name = "/" + targetName + ".v1." + protocolMinorVersion.ToString();
@@ -61,7 +63,25 @@ public class LComms : AbComms {
         }
         pMV = protocolMinorVersion;
 
-        return NativeMethods.LOpen(ref shm) == 0;
+        
+        if (NativeMethods.LOpen(ref shm) == 0) {
+            isOpen = true;
+            return true;
+        }
+        return false;
+        
+    }
+
+    public override void Close()
+    {
+        if (!isOpen){return;}
+
+        isOpen = false;
+
+        NativeMethods.LClose(ref shm);
+        shm = new dataBlock();
+
+        return;
     }
 
 }

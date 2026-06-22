@@ -129,13 +129,22 @@ class Patches {
         Plugin.spoutOptimised.CaptureFrame();
     }
 
+    static bool hasOverridenLayerMask = false;
+
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "Render")]
     [HarmonyPrefix]
     static void DoLayerMasks( ref SDKRender __instance) {
-        if (Plugin.cfg.LayerMask == 0){return;}
+        if (Plugin.cfg.LayerMask == 0){
+            if (hasOverridenLayerMask && Application.productName == "Beat Saber")
+            {
+                __instance.liv.spectatorLayerMask = 1979644927;
+                hasOverridenLayerMask=false;
+            }
+            return;
+        }
 
         __instance.liv.spectatorLayerMask = Plugin.cfg.LayerMask;
-        //1979644927
+        hasOverridenLayerMask = true;
 
         //Plugin.logger.Info(
         //Convert.ToString((int)__instance.liv.spectatorLayerMask)

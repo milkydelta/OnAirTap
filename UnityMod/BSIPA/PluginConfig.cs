@@ -1,3 +1,5 @@
+using System;
+
 namespace OnAirTap;
 
 //Thank you, BSIPA docs.
@@ -37,4 +39,9 @@ public class PluginConfig
 
     public ushort MMFProtocolMinorVersion { get; set; } = 0;
     public string LayerMaskString {get; set;} = "";
+
+    public virtual void OnReload()
+    {
+        BSIPA_OatComponent.instance.ReloadConfig();
+    }
 }

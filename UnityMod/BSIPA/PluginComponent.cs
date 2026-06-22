@@ -6,11 +6,13 @@ using System;
 
 namespace OnAirTap;
 
-internal class BSIPA_OatComponent: MonoBehaviour
+internal class BSIPA_OatComponent : MonoBehaviour
 {
-    private static BSIPA_OatComponent instance;
+    internal static BSIPA_OatComponent instance;
 
     private Plugin plug;
+
+    bool hasAwoken = false;
 
     private void BindConfigs()
     {
@@ -55,21 +57,33 @@ internal class BSIPA_OatComponent: MonoBehaviour
 
         Plugin.cfg.FarClip = PluginConfig.Instance.CameraFarClip;
         Plugin.cfg.ProtoMinorVer = PluginConfig.Instance.MMFProtocolMinorVersion;
-        
+
         if (PluginConfig.Instance.LayerMaskString == "")
         {
             Plugin.cfg.LayerMask = 0;
         }
         else
         {
-            Plugin.cfg.LayerMask = Convert.ToInt32(PluginConfig.Instance.LayerMaskString,2);
+            Plugin.cfg.LayerMask = Convert.ToInt32(PluginConfig.Instance.LayerMaskString, 2);
         }
-        
+
+    }
+
+    internal void ReloadConfig()
+    {
+        if (hasAwoken)
+        {
+            ValidateConfigs();
+            SendConfigs();
+            plug.ReloadConfig(true);
+        }
+
     }
 
     private void Awake()
     {
-        if (instance != null){
+        if (instance != null)
+        {
             BSIPAPlugin.Log.Warn("The OatComponent already exists.");
             DestroyImmediate(this);
             return;
@@ -89,6 +103,8 @@ internal class BSIPA_OatComponent: MonoBehaviour
         SendConfigs();
 
         plug.Awake();
+
+        hasAwoken = true;
     }
 
     void Update()

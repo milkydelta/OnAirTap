@@ -11,6 +11,7 @@ public class WComms : AbComms {
     private ushort pMV;
 
     public override bool Open(string targetName, ushort protocolMinorVersion){
+        if (isOpen){return false;}
         string name = targetName + ".v1." + protocolMinorVersion.ToString();
         pMV = protocolMinorVersion;
 
@@ -23,11 +24,13 @@ public class WComms : AbComms {
         mmf = MemoryMappedFile.CreateOrOpen(name, size);
         mmfView = mmf.CreateViewAccessor(0, size, MemoryMappedFileAccess.Read);
 
+        isOpen = true;
         return true;
     }
 
     public override LIVnyan_dat Read() {
         LIVnyan_dat dat = new LIVnyan_dat();
+        if (!isOpen){dat.cfg = LIVnyan_cfg.LOG_ON; return dat;}
 
         mmfView.ReadArray<float>(0,cameraData,0,8);
 
@@ -53,5 +56,14 @@ public class WComms : AbComms {
         }       
         
         return dat;
+    }
+
+    public override void Close()
+    {
+        if (!isOpen){return;}
+
+        isOpen = false;
+        mmfView.Dispose();
+        mmf.Dispose();
     }
 }

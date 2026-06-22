@@ -138,7 +138,25 @@ public class BepOatPlugin : BaseUnityPlugin
 
         plug.Awake();
 
+        Config.ConfigReloaded += ReloadEvent;
+
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
+    }
+
+    private void ReloadEvent(object sender, EventArgs e)
+    {
+        /*
+        I don't think BepInEx does automatic reloading.
+        I'll keep looking for a way to enable it, but i might have to make something to watch the file.
+        */
+        Console.WriteLine("CONFIG RELOAD! AAAAAAA!");
+        ReloadConfig();
+    }
+    void ReloadConfig()
+    {
+        ValidateConfigs();
+        SendConfigs();
+        plug.ReloadConfig(true);
     }
 
     void Update() {
