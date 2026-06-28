@@ -41,6 +41,7 @@ public class BepOatPlugin : BaseUnityPlugin
     internal static ConfigEntry<int> configLayerMask;
 
     internal static ConfigEntry<string> configLayerMaskString;
+    internal static ConfigEntry<int> configClipBehaviour;
 
     Plugin plug;
 
@@ -69,6 +70,7 @@ public class BepOatPlugin : BaseUnityPlugin
         configProtoMinorVer = Config.Bind("OAT_MMF_Data","ProtocolMinorVersion", (ushort)1);
         configLayerMask = Config.Bind("RenderPasses", "LayerMaskOverride", 0);
         configLayerMaskString = Config.Bind("RenderPasses", "LayerMaskString", "");
+        configClipBehaviour = Config.Bind("ClipPlanes", "ClipBehaviour", 0);
     }
 
     private void ValidateConfigs()
@@ -119,6 +121,8 @@ public class BepOatPlugin : BaseUnityPlugin
         {
             cfg.LayerMask = Convert.ToInt32(configLayerMaskString.Value, 2);
         }
+
+        cfg.ClipBehaviour = configClipBehaviour.Value;
     }
 
     private void Awake()

@@ -52,22 +52,45 @@ class Patches {
         ____injection_SDKInputFrame.data.pose.projectionMatrix = SDKMatrix4x4.Perspective(camDat.fov, ((float)res.width)/res.height, 0.01f, Plugin.cfg.FarClip);
 
 
-        Vector3 clipPos;
+        Vector3 clipTarget;
         Vector3 camPos = ____injection_SDKInputFrame.data.pose.localPosition;
 
         if (Plugin.cfg.ReadClipFromShm){
-            clipPos = new Vector3(camDat.clipX, camDat.clipY, camDat.clipZ);
+            clipTarget = new Vector3(camDat.clipX, camDat.clipY, camDat.clipZ);
         }else {
-            clipPos = Plugin.hmdPos;
+            clipTarget = Plugin.hmdPos;
         }
 
-        if (Plugin.cfg.VerticalClipPlane){
-            camPos.y = clipPos.y;
+        Vector3 clipPos;
+        Quaternion clipQuat;
+
+        switch (Plugin.cfg.ClipBehaviour)
+        {
+            case 2:
+                Vector3 camForward = (Quaternion)____injection_SDKInputFrame.data.pose.localRotation * Vector3.forward;
+                float distance = new Plane(camForward, camPos).GetDistanceToPoint(clipTarget);
+
+                distance = Mathf.Clamp(distance, 0.02f, Plugin.cfg.FarClip -0.01f);
+
+                clipPos = camPos + (camForward * distance);
+                clipQuat = ____injection_SDKInputFrame.data.pose.localRotation;
+
+                break;
+            case 1: // equivalent to true verticalclipplane
+                clipPos = clipTarget;
+                Vector3 clipNormal = camPos - clipPos;
+                clipNormal.y = 0;
+                clipQuat = Quaternion.LookRotation(clipNormal);
+                
+                break;
+            default: //equivalent to false verticalclipplane
+                clipPos = clipTarget;
+                clipQuat = Quaternion.LookRotation(camPos - clipPos);
+
+                break;
         }
 
-        Quaternion quat = Quaternion.LookRotation(camPos - clipPos);
-
-        ____injection_SDKInputFrame.data.clipPlane.transform = SDKMatrix4x4.Translate(clipPos) * SDKMatrix4x4.Rotate(quat);
+        ____injection_SDKInputFrame.data.clipPlane.transform = SDKMatrix4x4.Translate(clipPos) * SDKMatrix4x4.Rotate(clipQuat);
 
     }
 

@@ -20,4 +20,5 @@ internal class Config
     internal float FarClip;
     internal ushort ProtoMinorVer;
     internal int LayerMask;
+    internal int ClipBehaviour;
 }

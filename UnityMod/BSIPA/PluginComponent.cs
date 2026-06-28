@@ -67,6 +67,8 @@ internal class BSIPA_OatComponent : MonoBehaviour
             Plugin.cfg.LayerMask = Convert.ToInt32(PluginConfig.Instance.LayerMaskString, 2);
         }
 
+        Plugin.cfg.ClipBehaviour = PluginConfig.Instance.ClipPlaneBehaviour;
+
     }
 
     internal void ReloadConfig()
