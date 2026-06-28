@@ -20,6 +20,15 @@
   <ItemGroup>
     <DependsOn Include="BSIPA" Version="^4.3.0"/>
   </ItemGroup>
+
+  <PropertyGroup Condition="$(Configuration) == Release">
+    <BSMT_SetOutputs_Default>True</BSMT_SetOutputs_Default>
+  </PropertyGroup>
+  <ItemGroup Condition="$(Configuration) == Release">
+    <OutputCopy Include="../../Native/ShmWinelibDll/lincomm.dll" OutputPath="lincomm.dll"/>
+    <OutputCopy Include="$(BeatSaberDir)/Beat Saber_Data/Plugins/x86_64/OAT_KlakSpout.dll" OutputPath="Beat Saber_Data/Plugins/x86_64/OAT_KlakSpout.dll"/>
+    <OutputCopy Include="../../KLAKSPOUT-DLL-LICENSE.txt" OutputPath="Beat Saber_Data/Plugins/x86_64/KLAKSPOUT-DLL-LICENSE.txt"/>
+  </ItemGroup>
   
   <PropertyGroup>
     <BSMTProjectType>BSIPA</BSMTProjectType>
