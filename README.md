@@ -8,6 +8,14 @@ Spout -> Tap (sort of)<br>
 
 I'm bad at naming things.
 
+## A short word on compatibility
+
+I initially developed this using BepInEx 5 on Beat Saber 1.43. The BSIPA port has been tested on that game version, as well as 1.40.8 and 1.44.1. It shouldn't need a rebuild, I think.
+
+The only other game I've tested is Open Brush. If I remember rightly, that was initially just me dropping the BepInEx Beat Saber build into OB. Now, I build the BepInEx versions directly against OpenBrush. This should be reasonably game-agnostic, though.
+
+The only situation where I can say this definitely won't work is for games using v2 of the LIV Unity SDK. The main example I know for that is the Beat Saber URP beta. You can tell if a game uses v2 by checking `GameName_Data/Plugins/x86_64` . If that contains `LIV_Native.dll`, it's on v2. If there's **only** `LIV_Bridge.dll`, you're on an older version and should be compatible.
+
 ## Setup
 
 Go to Releases and download a build that's appropriate for your chosen mod loader, which you should already have set up.
@@ -49,17 +57,22 @@ There are some that could use a bit of background information.
  - ClipPlaneShouldBeVertical - An actual mesh plane is used to divide the foreground from the background. I couldn't decide what the rotation behaviour should be, so this chooses between the two easiest options.
 <img width="4000" height="2320" alt="clip" src="https://github.com/user-attachments/assets/11ae052a-a797-4e28-82ad-c8d639612452" />
 
-
-
  - CameraFarClip - This sets the far clip distance of the camera. Default value in BepInEx builds is 1000. That is raised to 5000 for BSIPA builds.
 
 ### Section - Extra Data
 
- - ShouldReadResolutionFromMMF
- - ShouldReadTrackerFromMMF
- - MMFProtocolMinorVersion
+ - ShouldReadResolutionFromMMF - Set the render resolution to values read from the MMF.
 
+ - ShouldReadTrackerFromMMF - Set the location of the clip plane based on a vector read from the MMF.
+    - Rotation is still controlled by ClipPlaneShouldBeVertical
 
+ - MMFProtocolMinorVersion - Sets the name of the MMF and determines how/what data is read.
+    - Value 0 is compatible with LIVnyan v1.2
+    - Value 1 is compatible with LIVnyan v1.3a2 (but not v1.3a1)
+
+ Both of the "ShouldRead"s can be enabled on ProtocolMinorVersion 0, but the read is not attempted.
+  - Resolution defaults back to the configured value.
+  - The tracker is stuck at the playspace root.
 
 
 
@@ -115,6 +128,10 @@ To composite this config:
 
 
 You only need a single filter here. The Foreground source must be masked to the Alpha channel of the VNyan source, so that foreground objects don't have double-strength glow.
+
+My settings for that mask are this:
+
+![PUT IMAGE HERE]()
 
 ### Notes on premultiplication
 ---
