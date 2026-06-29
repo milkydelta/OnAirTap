@@ -131,7 +131,8 @@ You only need a single filter here. The Foreground source must be masked to the 
 
 My settings for that mask are this:
 
-![PUT IMAGE HERE]()
+<img width="578" height="338" alt="AdvMask" src="https://github.com/user-attachments/assets/26545fbd-cd22-48fb-88dc-ac1c726df613" />
+
 
 ### Notes on premultiplication
 ---
