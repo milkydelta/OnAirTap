@@ -10,26 +10,38 @@ namespace OnAirTap;
 class BridgePatches {
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "UpdateBridgeInputFrame")]
+    [HarmonyPrefix]
+    static bool FixNonsense(ref SDKInputFrame ____inputFrame)
+    {
+        //If I try to patch SDKBridge::UpdateInputFrame, HarmonyX fails to patch with an AmbiguousMatchException.
+        //I have no idea why. There's no method with the same name in SDKBridge, and no other patches target that method.
+
+        ____inputFrame = InjectionPatches.blankFrame;
+
+        return false;
+    }
+
+    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "UpdateBridgeInputFrame")]
     [HarmonyPostfix]
-    static void SetInputFrame(ref SDKInputFrame ___inputFrame) {
+    static void SetInputFrame(ref SDKInputFrame ____inputFrame) {
         LIVnyan_dat camDat = Plugin.camDat;
-        ___inputFrame.pose.localPosition.x = camDat.x;
-        ___inputFrame.pose.localPosition.y = camDat.y;
-        ___inputFrame.pose.localPosition.z = camDat.z;
+        ____inputFrame.pose.localPosition.x = camDat.x;
+        ____inputFrame.pose.localPosition.y = camDat.y;
+        ____inputFrame.pose.localPosition.z = camDat.z;
 
-        ___inputFrame.pose.localRotation.w = camDat.qw;
-        ___inputFrame.pose.localRotation.x = camDat.qx;
-        ___inputFrame.pose.localRotation.y = camDat.qy;
-        ___inputFrame.pose.localRotation.z = camDat.qz;
+        ____inputFrame.pose.localRotation.w = camDat.qw;
+        ____inputFrame.pose.localRotation.x = camDat.qx;
+        ____inputFrame.pose.localRotation.y = camDat.qy;
+        ____inputFrame.pose.localRotation.z = camDat.qz;
 
-        ___inputFrame.pose.farClipPlane = Plugin.cfg.FarClip;
+        ____inputFrame.pose.farClipPlane = Plugin.cfg.FarClip;
         Vector2Int res = Plugin.resolution;
 
-        ___inputFrame.pose.projectionMatrix = SDKMatrix4x4.Perspective(camDat.fov, ((float)res.x)/res.y, 0.01f, Plugin.cfg.FarClip);
+        ____inputFrame.pose.projectionMatrix = SDKMatrix4x4.Perspective(camDat.fov, ((float)res.x)/res.y, 0.01f, Plugin.cfg.FarClip);
 
 
         Vector3 clipTarget;
-        Vector3 camPos = ___inputFrame.pose.localPosition;
+        Vector3 camPos = ____inputFrame.pose.localPosition;
 
         if (Plugin.cfg.ReadClipFromShm){
             clipTarget = new Vector3(camDat.clipX, camDat.clipY, camDat.clipZ);
@@ -43,13 +55,13 @@ class BridgePatches {
         switch (Plugin.cfg.ClipBehaviour)
         {
             case 2:
-                Vector3 camForward = (Quaternion)___inputFrame.pose.localRotation * Vector3.forward;
+                Vector3 camForward = (Quaternion)____inputFrame.pose.localRotation * Vector3.forward;
                 float distance = new Plane(camForward, camPos).GetDistanceToPoint(clipTarget);
 
                 distance = Mathf.Clamp(distance, 0.02f, Plugin.cfg.FarClip -0.01f);
 
                 clipPos = camPos + (camForward * distance);
-                clipQuat = ___inputFrame.pose.localRotation;
+                clipQuat = ____inputFrame.pose.localRotation;
 
                 break;
             case 1: // equivalent to true verticalclipplane
@@ -66,13 +78,13 @@ class BridgePatches {
                 break;
         }
 
-        ___inputFrame.clipPlane.transform = SDKMatrix4x4.Translate(clipPos) * SDKMatrix4x4.Rotate(clipQuat);
+        ____inputFrame.clipPlane.transform = SDKMatrix4x4.Translate(clipPos) * SDKMatrix4x4.Rotate(clipQuat);
 
     }
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "UpdateBridgeResolution")]
     [HarmonyPostfix]
-    static void UpdateResolution(ref SDKResolution ___resolution) {
+    static void UpdateResolution(ref SDKResolution ____resolution) {
         if (Plugin.cfg.ReadResFromShm != true) {return;}
 
         LIVnyan_dat camDat = Plugin.camDat;
@@ -85,8 +97,8 @@ class BridgePatches {
             Plugin.resolution.y = camDat.resY;
         }
 
-        ___resolution.width = Plugin.resolution.x;
-        ___resolution.height = Plugin.resolution.y;
+        ____resolution.width = Plugin.resolution.x;
+        ____resolution.height = Plugin.resolution.y;
     }
 
 }
