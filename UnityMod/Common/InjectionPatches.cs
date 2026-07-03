@@ -1,11 +1,9 @@
-using UnityEngine;
 using LIV.SDK.Unity;
-using OnAirTap.Spout;
 using HarmonyLib;
-using System;
-
 
 namespace OnAirTap;
+
+//patches to replace the use of SDKBridge's private __injection fields in sdk 1.5
 
 [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
 class InjectionPatches {
