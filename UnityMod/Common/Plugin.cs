@@ -42,7 +42,7 @@ public class Plugin //: BaseUnityPlugin
     internal static Harmony harmony;
 
 
-    bool isActive=false;
+    //bool isActive=false;
         
     void DummyFunction(){}
 
@@ -60,23 +60,23 @@ public class Plugin //: BaseUnityPlugin
         BrDisableAddTex= t.GetField("_injection_DisableAddTexture", BindingFlags.NonPublic|BindingFlags.Static);
         BrDisableCreateFrame= t.GetField("_injection_DisableCreateFrame", BindingFlags.NonPublic|BindingFlags.Static);
 
-        BrInputFrame.SetValue(null, new SDKBridge.SDKInjection<SDKInputFrame>{
-            active = true,
-            action = DummyFunction,
-            data = SDKInputFrame.empty
-        });
+        // BrInputFrame.SetValue(null, new SDKBridge.SDKInjection<SDKInputFrame>{
+        //     active = true,
+        //     action = DummyFunction,
+        //     data = SDKInputFrame.empty
+        // });
 
-        BrResolution.SetValue(null, new SDKBridge.SDKInjection<SDKResolution>{
-            active = true,
-            action = DummyFunction,
-            data = SDKResolution.zero
-        });
+        // BrResolution.SetValue(null, new SDKBridge.SDKInjection<SDKResolution>{
+        //     active = true,
+        //     action = DummyFunction,
+        //     data = SDKResolution.zero
+        // });
 
-        BrIsActive.SetValue(null, new SDKBridge.SDKInjection<bool>{
-            active = true,
-            action = null,
-            data = isActive
-        });
+        // BrIsActive.SetValue(null, new SDKBridge.SDKInjection<bool>{
+        //     active = true,
+        //     action = null,
+        //     data = isActive
+        // });
 
         BrDisableSubmit.SetValue(null, true);
         BrDisableSubmitAppOut.SetValue(null, true);
@@ -95,6 +95,7 @@ public class Plugin //: BaseUnityPlugin
 
         harmony.PatchAll(typeof(RenderingPatches));
         harmony.PatchAll(typeof(BridgePatches));
+        harmony.PatchAll(typeof(InjectionPatches));
 
         logger.Info("Core Plugin has completed Awake().");
 
@@ -119,17 +120,19 @@ public class Plugin //: BaseUnityPlugin
             * SDKMatrix4x4.Rotate(SDKQuaternion.Euler(1.5708f,0,0));
         }
 
-        BrInputFrame.SetValue(null, new SDKBridge.SDKInjection<SDKInputFrame>{
-            active = true,
-            action = DummyFunction,
-            data = inFrame
-        });
+        InjectionPatches.blankFrame = inFrame;
 
-        BrResolution.SetValue(null, new SDKBridge.SDKInjection<SDKResolution>{
-            active = true,
-            action = DummyFunction,
-            data = new SDKResolution{width=cfg.ResX, height=cfg.ResY}
-        });
+        // BrInputFrame.SetValue(null, new SDKBridge.SDKInjection<SDKInputFrame>{
+        //     active = true,
+        //     action = DummyFunction,
+        //     data = inFrame
+        // });
+
+        // BrResolution.SetValue(null, new SDKBridge.SDKInjection<SDKResolution>{
+        //     active = true,
+        //     action = DummyFunction,
+        //     data = new SDKResolution{width=cfg.ResX, height=cfg.ResY}
+        // });
 
         if (notInitial){
             if (!cfg.SpoutSendBG){spoutBG.captureMethod = CaptureMethod.GameView;}
@@ -170,14 +173,14 @@ public class Plugin //: BaseUnityPlugin
         bool CAM_ON = (camDat.cfg & LIVnyan_cfg.CAM_ON) != 0;
 
         //I've heard reflection is expensive, so I'll put it behind an if.
-        if (CAM_ON != isActive){
-            BrIsActive.SetValue(null, new SDKBridge.SDKInjection<bool>{
-                    active = true,
-                    action = null,
-                    data = CAM_ON
-            });
-            isActive = CAM_ON;
-        }
+        // if (CAM_ON != isActive){
+        //     BrIsActive.SetValue(null, new SDKBridge.SDKInjection<bool>{
+        //             active = true,
+        //             action = null,
+        //             data = CAM_ON
+        //     });
+        //     isActive = CAM_ON;
+        // }
 
         logger.enabled = (camDat.cfg & LIVnyan_cfg.LOG_ON) != 0;
         if ((camDat.cfg & LIVnyan_cfg.LOGSPM) != 0) {logger.Info(camDat.ToString());}

@@ -8,6 +8,8 @@ namespace OnAirTap;
 [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
 class InjectionPatches {
 
+    internal static SDKInputFrame blankFrame = SDKInputFrame.empty;
+
     [HarmonyPatch("IsActive", MethodType.Getter)]
     [HarmonyPrefix]
     static bool Patch_IsActive(ref bool __result) {
@@ -29,7 +31,8 @@ class InjectionPatches {
 
     [HarmonyPatch("UpdateInputFrame")]
     [HarmonyPrefix]
-    static bool Patch_SDKInputFrame(ref bool __result) {
+    static bool Patch_SDKInputFrame(ref bool __result, ref SDKInputFrame setframe) {
+        setframe = blankFrame;
         __result = true;
         return false;
     }
