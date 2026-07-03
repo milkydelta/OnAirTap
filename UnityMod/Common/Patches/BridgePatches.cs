@@ -9,27 +9,27 @@ namespace OnAirTap;
 
 class BridgePatches {
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge), "UpdateInputFrame")]
-    [HarmonyPrefix]
-    static void SetInputFrame(ref SDKBridge.SDKInjection<SDKInputFrame> ____injection_SDKInputFrame, ref SDKBridge.SDKInjection<SDKResolution> ____injection_SDKResolution) {
+    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "UpdateBridgeInputFrame")]
+    [HarmonyPostfix]
+    static void SetInputFrame(ref SDKInputFrame ___inputFrame) {
         LIVnyan_dat camDat = Plugin.camDat;
-        ____injection_SDKInputFrame.data.pose.localPosition.x = camDat.x;
-        ____injection_SDKInputFrame.data.pose.localPosition.y = camDat.y;
-        ____injection_SDKInputFrame.data.pose.localPosition.z = camDat.z;
+        ___inputFrame.pose.localPosition.x = camDat.x;
+        ___inputFrame.pose.localPosition.y = camDat.y;
+        ___inputFrame.pose.localPosition.z = camDat.z;
 
-        ____injection_SDKInputFrame.data.pose.localRotation.w = camDat.qw;
-        ____injection_SDKInputFrame.data.pose.localRotation.x = camDat.qx;
-        ____injection_SDKInputFrame.data.pose.localRotation.y = camDat.qy;
-        ____injection_SDKInputFrame.data.pose.localRotation.z = camDat.qz;
+        ___inputFrame.pose.localRotation.w = camDat.qw;
+        ___inputFrame.pose.localRotation.x = camDat.qx;
+        ___inputFrame.pose.localRotation.y = camDat.qy;
+        ___inputFrame.pose.localRotation.z = camDat.qz;
 
-        ____injection_SDKInputFrame.data.pose.farClipPlane = Plugin.cfg.FarClip;
-        SDKResolution res = ____injection_SDKResolution.data;
+        ___inputFrame.pose.farClipPlane = Plugin.cfg.FarClip;
+        Vector2Int res = Plugin.resolution;
 
-        ____injection_SDKInputFrame.data.pose.projectionMatrix = SDKMatrix4x4.Perspective(camDat.fov, ((float)res.width)/res.height, 0.01f, Plugin.cfg.FarClip);
+        ___inputFrame.pose.projectionMatrix = SDKMatrix4x4.Perspective(camDat.fov, ((float)res.x)/res.y, 0.01f, Plugin.cfg.FarClip);
 
 
         Vector3 clipTarget;
-        Vector3 camPos = ____injection_SDKInputFrame.data.pose.localPosition;
+        Vector3 camPos = ___inputFrame.pose.localPosition;
 
         if (Plugin.cfg.ReadClipFromShm){
             clipTarget = new Vector3(camDat.clipX, camDat.clipY, camDat.clipZ);
@@ -43,13 +43,13 @@ class BridgePatches {
         switch (Plugin.cfg.ClipBehaviour)
         {
             case 2:
-                Vector3 camForward = (Quaternion)____injection_SDKInputFrame.data.pose.localRotation * Vector3.forward;
+                Vector3 camForward = (Quaternion)___inputFrame.pose.localRotation * Vector3.forward;
                 float distance = new Plane(camForward, camPos).GetDistanceToPoint(clipTarget);
 
                 distance = Mathf.Clamp(distance, 0.02f, Plugin.cfg.FarClip -0.01f);
 
                 clipPos = camPos + (camForward * distance);
-                clipQuat = ____injection_SDKInputFrame.data.pose.localRotation;
+                clipQuat = ___inputFrame.pose.localRotation;
 
                 break;
             case 1: // equivalent to true verticalclipplane
@@ -66,13 +66,13 @@ class BridgePatches {
                 break;
         }
 
-        ____injection_SDKInputFrame.data.clipPlane.transform = SDKMatrix4x4.Translate(clipPos) * SDKMatrix4x4.Rotate(clipQuat);
+        ___inputFrame.clipPlane.transform = SDKMatrix4x4.Translate(clipPos) * SDKMatrix4x4.Rotate(clipQuat);
 
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge), "GetResolution")]
-    [HarmonyPrefix]
-    static void UpdateResolution(ref SDKBridge.SDKInjection<SDKResolution> ____injection_SDKResolution) {
+    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "UpdateBridgeResolution")]
+    [HarmonyPostfix]
+    static void UpdateResolution(ref SDKResolution ___resolution) {
         if (Plugin.cfg.ReadResFromShm != true) {return;}
 
         LIVnyan_dat camDat = Plugin.camDat;
@@ -85,8 +85,8 @@ class BridgePatches {
             Plugin.resolution.y = camDat.resY;
         }
 
-        ____injection_SDKResolution.data.width = Plugin.resolution.x;
-        ____injection_SDKResolution.data.height = Plugin.resolution.y;
+        ___resolution.width = Plugin.resolution.x;
+        ___resolution.height = Plugin.resolution.y;
     }
 
 }
