@@ -7,7 +7,7 @@ using System;
 
 namespace OnAirTap;
 
-class UnCommonPatches {
+class BridgePatches {
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge), "UpdateInputFrame")]
     [HarmonyPrefix]

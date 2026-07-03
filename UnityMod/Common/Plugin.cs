@@ -39,6 +39,8 @@ public class Plugin //: BaseUnityPlugin
 
     internal static Vector2Int resolution;
 
+    internal static Harmony harmony;
+
 
     bool isActive=false;
         
@@ -46,6 +48,8 @@ public class Plugin //: BaseUnityPlugin
 
     internal void Awake()
     {
+        harmony = new Harmony("OnAirTap");
+
         var t = typeof(SDKBridge);
 
         BrInputFrame= t.GetField("_injection_SDKInputFrame", BindingFlags.NonPublic|BindingFlags.Static);
@@ -89,7 +93,8 @@ public class Plugin //: BaseUnityPlugin
 
         ReloadConfig(false);
 
-        Harmony.CreateAndPatchAll(typeof(Patches));
+        harmony.PatchAll(typeof(RenderingPatches));
+        harmony.PatchAll(typeof(BridgePatches));
 
         logger.Info("Core Plugin has completed Awake().");
 

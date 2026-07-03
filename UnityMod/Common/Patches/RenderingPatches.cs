@@ -7,7 +7,7 @@ using System;
 
 namespace OnAirTap;
 
-class Patches {
+class RenderingPatches {
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateBackgroundTexture")]
     [HarmonyPostfix]
