@@ -7,7 +7,8 @@ using LIV.SDK.Unity;
 using OnAirTap.Spout;
 
 using HarmonyLib;
-using System.Reflection;
+//using System.Reflection;
+using System.Linq;
 
 
 namespace OnAirTap;
@@ -41,6 +42,8 @@ public class Plugin //: BaseUnityPlugin
 
     internal static Harmony harmony;
 
+    private string[] testedSDKVersions = ["2.1.2", "1.5.4"];
+
 
     internal void Awake()
     {
@@ -61,6 +64,10 @@ public class Plugin //: BaseUnityPlugin
         harmony.PatchAll(typeof(RenderingPatches));
 
         logger.Info("Reported LIV SDK version: "+ SDKConstants.SDK_VERSION);
+        if (!testedSDKVersions.Contains(SDKConstants.SDK_VERSION))
+        {
+            logger.Warn("OnAirTap has not been tested with this SDK version. You may encounter problems.");
+        }
 
         {
             harmony.PatchAll(typeof(InjectionPatchesCommon.Patch_DisableCreateFrame));
