@@ -7,23 +7,17 @@ using System;
 
 namespace OnAirTap;
 
-class BridgePatches {
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "UpdateBridgeInputFrame")]
-    [HarmonyPrefix]
-    static bool FixNonsense(ref SDKInputFrame ____inputFrame)
-    {
-        //If I try to patch SDKBridge::UpdateInputFrame, HarmonyX fails to patch with an AmbiguousMatchException.
-        //I have no idea why. There's no method with the same name in SDKBridge, and no other patches target that method.
 
-        ____inputFrame = InjectionPatches.blankFrame;
+class BridgePatchMethods {
 
-        return false;
-    }
+    internal static SDKInputFrame Frame = SDKInputFrame.empty;
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "UpdateBridgeInputFrame")]
-    [HarmonyPostfix]
-    static void SetInputFrame(ref SDKInputFrame ____inputFrame) {
+    internal static SDKResolution Res = SDKResolution.zero;
+
+    //[HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "UpdateBridgeInputFrame")]
+    //[HarmonyPostfix]
+    internal static void SetInputFrame(ref SDKInputFrame ____inputFrame) {
         LIVnyan_dat camDat = Plugin.camDat;
         ____inputFrame.pose.localPosition.x = camDat.x;
         ____inputFrame.pose.localPosition.y = camDat.y;
@@ -84,7 +78,7 @@ class BridgePatches {
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "UpdateBridgeResolution")]
     [HarmonyPostfix]
-    static void UpdateResolution(ref SDKResolution ____resolution) {
+    internal static void UpdateResolution(ref SDKResolution ____resolution) {
         if (Plugin.cfg.ReadResFromShm != true) {return;}
 
         LIVnyan_dat camDat = Plugin.camDat;

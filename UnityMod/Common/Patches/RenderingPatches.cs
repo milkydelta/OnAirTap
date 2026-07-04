@@ -7,6 +7,8 @@ using System;
 
 namespace OnAirTap;
 
+
+
 class RenderingPatches {
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateBackgroundTexture")]

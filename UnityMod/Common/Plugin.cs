@@ -93,9 +93,10 @@ public class Plugin //: BaseUnityPlugin
 
         ReloadConfig(false);
 
+        harmony.PatchAll(Assembly.GetExecutingAssembly());
         harmony.PatchAll(typeof(RenderingPatches));
-        harmony.PatchAll(typeof(BridgePatches));
-        harmony.PatchAll(typeof(InjectionPatches));
+        //harmony.PatchAll(typeof(BridgePatches));
+        //harmony.PatchAll(typeof(InjectionPatches));
 
         logger.Info("Core Plugin has completed Awake().");
 
@@ -120,7 +121,9 @@ public class Plugin //: BaseUnityPlugin
             * SDKMatrix4x4.Rotate(SDKQuaternion.Euler(1.5708f,0,0));
         }
 
-        InjectionPatches.blankFrame = inFrame;
+        BridgePatchMethods.Frame = inFrame;
+
+        BridgePatchMethods.Res = new SDKResolution{width=cfg.ResX, height=cfg.ResY};
 
         // BrInputFrame.SetValue(null, new SDKBridge.SDKInjection<SDKInputFrame>{
         //     active = true,
