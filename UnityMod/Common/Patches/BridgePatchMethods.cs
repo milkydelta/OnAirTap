@@ -76,8 +76,8 @@ class BridgePatchMethods {
 
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "UpdateBridgeResolution")]
-    [HarmonyPostfix]
+    //[HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "UpdateBridgeResolution")]
+    //[HarmonyPostfix]
     internal static void UpdateResolution(ref SDKResolution ____resolution) {
         if (Plugin.cfg.ReadResFromShm != true) {return;}
 
