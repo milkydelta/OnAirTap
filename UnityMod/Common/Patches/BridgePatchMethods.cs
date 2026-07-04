@@ -33,6 +33,9 @@ class BridgePatchMethods {
 
         ____inputFrame.pose.projectionMatrix = SDKMatrix4x4.Perspective(camDat.fov, ((float)res.x)/res.y, 0.01f, Plugin.cfg.FarClip);
 
+        // In SDK 2, the projection matrix above is unused. As such, we do now need to set the frame fov separately.
+        ____inputFrame.pose.verticalFieldOfView = camDat.fov;
+
 
         Vector3 clipTarget;
         Vector3 camPos = ____inputFrame.pose.localPosition;

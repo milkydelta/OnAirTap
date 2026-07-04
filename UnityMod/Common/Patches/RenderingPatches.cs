@@ -43,11 +43,11 @@ class RenderingPatches {
         Plugin.spoutOptimised.CaptureFrame();
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "RenderForeground")]
-    [HarmonyPrefix]
-    static void GetCameraForClipPlane( ref SDKRender __instance) {
-        Plugin.hmdPos = __instance.liv.stageWorldToLocalMatrix.MultiplyPoint3x4(__instance.liv.HMDCamera.transform.position);
-    }
+    // [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "RenderForeground")]
+    // [HarmonyPrefix]
+    // static void GetCameraForClipPlane( ref SDKRender __instance) {
+    //     Plugin.hmdPos = __instance.liv.stageWorldToLocalMatrix.MultiplyPoint3x4(__instance.liv.HMDCamera.transform.position);
+    // }
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "Dispose")]
     [HarmonyPrefix]
@@ -78,6 +78,7 @@ class RenderingPatches {
     static void DoLayerMasks( ref int layerMask) {
         if (Plugin.cfg.LayerMask != 0){
             layerMask = Plugin.cfg.LayerMask;
-        }        
+        }
+        Plugin.hmdPos = Vector3.zero;
     }
 }
