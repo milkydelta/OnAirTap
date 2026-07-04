@@ -15,8 +15,6 @@ class BridgePatchMethods {
 
     internal static SDKResolution Res = SDKResolution.zero;
 
-    //[HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "UpdateBridgeInputFrame")]
-    //[HarmonyPostfix]
     internal static void SetInputFrame(ref SDKInputFrame ____inputFrame) {
         LIVnyan_dat camDat = Plugin.camDat;
         ____inputFrame.pose.localPosition.x = camDat.x;
@@ -79,8 +77,6 @@ class BridgePatchMethods {
 
     }
 
-    //[HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "UpdateBridgeResolution")]
-    //[HarmonyPostfix]
     internal static void UpdateResolution(ref SDKResolution ____resolution) {
         if (Plugin.cfg.ReadResFromShm != true) {return;}
 

@@ -54,10 +54,6 @@ class RenderingPatches {
     static void DisposeSpoutSenders() {
         if (Plugin.cfg.BlankSpoutSenders == false) {return;}
 
-        //Plugin.spoutBG.OnDisable();
-        //Plugin.spoutFG.OnDisable();
-        //Plugin.spoutOptimised.OnDisable();
-
         /*For some reason, the Spout senders just stop working permanently if I disable them.
         The senders still appear in OBS, but there's no frames.
         I've used RUE to check the internal buffer rendertexture. That's still being copied to, but it's not sending.*/

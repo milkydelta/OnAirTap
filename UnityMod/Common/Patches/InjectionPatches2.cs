@@ -15,26 +15,6 @@ class Patch_IsConnected
     }
 }
 
-// [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
-// [HarmonyPatch("IssuePluginEvent")]
-// class Patch_DisableSubmit
-// {
-//     static bool Prefix()
-//     {
-//         return false;
-//     }
-// }
-
-// [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
-// [HarmonyPatch("SubmitApplicationOutput")]
-// class Patch_DisableSubmitApplicationOutput
-// {
-//     static bool Prefix()
-//     {
-//         return false;
-//     }
-// }
-
 [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
 [HarmonyPatch("AddTexture")]
 class Patch_DisableAddTexture
@@ -44,16 +24,6 @@ class Patch_DisableAddTexture
         return false;
     }
 }
-
-// [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
-// [HarmonyPatch("CreateFrame")]
-// class Patch_DisableCreateFrame
-// {
-//     static bool Prefix()
-//     {
-//         return false;
-//     }
-// }
 
 [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
 [HarmonyPatch("GetResolution")]

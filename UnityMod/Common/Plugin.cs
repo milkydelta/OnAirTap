@@ -1,32 +1,17 @@
-﻿//using BepInEx;
-//using BepInEx.Logging;
-//using BepInEx.Configuration;
-
-using UnityEngine;
+﻿using UnityEngine;
 using LIV.SDK.Unity;
 using OnAirTap.Spout;
 
 using HarmonyLib;
-//using System.Reflection;
 using System.Linq;
 
 
 namespace OnAirTap;
 
-//[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-public class Plugin //: BaseUnityPlugin
+public class Plugin
 {
-    //internal static new ManualLogSource Logger;
 
     internal static AbLogger logger;
-
-    //FieldInfo BrInputFrame;
-    //FieldInfo BrResolution;
-    //FieldInfo BrIsActive;
-    //FieldInfo BrDisableSubmit;
-    //FieldInfo BrDisableSubmitAppOut;
-    //FieldInfo BrDisableAddTex;
-    //FieldInfo BrDisableCreateFrame;
 
     internal static Config cfg = new Config();
     
@@ -154,21 +139,7 @@ public class Plugin //: BaseUnityPlugin
     internal void LateUpdate() {
         camDat = nyanShm.Read();
 
-        bool CAM_ON = (camDat.cfg & LIVnyan_cfg.CAM_ON) != 0;
-
-        //I've heard reflection is expensive, so I'll put it behind an if.
-        // if (CAM_ON != isActive){
-        //     BrIsActive.SetValue(null, new SDKBridge.SDKInjection<bool>{
-        //             active = true,
-        //             action = null,
-        //             data = CAM_ON
-        //     });
-        //     isActive = CAM_ON;
-        // }
-
         logger.enabled = (camDat.cfg & LIVnyan_cfg.LOG_ON) != 0;
         if ((camDat.cfg & LIVnyan_cfg.LOGSPM) != 0) {logger.Info(camDat.ToString());}
-        //logger.Info("LOGSPAM: "+camDat.ToString());;
-
     }
 }
