@@ -49,26 +49,32 @@ class BridgePatchMethods {
 
         switch (Plugin.cfg.ClipBehaviour)
         {
-            case 2:
+            case 1:
                 Vector3 camForward = (Quaternion)____inputFrame.pose.localRotation * Vector3.forward;
+                clipQuat = ____inputFrame.pose.localRotation;
+
+                if (Plugin.cfg.VerticalClipPlane) {
+                    camForward.y = 0;
+                    camForward = camForward.normalized;
+
+                    clipQuat = Quaternion.LookRotation(camForward);
+                }
+
                 float distance = new Plane(camForward, camPos).GetDistanceToPoint(clipTarget);
 
                 distance = Mathf.Clamp(distance, 0.02f, Plugin.cfg.FarClip -0.01f);
 
                 clipPos = camPos + (camForward * distance);
-                clipQuat = ____inputFrame.pose.localRotation;
 
                 break;
-            case 1: // equivalent to true verticalclipplane
+            default: 
                 clipPos = clipTarget;
-                Vector3 clipNormal = camPos - clipPos;
-                clipNormal.y = 0;
-                clipQuat = Quaternion.LookRotation(clipNormal);
                 
-                break;
-            default: //equivalent to false verticalclipplane
-                clipPos = clipTarget;
-                clipQuat = Quaternion.LookRotation(camPos - clipPos);
+                Vector3 clipNormal = camPos - clipPos;
+                
+                if (Plugin.cfg.VerticalClipPlane) {clipNormal.y = 0;}
+                
+                clipQuat = Quaternion.LookRotation(clipNormal);
 
                 break;
         }
