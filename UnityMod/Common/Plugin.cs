@@ -1,31 +1,17 @@
-﻿//using BepInEx;
-//using BepInEx.Logging;
-//using BepInEx.Configuration;
-
-using UnityEngine;
+﻿using UnityEngine;
 using LIV.SDK.Unity;
 using OnAirTap.Spout;
 
 using HarmonyLib;
-using System.Reflection;
+using System.Linq;
 
 
 namespace OnAirTap;
 
-//[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-public class Plugin //: BaseUnityPlugin
+public class Plugin
 {
-    //internal static new ManualLogSource Logger;
 
     internal static AbLogger logger;
-
-    FieldInfo BrInputFrame;
-    FieldInfo BrResolution;
-    FieldInfo BrIsActive;
-    FieldInfo BrDisableSubmit;
-    FieldInfo BrDisableSubmitAppOut;
-    FieldInfo BrDisableAddTex;
-    FieldInfo BrDisableCreateFrame;
 
     internal static Config cfg = new Config();
     
@@ -39,45 +25,16 @@ public class Plugin //: BaseUnityPlugin
 
     internal static Vector2Int resolution;
 
+    internal static Harmony harmony;
 
-    bool isActive=false;
-        
-    void DummyFunction(){}
+    private string[] testedSDKVersions = ["2.1.2", "1.5.4"];
+
 
     internal void Awake()
     {
+        harmony = new Harmony("OnAirTap");
+
         var t = typeof(SDKBridge);
-
-        BrInputFrame= t.GetField("_injection_SDKInputFrame", BindingFlags.NonPublic|BindingFlags.Static);
-        BrResolution= t.GetField("_injection_SDKResolution", BindingFlags.NonPublic|BindingFlags.Static);
-        BrIsActive= t.GetField("_injection_IsActive", BindingFlags.NonPublic|BindingFlags.Static);
-        BrDisableSubmit= t.GetField("_injection_DisableSubmit", BindingFlags.NonPublic|BindingFlags.Static);
-        BrDisableSubmitAppOut= t.GetField("_injection_DisableSubmitApplicationOutput", BindingFlags.NonPublic|BindingFlags.Static);
-        BrDisableAddTex= t.GetField("_injection_DisableAddTexture", BindingFlags.NonPublic|BindingFlags.Static);
-        BrDisableCreateFrame= t.GetField("_injection_DisableCreateFrame", BindingFlags.NonPublic|BindingFlags.Static);
-
-        BrInputFrame.SetValue(null, new SDKBridge.SDKInjection<SDKInputFrame>{
-            active = true,
-            action = DummyFunction,
-            data = SDKInputFrame.empty
-        });
-
-        BrResolution.SetValue(null, new SDKBridge.SDKInjection<SDKResolution>{
-            active = true,
-            action = DummyFunction,
-            data = SDKResolution.zero
-        });
-
-        BrIsActive.SetValue(null, new SDKBridge.SDKInjection<bool>{
-            active = true,
-            action = null,
-            data = isActive
-        });
-
-        BrDisableSubmit.SetValue(null, true);
-        BrDisableSubmitAppOut.SetValue(null, true);
-        BrDisableAddTex.SetValue(null, true);
-        BrDisableCreateFrame.SetValue(null, true);
 
         NativeMethods.Platform plat = NativeMethods.GetPlatform();
         logger.Info("Detected platform: "+plat.ToString()+". Making Comms.");
@@ -89,7 +46,35 @@ public class Plugin //: BaseUnityPlugin
 
         ReloadConfig(false);
 
-        Harmony.CreateAndPatchAll(typeof(Patches));
+        harmony.PatchAll(typeof(RenderingPatches));
+
+        logger.Info("Reported LIV SDK version: "+ SDKConstants.SDK_VERSION);
+        if (!testedSDKVersions.Contains(SDKConstants.SDK_VERSION))
+        {
+            logger.Warn("OnAirTap has not been tested with this SDK version. You may encounter problems.");
+        }
+
+        {
+            harmony.PatchAll(typeof(InjectionPatchesCommon.Patch_DisableCreateFrame));
+            harmony.PatchAll(typeof(InjectionPatchesCommon.Patch_DisableSubmit));
+            harmony.PatchAll(typeof(InjectionPatchesCommon.Patch_DisableSubmitApplicationOutput));
+
+            if (SDKConstants.SDK_VERSION.StartsWith("2.")) {
+                harmony.PatchAll(typeof(InjectionPatches2.Patch_IsConnected));
+                harmony.PatchAll(typeof(InjectionPatches2.Patch_DisableAddTexture));
+                harmony.PatchAll(typeof(InjectionPatches2.Patch_SDKInputFrame));
+                harmony.PatchAll(typeof(InjectionPatches2.Patch_SDKResolution));
+
+                harmony.PatchAll(typeof(InjectionPatches2.Patch_CreateCaptureProtocol));
+                harmony.PatchAll(typeof(InjectionPatches2.Patch_UpdateBridgeInputFrame));
+            }
+            else {
+                harmony.PatchAll(typeof(InjectionPatches1.Patch_IsActive));
+                harmony.PatchAll(typeof(InjectionPatches1.Patch_DisableAddTexture));
+                harmony.PatchAll(typeof(InjectionPatches1.Patch_SDKInputFrame));
+                harmony.PatchAll(typeof(InjectionPatches1.Patch_SDKResolution));
+            }
+        }
 
         logger.Info("Core Plugin has completed Awake().");
 
@@ -114,17 +99,9 @@ public class Plugin //: BaseUnityPlugin
             * SDKMatrix4x4.Rotate(SDKQuaternion.Euler(1.5708f,0,0));
         }
 
-        BrInputFrame.SetValue(null, new SDKBridge.SDKInjection<SDKInputFrame>{
-            active = true,
-            action = DummyFunction,
-            data = inFrame
-        });
+        BridgePatchMethods.Frame = inFrame;
 
-        BrResolution.SetValue(null, new SDKBridge.SDKInjection<SDKResolution>{
-            active = true,
-            action = DummyFunction,
-            data = new SDKResolution{width=cfg.ResX, height=cfg.ResY}
-        });
+        BridgePatchMethods.Res = new SDKResolution{width=cfg.ResX, height=cfg.ResY};
 
         if (notInitial){
             if (!cfg.SpoutSendBG){spoutBG.captureMethod = CaptureMethod.GameView;}
@@ -162,21 +139,7 @@ public class Plugin //: BaseUnityPlugin
     internal void LateUpdate() {
         camDat = nyanShm.Read();
 
-        bool CAM_ON = (camDat.cfg & LIVnyan_cfg.CAM_ON) != 0;
-
-        //I've heard reflection is expensive, so I'll put it behind an if.
-        if (CAM_ON != isActive){
-            BrIsActive.SetValue(null, new SDKBridge.SDKInjection<bool>{
-                    active = true,
-                    action = null,
-                    data = CAM_ON
-            });
-            isActive = CAM_ON;
-        }
-
         logger.enabled = (camDat.cfg & LIVnyan_cfg.LOG_ON) != 0;
         if ((camDat.cfg & LIVnyan_cfg.LOGSPM) != 0) {logger.Info(camDat.ToString());}
-        //logger.Info("LOGSPAM: "+camDat.ToString());;
-
     }
 }
