@@ -38,7 +38,7 @@ class BridgePatchMethods {
         Vector3 clipTarget;
         Vector3 camPos = ____inputFrame.pose.localPosition;
 
-        if (Plugin.cfg.ReadClipFromShm){
+        if (Plugin.cfg.ReadClipFromShm && camDat.HasSetting(LIVnyan_cfg.OAT_READCLIP)){
             clipTarget = new Vector3(camDat.clipX, camDat.clipY, camDat.clipZ);
         }else {
             clipTarget = Plugin.hmdPos;

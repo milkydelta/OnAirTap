@@ -139,7 +139,7 @@ public class Plugin
     internal void LateUpdate() {
         camDat = nyanShm.Read();
 
-        logger.enabled = (camDat.cfg & LIVnyan_cfg.LOG_ON) != 0;
-        if ((camDat.cfg & LIVnyan_cfg.LOGSPM) != 0) {logger.Info(camDat.ToString());}
+        logger.enabled = camDat.HasSetting(LIVnyan_cfg.LOG_ON);
+        if (camDat.HasSetting(LIVnyan_cfg.LOGSPM)) {logger.Info(camDat.ToString());}
     }
 }

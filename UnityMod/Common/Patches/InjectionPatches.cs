@@ -47,7 +47,7 @@ namespace OnAirTap.InjectionPatches1
     {
         static bool Prefix(ref bool __result)
         {
-            __result = (Plugin.camDat.cfg & LIVnyan_cfg.CAM_ON) != 0;
+            __result = Plugin.camDat.HasSetting(LIVnyan_cfg.CAM_ON);
             return false;
         }
     }

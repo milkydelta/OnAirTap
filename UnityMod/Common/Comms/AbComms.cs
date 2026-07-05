@@ -30,13 +30,20 @@ public struct LIVnyan_dat {
             " Cl: ", clipX, ",", clipY, ",",  clipZ
         );
     }
+
+    public bool HasSetting(LIVnyan_cfg flag)
+    {
+        return (cfg & flag) != LIVnyan_cfg.None;
+    }
 };
 
 [Flags]
 public enum LIVnyan_cfg {
-    CAM_ON = 0x01,
-    LOG_ON = 0x02,
-    LOGSPM = 0x04
+    None         = 0b0000_0000,
+    CAM_ON       = 0b0000_0001,
+    LOG_ON       = 0b0000_0010,
+    LOGSPM       = 0b0000_0100,
+    OAT_READCLIP = 0b0000_1000
 }
 
 public abstract class AbComms{
