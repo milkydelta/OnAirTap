@@ -16,7 +16,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <GameDataDirectory>/mnt/solidus/SteamLibrary/steamapps/common/Open Brush/OpenBrush_Data</GameDataDirectory>
+    <GameBaseDirectory>/mnt/solidus/SteamLibrary/steamapps/common/Open Brush</GameBaseDirectory>
+    <GameName>OpenBrush</GameName>
+    <GameDataDirectory>$(GameBaseDirectory)/$(GameName)_Data</GameDataDirectory>
     <Deterministic>false</Deterministic>
   </PropertyGroup>
 
@@ -45,4 +47,28 @@
   <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
   </ItemGroup>
+
+  <Target Name="MakeOutputFolder" AfterTargets="PostBuildEvent">
+    <PropertyGroup>
+      <OutputTargetFolder>$(OutputPath)Out/Folder</OutputTargetFolder>
+    </PropertyGroup>
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(OutputTargetFolder)/BepInEx/plugins" />
+    <Copy SourceFiles="../../Native/ShmWinelibDll/lincomm.dll" DestinationFolder="$(OutputTargetFolder)" />
+    <Copy SourceFiles="$(GameDataDirectory)/Plugins/x86_64/OAT_KlakSpout.dll" DestinationFolder="$(OutputTargetFolder)/$(GameName)_Data/Plugins/x86_64" />
+    <Copy SourceFiles="../../KLAKSPOUT-DLL-LICENSE.txt" DestinationFolder="$(OutputTargetFolder)/$(GameName)_Data/Plugins/x86_64" />
+  </Target>
+
+  <Target Name="GetGit" AfterTargets="MakeOutputFolder">
+    <Exec Command="git rev-parse --short HEAD" ConsoleToMsBuild="true" StandardOutputImportance="Low">
+      <Output TaskParameter="ConsoleOutput" PropertyName="GitHash" />
+    </Exec>
+  </Target>
+
+  <Target Name="ZipOutputFolder" AfterTargets="GetGit" Condition="$(Configuration) == Release">
+    <PropertyGroup>
+      <ZipOutputFilename>$(OutputPath)/Out/OnAirTap-$(Version)-BepInEx5-$(GameName)-$(GitHash).zip</ZipOutputFilename>
+    </PropertyGroup>
+    <Delete Files="$(ZipOutputFilename)" Condition="Exists($(ZipOutputFilename))"/>
+    <ZipDirectory SourceDirectory="$(OutputTargetFolder)" DestinationFile="$(ZipOutputFilename)" />
+  </Target>
 </Project>
