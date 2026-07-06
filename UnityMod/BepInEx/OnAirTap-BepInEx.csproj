@@ -4,7 +4,7 @@
     <TargetFramework>net472</TargetFramework>
     <AssemblyName>OnAirTap</AssemblyName>
     <Product>My first plugin</Product>
-    <Version>0.7.0</Version>
+    <Version>1.0.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <RestoreAdditionalProjectSources>
@@ -48,7 +48,7 @@
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
   </ItemGroup>
 
-  <Target Name="MakeOutputFolder" AfterTargets="PostBuildEvent">
+  <Target Name="MakeOutputFolder" AfterTargets="PostBuildEvent" Condition="$(Configuration) == Release">
     <PropertyGroup>
       <OutputTargetFolder>$(OutputPath)Out/Folder</OutputTargetFolder>
     </PropertyGroup>

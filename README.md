@@ -14,8 +14,9 @@ I initially developed this using BepInEx 5 on Beat Saber 1.43. The BSIPA port ha
 
 The only other game I've tested is Open Brush. If I remember rightly, that was initially just me dropping the BepInEx Beat Saber build into OB. Now, I build the BepInEx versions directly against OpenBrush. This should be reasonably game-agnostic, though.
 
-The only situation where I can say this definitely won't work is for games using v2 of the LIV Unity SDK. The main example I know for that is the Beat Saber URP beta. You can tell if a game uses v2 by checking `GameName_Data/Plugins/x86_64` . If that contains `LIV_Native.dll`, it's on v2. If there's **only** `LIV_Bridge.dll`, you're on an older version and should be compatible.
+The support for SDK 2 was developed against version `1.43.100_18399` of Beat Saber's URP beta. It might work with other games, but I have nothing to test that against.
 
+There is currently no support for IL2CPP games, although I am looking into it.
 ## Setup
 
 Go to Releases and download a build that's appropriate for your chosen mod loader, which you should already have set up.
@@ -64,7 +65,8 @@ There are some that could use a bit of background information.
  - ShouldReadResolutionFromMMF - Set the render resolution to values read from the MMF.
 
  - ShouldReadTrackerFromMMF - Set the location of the clip plane based on a vector read from the MMF.
-    - Rotation is still controlled by ClipPlaneShouldBeVertical
+    - Rotation is still controlled by relevant settings in the config.
+    - If the relevant setting is not also transmitted by LIVnyan, This is ignored.
 
  - MMFProtocolMinorVersion - Sets the name of the MMF and determines how/what data is read.
     - Value 0 is compatible with LIVnyan v1.2
@@ -181,3 +183,11 @@ Then open a terminal and run `dotnet build`. If you get complaints about netstan
 ### KlakSpout
 
 This repo includes the C# code for KlakSpout, but some of the backend Spout logic is contained in a separate C dll, which I have not included. Go to the KlakSpout GitHub repo, and grab KlakSpout.dll from `Packages/jp.keijiro.klak.spout/Plugin`. Place that in `GameName_Data/Plugins/x86_64/` as `OAT_KlakSpout.dll`. If you put it in the other plugins folder, vital initialisation logic is not performed, and the game will crash whenever a Spout sender is created. I had to figure that out the hard way.
+
+
+## Thanks Very Much To These People For These Reasons
+
+ - [LumKitty](https://github.com/LumKitty) - Inspiration, Beta Testing
+ - [Empoleon](https://github.com/mercurialworld) - Beta Testing
+
+Your assistance has been invaluable.

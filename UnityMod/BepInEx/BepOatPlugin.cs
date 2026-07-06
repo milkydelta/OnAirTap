@@ -31,7 +31,6 @@ public class BepOatPlugin : BaseUnityPlugin
     internal static ConfigEntry<float> configFarClip;
 
     internal static ConfigEntry<ushort> configProtoMinorVer;
-    internal static ConfigEntry<int> configLayerMask;
 
     internal static ConfigEntry<string> configLayerMaskString;
     internal static ConfigEntry<int> configClipBehaviour;
@@ -44,7 +43,7 @@ public class BepOatPlugin : BaseUnityPlugin
 
         configRenderBG = Config.Bind("RenderPasses","RenderBackground",true);
         configRenderFG = Config.Bind("RenderPasses","RenderForeground",true);
-        configRenderOP = Config.Bind("RenderPasses","RenderOptimised",true);
+        configRenderOP = Config.Bind("RenderPasses","RenderOptimised",false);
 
         configGroundPlaneOn = Config.Bind("ClipPlanes","GroundEnabled",true);
         configGroundPlaneHeight = Config.Bind("ClipPlanes","GroundElevation",0.01f, "This is in metres, I think.");
@@ -54,14 +53,13 @@ public class BepOatPlugin : BaseUnityPlugin
         configReadClipFromShm = Config.Bind("OAT_MMF_Data","ReadClipPlaneLocation", false);
 
         configSpoutSendBG = Config.Bind("RenderPasses","SendBackground",true);
-        configSpoutSendFG = Config.Bind("RenderPasses","SendForeground",false);
-        configSpoutSendOP = Config.Bind("RenderPasses","SendOptimised",true);
+        configSpoutSendFG = Config.Bind("RenderPasses","SendForeground",true);
+        configSpoutSendOP = Config.Bind("RenderPasses","SendOptimised",false);
         configBlankSpoutSenders = Config.Bind("RenderPasses","BlankSendersOnRenderDispose",true);
 
         configFarClip = Config.Bind("ClipPlanes", "CameraFarClip", 1000f);
 
         configProtoMinorVer = Config.Bind("OAT_MMF_Data","ProtocolMinorVersion", (ushort)1);
-        configLayerMask = Config.Bind("RenderPasses", "LayerMaskOverride", 0);
         configLayerMaskString = Config.Bind("RenderPasses", "LayerMaskString", "");
         configClipBehaviour = Config.Bind("ClipPlanes", "ClipBehaviour", 0);
     }
