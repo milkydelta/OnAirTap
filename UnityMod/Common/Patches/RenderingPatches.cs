@@ -46,6 +46,7 @@ class RenderingPatches {
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "InvokePreRender")]
     [HarmonyPostfix]
     static void GetCameraForClipPlane( ref SDKRender __instance) {
+        if (__instance.stage == null || __instance.hmdCamera == null) {return;}
         Plugin.hmdPos = __instance.stage.worldToLocalMatrix.MultiplyPoint3x4(__instance.hmdCamera.transform.position);
     }
 
