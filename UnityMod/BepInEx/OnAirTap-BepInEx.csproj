@@ -58,7 +58,7 @@
     <Copy SourceFiles="../../KLAKSPOUT-DLL-LICENSE.txt" DestinationFolder="$(OutputTargetFolder)/$(GameName)_Data/Plugins/x86_64" />
   </Target>
 
-  <Target Name="GetGit" AfterTargets="MakeOutputFolder">
+  <Target Name="GetGit" AfterTargets="MakeOutputFolder" Condition="$(Configuration) == Release">
     <Exec Command="git rev-parse --short HEAD" ConsoleToMsBuild="true" StandardOutputImportance="Low">
       <Output TaskParameter="ConsoleOutput" PropertyName="GitHash" />
     </Exec>
