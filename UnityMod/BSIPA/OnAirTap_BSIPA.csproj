@@ -1,10 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  
-  <PropertyGroup>
-   <BeatSaberDir>/mnt/solidus/SteamLibrary/steamapps/common/Beat Saber</BeatSaberDir>
-  </PropertyGroup>
 
-  <Import Project="BarePlugin.csproj.user" Condition="Exists('BarePlugin.csproj.user')" />
+  <Import Project="OnAirTap_BSIPA.csproj.usr" Condition="Exists('OnAirTap_BSIPA.csproj.usr')" />
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
@@ -22,6 +18,12 @@
     <EnableFrameworkPathOverride>true</EnableFrameworkPathOverride>
     <FrameworkPathOverride>$(BeatSaberDir)\Beat Saber_Data\Managed</FrameworkPathOverride>
     <MarkPackageReferencesAsExternallyResolved>false</MarkPackageReferencesAsExternallyResolved>
+    <RootNamespace>OnAirTap.BSIPA</RootNamespace>
+    <AssemblyName>OnAirTap.BSIPA</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>none</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,10 +31,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="BarePlugin.csproj.user" Condition="Exists('BarePlugin.csproj.user')" />
   </ItemGroup>
 
   <ItemGroup>

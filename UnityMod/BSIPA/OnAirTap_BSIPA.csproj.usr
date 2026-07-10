@@ -1,0 +1,5 @@
+﻿<Project>
+  <PropertyGroup>
+    <BeatSaberDir>/mnt/solidus/SteamLibrary/steamapps/common/Beat Saber</BeatSaberDir>
+  </PropertyGroup>
+</Project>

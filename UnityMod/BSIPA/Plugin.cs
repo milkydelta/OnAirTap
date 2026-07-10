@@ -6,7 +6,7 @@ using IPA.Config.Stores;
 
 using UnityEngine;
 
-namespace OnAirTap;
+namespace OnAirTap.BSIPA;
 
 [Plugin(RuntimeOptions.SingleStartInit)]
 internal class BSIPAPlugin

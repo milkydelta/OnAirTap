@@ -4,7 +4,7 @@ using IPA.Config.Stores;
 using System;
 
 
-namespace OnAirTap;
+namespace OnAirTap.BSIPA;
 
 internal class BSIPA_OatComponent : MonoBehaviour
 {

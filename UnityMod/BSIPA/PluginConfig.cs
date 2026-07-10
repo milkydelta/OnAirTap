@@ -1,6 +1,6 @@
 using System;
 
-namespace OnAirTap;
+namespace OnAirTap.BSIPA;
 
 //Thank you, BSIPA docs.
 public class PluginConfig

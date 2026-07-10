@@ -1,4 +1,4 @@
-namespace OnAirTap;
+namespace OnAirTap.BSIPA;
 
 public class BSIPALogger : AbLogger{
 
