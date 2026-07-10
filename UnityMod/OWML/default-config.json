@@ -16,12 +16,12 @@
     "renderBG": {
       "title": "Render Background",
       "type": "toggle",
-      "value": false
+      "value": true
     },
     "renderFG": {
       "title": "Render Foreground",
       "type": "toggle",
-      "value": false
+      "value": true
     },
     "renderOP": {
       "title": "Render Optimised",
@@ -31,12 +31,12 @@
     "sendBG": {
       "title": "Send Background",
       "type": "toggle",
-      "value": false
+      "value": true
     },
     "sendFG": {
       "title": "Send Foreground",
       "type": "toggle",
-      "value": false
+      "value": true
     },
     "sendOP": {
       "title": "Send Optimised",
@@ -57,7 +57,7 @@
     "groundOn": {
       "title": "Ground Plane",
       "type": "toggle",
-      "value": false
+      "value": true
     },
     "groundUp": {
       "title": "Ground Plane Elevation",

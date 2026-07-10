@@ -39,6 +39,7 @@
   <ItemGroup>
     <Reference Include="LIV">
       <HintPath>$(OWMLPath)/Mods/Raicuparta.OwLiv/LIV.dll</HintPath>
+      <Private>false</Private>
     </Reference>
   </ItemGroup>
 </Project>

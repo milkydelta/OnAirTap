@@ -12,8 +12,6 @@ public class ModMain : ModBehaviour
 
 	OnAirTap.Plugin plug;
 
-
-
 	public void Awake()
 	{
 		instance = this;
@@ -95,6 +93,11 @@ public class ModMain : ModBehaviour
 		ValidateConfigs();
         SendConfigs();
         plug.ReloadConfig(true);
+    }
+
+    public override void Configure(IModConfig config)
+    {
+        ReloadConfig();
     }
 
 	public void Start()
