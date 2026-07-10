@@ -1,4 +1,4 @@
-namespace OnAirTap;
+namespace OnAirTap.BepInEx5;
 
 public class BepLogger : AbLogger{
 

@@ -5,7 +5,7 @@ using System;
 
 
 
-namespace OnAirTap;
+namespace OnAirTap.BepInEx5;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class BepOatPlugin : BaseUnityPlugin
