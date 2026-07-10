@@ -4,11 +4,11 @@ using OWML.ModHelper;
 using OnAirTap;
 using System;
 
-namespace OnAirTap_OWML;
+namespace OnAirTap.OWML;
 
-public class OnAirTap_OWML : ModBehaviour
+public class ModMain : ModBehaviour
 {
-	public static OnAirTap_OWML instance;
+	public static ModMain instance;
 
 	OnAirTap.Plugin plug;
 
@@ -109,7 +109,7 @@ public class OnAirTap_OWML : ModBehaviour
 
 		plug.Awake();
 
-		ModHelper.Console.WriteLine($"{nameof(OnAirTap_OWML)} is loaded!", MessageType.Success);
+		ModHelper.Console.WriteLine($"{"milkydelta.OnAirTap"} is loaded!", MessageType.Success);
 	}
 
 	void Update()

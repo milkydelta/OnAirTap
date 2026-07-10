@@ -1,6 +1,6 @@
 using OWML.Common;
 
-namespace OnAirTap;
+namespace OnAirTap.OWML;
 
 public class OWLogger : AbLogger{
 

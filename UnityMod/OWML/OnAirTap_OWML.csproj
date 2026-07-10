@@ -3,6 +3,8 @@
     <TargetFramework>net48</TargetFramework>
     <LangVersion>latest</LangVersion>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <AssemblyName>OnAirTap.OWML</AssemblyName>
+    <RootNamespace>OnAirTap.OWML</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
