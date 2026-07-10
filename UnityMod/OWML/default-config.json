@@ -1,0 +1,101 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ow-mods/owml/master/schemas/config_schema.json",
+  "enabled": true,
+  "settings": {
+    "resolutionX": {
+      "title": "X",
+      "type": "number",
+      "value": 1920
+    },
+    "resolutionY": {
+      "title": "Y",
+      "type": "number",
+      "value": 1080
+    },
+    "renderPassesSeparator": {"type": "separator"},
+    "renderBG": {
+      "title": "Render Background",
+      "type": "toggle",
+      "value": true
+    },
+    "renderFG": {
+      "title": "Render Foreground",
+      "type": "toggle",
+      "value": true
+    },
+    "renderOP": {
+      "title": "Render Optimised",
+      "type": "toggle",
+      "value": false
+    },
+    "sendBG": {
+      "title": "Send Background",
+      "type": "toggle",
+      "value": true
+    },
+    "sendFG": {
+      "title": "Send Foreground",
+      "type": "toggle",
+      "value": true
+    },
+    "sendOP": {
+      "title": "Send Optimised",
+      "type": "toggle",
+      "value": false
+    },
+    "blankSenders": {
+      "title": "Blank Spout on Scene Change",
+      "type": "toggle",
+      "value": false
+    },
+    "layerMaskString": {
+      "title": "Layer Mask",
+      "type": "text",
+      "value": "00000000000000000000000000000000"
+    },
+    "clipSeparator": {"type": "separator"},
+    "groundOn": {
+      "title": "Ground Plane",
+      "type": "toggle",
+      "value": true
+    },
+    "groundUp": {
+      "title": "Ground Plane Elevation",
+      "type": "number",
+      "value": 0.01
+    },
+    "farClip": {
+      "title": "Far Clip Distance",
+      "type": "number",
+      "value": 1000.0
+    },
+    "clipBehave": {
+      "title": "Clip Plane Behaviour",
+      "type": "selector",
+      "value": "Simple",
+      "options": ["Simple","Distance-based"]
+    },
+    "clipVertical": {
+      "title": "Vertical Clip Plane",
+      "type": "toggle",
+      "value": false
+    },
+    "mmfSeparator": {"type": "separator"},
+    "protoMinorVer": {
+      "title": "LIVnyan Protocol Version",
+      "type": "selector",
+      "value": "1",
+      "options": ["0","1"]
+    },
+    "readRes": {
+      "title": "Read Resolution from MMF",
+      "type": "toggle",
+      "value": false
+    },
+    "readClip": {
+      "title": "Read Clip Location from MMF",
+      "type": "toggle",
+      "value": false
+    }
+  }
+}
