@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ow-mods/owml/master/schemas/manifest_schema.json",
+  "filename": "OnAirTap_OWML.dll",
+  "author": "milkydelta",
+  "name": "OnAirTap_OWML",
+  "uniqueName": "milkydelta.OnAirTap_OWML",
+  "version": "1.0.0",
+  "owmlVersion": "2.15.1",
+  "dependencies": [ "Raicuparta.OwLiv" ]
+}
