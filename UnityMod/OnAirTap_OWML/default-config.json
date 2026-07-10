@@ -13,13 +13,13 @@
       "value": 1080
     },
     "renderPassesSeparator": {"type": "separator"},
-    "renderFG": {
-      "title": "Render Foreground",
+    "renderBG": {
+      "title": "Render Background",
       "type": "toggle",
       "value": false
     },
-    "renderBG": {
-      "title": "Render Background",
+    "renderFG": {
+      "title": "Render Foreground",
       "type": "toggle",
       "value": false
     },
@@ -28,13 +28,13 @@
       "type": "toggle",
       "value": false
     },
-    "sendFG": {
-      "title": "Send Foreground",
+    "sendBG": {
+      "title": "Send Background",
       "type": "toggle",
       "value": false
     },
-    "sendBG": {
-      "title": "Send Background",
+    "sendFG": {
+      "title": "Send Foreground",
       "type": "toggle",
       "value": false
     },
@@ -67,7 +67,7 @@
     "farClip": {
       "title": "Far Clip Distance",
       "type": "number",
-      "value": 1000
+      "value": 1000.0
     },
     "clipBehave": {
       "title": "Clip Plane Behaviour",
@@ -84,8 +84,8 @@
     "protoMinorVer": {
       "title": "LIVnyan Protocol Version",
       "type": "selector",
-      "value": 1,
-      "options": [0,1]
+      "value": "1",
+      "options": ["0","1"]
     },
     "readRes": {
       "title": "Read Resolution from MMF",
