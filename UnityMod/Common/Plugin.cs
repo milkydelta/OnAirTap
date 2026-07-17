@@ -119,16 +119,19 @@ public class Plugin
 
             if (spoutObject)
             {
-                spoutBG = spoutObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
-                spoutBG.enabled=false;
+                //spoutBG = spoutObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
+                //spoutBG.enabled=false;
+                spoutBG = new SpoutSender();
                 spoutBG.spoutName="OnAirTap Background";
 
-                spoutFG = spoutObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
-                spoutFG.enabled=false;
+                //spoutFG = spoutObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
+                //spoutFG.enabled=false;
+                spoutFG = new SpoutSender();
                 spoutFG.spoutName = "OnAirTap Foreground";
 
-                spoutOptimised = spoutObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
-                spoutOptimised.enabled=false;
+                //spoutOptimised = spoutObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
+                //spoutOptimised.enabled=false;
+                spoutOptimised = new SpoutSender();
                 spoutOptimised.spoutName = "OnAirTap Foreground [Optimised]";
 
                 logger.Info("Successfully made Spout Holding Object.");

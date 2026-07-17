@@ -10,7 +10,7 @@ namespace OnAirTap.Spout {
 //
 [ExecuteInEditMode]
 [AddComponentMenu("Klak/Spout/Spout Sender")]
-public sealed partial class SpoutSender : MonoBehaviour
+public sealed partial class SpoutSender// : MonoBehaviour
 {
     #region Sender plugin object
 
@@ -137,9 +137,9 @@ public sealed partial class SpoutSender : MonoBehaviour
 
     #region MonoBehaviour implementation
 
-    void OnEnable() {
-        StartCoroutine(CaptureCoroutine());
-    }
+    //void OnEnable() {
+    //    StartCoroutine(CaptureCoroutine());
+    //}
 
     public void OnDisable()
     {
