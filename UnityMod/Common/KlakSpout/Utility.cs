@@ -52,14 +52,14 @@ static class Blitter
 
 static class Utility
 {
-    public static void Destroy(Object obj)
+    public static void Destroy(UnityEngine.Object obj)
     {
         if (obj == null) return;
 
         if (Application.isPlaying)
-            Object.Destroy(obj);
+            UnityEngine.Object.Destroy(obj);
         else
-            Object.DestroyImmediate(obj);
+            UnityEngine.Object.DestroyImmediate(obj);
     }
 }
 

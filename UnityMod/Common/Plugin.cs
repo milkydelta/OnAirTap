@@ -25,14 +25,14 @@ public class Plugin
 
     internal static Vector2Int resolution;
 
-    internal static Harmony harmony;
+    internal static HarmonyLib.Harmony harmony;
 
     private string[] testedSDKVersions = ["2.1.2", "1.5.4"];
 
 
     internal void Awake()
     {
-        harmony = new Harmony("OnAirTap");
+        harmony = new HarmonyLib.Harmony("OnAirTap");
 
         var t = typeof(SDKBridge);
 
