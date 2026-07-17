@@ -14,9 +14,14 @@
     <DebugType>none</DebugType>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <lincomm_Path>../../../Native/ShmWinelibDll/lincomm.dll</lincomm_Path>
+    <KlakSpout_Path>../../../Native/../Native/ShmWinelibDll/lincomm.dll</KlakSpout_Path>
+  </PropertyGroup>
+
   <ItemGroup>
-    <EmbeddedResource Include="../../../Native/ShmWinelibDll/lincomm.dll" LogicalName="lincomm.dll.so"/>
-    <EmbeddedResource Include="../../../Native/../Native/ShmWinelibDll/lincomm.dll" LogicalName="KlakSpout.dll"/>
+    <EmbeddedResource Include="$(lincomm_Path)" LogicalName="lincomm.dll.so" Condition="Exists($(lincomm_Path))"/>
+    <EmbeddedResource Include="$(KlakSpout_Path)" LogicalName="KlakSpout.dll" Condition="Exists($(KlakSpout_Path))"/>
     <None Include="../../../KLAKSPOUT-DLL-LICENSE.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
