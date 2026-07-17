@@ -1,0 +1,6 @@
+<Project>
+    <Target Name="MakeZip" AfterTargets="PostBuildEvent" Condition="$(Configuration) == Release">
+        <Delete Files="$(OutputPath)../milkydelta.OnAirTap.zip" Condition="Exists('$(OutputPath)../milkydelta.OnAirTap.zip')" />
+        <ZipDirectory SourceDirectory="$(OutputPath)" DestinationFile="$(OutputPath)../milkydelta.OnAirTap.zip" />
+    </Target>
+</Project>

@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <BaseOutputPath>../bin</BaseOutputPath>
+    <AssemblyName>OnAirTap.OWML.Patcher</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="../../../Native/ShmWinelibDll/lincomm.dll" LogicalName="lincomm.dll.so"/>
+    <EmbeddedResource Include="../../../Native/../Native/ShmWinelibDll/lincomm.dll" LogicalName="KlakSpout.dll"/>
+    <None Include="../../../KLAKSPOUT-DLL-LICENSE.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

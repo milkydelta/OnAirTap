@@ -5,6 +5,7 @@
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <AssemblyName>OnAirTap.OWML</AssemblyName>
     <RootNamespace>OnAirTap.OWML</RootNamespace>
+    <BaseOutputPath>../bin</BaseOutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
@@ -30,10 +31,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="../Common/*.cs" />
-    <Compile Include="../Common/KlakSpout/*.cs" />
-    <Compile Include="../Common/Comms/*.cs" />
-    <Compile Include="../Common/Patches/*.cs" />
+    <Compile Include="../../Common/*.cs" />
+    <Compile Include="../../Common/KlakSpout/*.cs" />
+    <Compile Include="../../Common/Comms/*.cs" />
+    <Compile Include="../../Common/Patches/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Patcher/OAT_OWML_Patcher.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
