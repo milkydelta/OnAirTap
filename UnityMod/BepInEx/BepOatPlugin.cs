@@ -60,7 +60,7 @@ public class BepOatPlugin : BaseUnityPlugin
         configFarClip = Config.Bind("ClipPlanes", "CameraFarClip", 1000f);
 
         configProtoMinorVer = Config.Bind("OAT_MMF_Data","ProtocolMinorVersion", (ushort)1);
-        configLayerMaskString = Config.Bind("RenderPasses", "LayerMaskString", "");
+        configLayerMaskString = Config.Bind("RenderPasses", "LayerMaskString", "00000000000000000000000000000000");
         configClipBehaviour = Config.Bind("ClipPlanes", "ClipBehaviour", 0);
     }
 
