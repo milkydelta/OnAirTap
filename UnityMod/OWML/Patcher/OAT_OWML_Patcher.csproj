@@ -16,7 +16,7 @@
 
   <PropertyGroup>
     <lincomm_Path>../../../Native/ShmWinelibDll/lincomm.dll</lincomm_Path>
-    <KlakSpout_Path>../../../Native/../Native/ShmWinelibDll/lincomm.dll</KlakSpout_Path>
+    <KlakSpout_Path>../../../Native/KlakSpout/Plugin/KlakSpout.dll</KlakSpout_Path>
   </PropertyGroup>
 
   <ItemGroup>
