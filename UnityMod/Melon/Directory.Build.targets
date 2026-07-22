@@ -1,0 +1,25 @@
+<Project>
+    <Target Name="MakeOutputFolder" AfterTargets="PostBuildEvent" Condition="$(Configuration) == Release">
+        <PropertyGroup>
+            <OutputTargetFolder>$(OutputPath)Out/Folder</OutputTargetFolder>
+        </PropertyGroup>
+        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(OutputTargetFolder)/Mods" />
+        <Copy SourceFiles="../../Native/ShmWinelibDll/lincomm.dll" DestinationFolder="$(OutputTargetFolder)" />
+        <Copy SourceFiles="$(GameDataDirectory)/Plugins/x86_64/OAT_KlakSpout.dll" DestinationFolder="$(OutputTargetFolder)/$(GameName)_Data/Plugins/x86_64" />
+        <Copy SourceFiles="../../KLAKSPOUT-DLL-LICENSE.txt" DestinationFolder="$(OutputTargetFolder)/$(GameName)_Data/Plugins/x86_64" />
+    </Target>
+
+    <Target Name="GetGit" AfterTargets="MakeOutputFolder" Condition="$(Configuration) == Release">
+        <Exec Command="git rev-parse --short HEAD" ConsoleToMsBuild="true" StandardOutputImportance="Low">
+            <Output TaskParameter="ConsoleOutput" PropertyName="GitHash" />
+        </Exec>
+    </Target>
+
+    <Target Name="ZipOutputFolder" AfterTargets="GetGit" Condition="$(Configuration) == Release">
+        <PropertyGroup>
+            <ZipOutputFilename>$(OutputPath)/Out/OnAirTap-$(Version)-Melon-$(GameName)-$(GitHash).zip</ZipOutputFilename>
+        </PropertyGroup>
+        <Delete Files="$(ZipOutputFilename)" Condition="Exists($(ZipOutputFilename))" />
+        <ZipDirectory SourceDirectory="$(OutputTargetFolder)" DestinationFile="$(ZipOutputFilename)" />
+    </Target>
+</Project>

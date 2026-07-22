@@ -19,30 +19,69 @@
     <Compile Include = "../Common/Patches/*.cs"/>
   </ItemGroup>
 
+  <PropertyGroup>
+    <MLPath>$(GameBaseDirectory)/MelonLoader</MLPath>
+    <MLAssembliesPath Condition="!Exists('$(MLPath)/net6')">$(MLPath)</MLAssembliesPath>
+    <MLAssembliesPath Condition="Exists('$(MLPath)/net6')">$(MLPath)/$(TargetFramework)</MLAssembliesPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <Reference Include="MelonLoader">
-      <HintPath>$(GameBaseDirectory)/MelonLoader/$(TargetFramework)/MelonLoader.dll</HintPath>
+      <HintPath>$(MLAssembliesPath)/MelonLoader.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="0Harmony">
-      <HintPath>$(GameBaseDirectory)/MelonLoader/$(TargetFramework)/0Harmony.dll</HintPath>
+      <HintPath>$(MLAssembliesPath)/0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <GameManagedDirectory>$(GameDataDirectory)/Managed</GameManagedDirectory>
+    <GameManagedDirectory Condition="Exists('$(MLPath)/Managed')">$(MLPath)/Managed</GameManagedDirectory>
+    <GameManagedDirectory Condition="Exists('$(MLPath)/Il2CppAssemblies')">$(MLPath)/Il2CppAssemblies</GameManagedDirectory>
+  </PropertyGroup>
+
+  <ItemGroup Condition="Exists('$(MLPath)/Il2CppAssemblies')">
+    <!-- Supporting Assemblies for IL2CPP on MelonLoader-->
+     <Reference Include="Il2Cppmscorlib">
+      <HintPath>$(MLPath)/Il2CppAssemblies/Il2Cppmscorlib.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Il2CppInterop.Common">
+      <HintPath>$(MLPath)/net6/Il2CppInterop.Common.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Il2CppInterop.Runtime">
+      <HintPath>$(MLPath)/net6/Il2CppInterop.Common.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('$(MLPath)/Managed')">
+    <!-- Supporting Assemblies for IL2CPP on pre-0.6.0 MelonLoader-->
+    <Reference Include="Il2Cppmscorlib">
+      <HintPath>$(MLPath)/Managed/Il2Cppmscorlib.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnhollowerBaseLib">
+      <HintPath>$(MLPath)/Managed/UnhollowerBaseLib.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="UnityEngine">
-      <HintPath>$(GameDataDirectory)/Managed/UnityEngine.dll</HintPath>
+      <HintPath>$(GameManagedDirectory)/UnityEngine.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(GameDataDirectory)/Managed/UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(GameManagedDirectory)/UnityEngine.CoreModule.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="LIV">
-      <HintPath>$(GameDataDirectory)/Managed/Assembly-CSharp.dll</HintPath>
+      <HintPath>$(GameManagedDirectory)/Assembly-CSharp.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>
-
 </Project>

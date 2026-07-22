@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices.WindowsRuntime;
-using MelonLoader;
+﻿using MelonLoader;
 
 namespace OnAirTap.Melon;
 
@@ -143,6 +142,11 @@ public class Mod : MelonMod
 
     public override void OnInitializeMelon()
     {
+        if (MelonLoader.Utils.MelonEnvironment.IsDotnetRuntime)
+        {
+            //We're not on mono. This must be an il2cpp game.
+        }
+
         Plugin.logger = new MelonLogger(LoggerInstance);
 
         plug = new Plugin();

@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <GameBaseDirectory>/mnt/solidus/SteamLibrary/Open Brush</GameBaseDirectory>
+        <GameBaseDirectory>/mnt/solidus/SteamLibrary/steamapps/common/Open Brush</GameBaseDirectory>
         <GameName>OpenBrush</GameName>
         <GameDataDirectory>$(GameBaseDirectory)/$(GameName)_Data</GameDataDirectory>
     </PropertyGroup>
