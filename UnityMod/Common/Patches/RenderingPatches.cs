@@ -73,8 +73,36 @@ class RenderingPatches {
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKUtils), "SetCamera")]
     [HarmonyPrefix]
     static void DoLayerMasks( ref int layerMask) {
-        if (Plugin.cfg.LayerMask != 0){
-            layerMask = Plugin.cfg.LayerMask;
+        int mask = Plugin.cfg.LayerMask;
+        if (currentPass == RenPass.FG){mask = Plugin.cfg.LayerMaskFG;}
+        else if (currentPass == RenPass.OP){mask = Plugin.cfg.LayerMaskOP;}
+        
+        if (mask != 0){
+            layerMask = mask;
         }
+    }
+
+    enum RenPass {
+        BG,FG,OP
+    }
+
+    static RenPass currentPass;
+
+    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "RenderBackground")]
+    [HarmonyPrefix]
+    static void IsPassBG() {
+        currentPass = RenPass.BG;
+    }
+
+    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "RenderForeground")]
+    [HarmonyPrefix]
+    static void IsPassFG() {
+        currentPass = RenPass.FG;
+    }
+
+    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "RenderOptimized")]
+    [HarmonyPrefix]
+    static void IsPassOP() {
+        currentPass = RenPass.OP;
     }
 }

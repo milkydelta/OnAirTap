@@ -12,13 +12,19 @@ internal static class ConfigValidation
 
     public static bool LayerMaskString(string mask)
     {
-        if (mask.Length != 32){return false;}
+        if (mask == ""){return true;}
+
+        if (mask.Length != 32){
+            Plugin.logger.Warn("Layer Mask String - Length bad!");
+            return false;
+        }
         try
         {
             Convert.ToInt32(mask, 2);
         }
         catch (Exception)
         {
+            Plugin.logger.Warn("Layer Mask String - Could not convert!");
             return false;
         }
         return true;

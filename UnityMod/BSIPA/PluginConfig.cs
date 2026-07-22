@@ -39,6 +39,8 @@ public class PluginConfig
 
     public ushort MMFProtocolMinorVersion { get; set; } = 1;
     public string LayerMaskString {get; set;} = "00000000000000000000000000000000";
+    public string LayerMaskFG {get; set;} = "00000000000000000000000000000000";
+    public string LayerMaskOP {get; set;} = "00000000000000000000000000000000";
     public int ClipPlaneBehaviour {get; set;} = 0;
 
     public virtual void OnReload()
