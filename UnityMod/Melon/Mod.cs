@@ -17,7 +17,8 @@ public class Mod : MelonMod
     MelonPreferences_Entry<bool> configSendOP;
     MelonPreferences_Entry<bool> configBlankSpout;
     MelonPreferences_Entry<string> configLMS;
-
+    MelonPreferences_Entry<string> configLMS_F;
+    MelonPreferences_Entry<string> configLMS_O;
     MelonPreferences_Category categoryClip;
     MelonPreferences_Entry<bool> configGroundPlaneOn;
     MelonPreferences_Entry<float> configGroundPlaneHeight;
@@ -51,6 +52,8 @@ public class Mod : MelonMod
         configSendOP = categoryPasses.CreateEntry<bool>("SendOP", true);
         configBlankSpout = categoryPasses.CreateEntry<bool>("BlankSendersOnDispose", true);
         configLMS = categoryPasses.CreateEntry<string>("LayerMask", "00000000000000000000000000000000");
+        configLMS_F = categoryPasses.CreateEntry<string>("LayerMaskFG", "00000000000000000000000000000000");
+        configLMS_O = categoryPasses.CreateEntry<string>("LayerMaskOP", "00000000000000000000000000000000");
 
         categoryClip = MelonPreferences.CreateCategory("ClipPlanes");
         categoryClip.SetFilePath(configPath, autoload: false);
@@ -80,9 +83,14 @@ public class Mod : MelonMod
             configResY.ResetToDefault();
         }
 
-        if (!ConfigValidation.LayerMaskString(configLMS.Value))
-        {
+        if (!ConfigValidation.LayerMaskString(configLMS.Value)) {
             configLMS.ResetToDefault();
+        }
+        if (!ConfigValidation.LayerMaskString(configLMS_F.Value)) {
+            configLMS_F.ResetToDefault();
+        }
+        if (!ConfigValidation.LayerMaskString(configLMS_O.Value)) {
+            configLMS_O.ResetToDefault();
         }
     }
 
@@ -112,13 +120,22 @@ public class Mod : MelonMod
 
         cfg.ProtoMinorVer = configProtoMinorVer.Value;
 
-        if (configLMS.Value == "")
-        {
+        if (configLMS.Value == "") {
             cfg.LayerMask = 0;
-        }
-        else
-        {
+        } else {
             cfg.LayerMask = Convert.ToInt32(configLMS.Value, 2);
+        }
+
+        if (configLMS_F.Value == "") {
+            cfg.LayerMaskFG = 0;
+        } else {
+            cfg.LayerMaskFG = Convert.ToInt32(configLMS_F.Value, 2);
+        }
+
+        if (configLMS_O.Value == "") {
+            cfg.LayerMaskOP = 0;
+        } else {
+            cfg.LayerMaskOP = Convert.ToInt32(configLMS_O.Value, 2);
         }
 
         cfg.ClipBehaviour = configClipBehaviour.Value;

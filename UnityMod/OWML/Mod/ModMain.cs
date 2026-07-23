@@ -27,9 +27,14 @@ public class ModMain : ModBehaviour
 			cfg.SetSettingsValue("resolutionY", 1080);
 		}
 
-		if (!ConfigValidation.LayerMaskString(cfg.GetSettingsValue<string>("layerMaskString")))
-		{
+		if (!ConfigValidation.LayerMaskString(cfg.GetSettingsValue<string>("layerMaskString"))) {
 			cfg.SetSettingsValue("layerMaskString", "00000000000000000000000000000000");
+		}
+		if (!ConfigValidation.LayerMaskString(cfg.GetSettingsValue<string>("layerMaskStringFG"))) {
+			cfg.SetSettingsValue("layerMaskStringFG", "00000000000000000000000000000000");
+		}
+		if (!ConfigValidation.LayerMaskString(cfg.GetSettingsValue<string>("layerMaskStringOP"))) {
+			cfg.SetSettingsValue("layerMaskStringOP", "00000000000000000000000000000000");
 		}
 	}
 	public void SendConfigs()
@@ -57,6 +62,14 @@ public class ModMain : ModBehaviour
 		string mask = cfg.GetSettingsValue<string>("layerMaskString");
 		if (mask == ""){conf.LayerMask = 0;}
 		else {conf.LayerMask = Convert.ToInt32(mask, 2);}
+
+		mask = cfg.GetSettingsValue<string>("layerMaskStringFG");
+		if (mask == ""){conf.LayerMaskFG = 0;}
+		else {conf.LayerMaskFG = Convert.ToInt32(mask, 2);}
+
+		mask = cfg.GetSettingsValue<string>("layerMaskStringOP");
+		if (mask == ""){conf.LayerMaskOP = 0;}
+		else {conf.LayerMaskOP = Convert.ToInt32(mask, 2);}
 
 		//ClipPlanes
 

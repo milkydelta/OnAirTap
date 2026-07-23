@@ -33,6 +33,8 @@ public class BepOatPlugin : BaseUnityPlugin
     internal static ConfigEntry<ushort> configProtoMinorVer;
 
     internal static ConfigEntry<string> configLayerMaskString;
+    internal static ConfigEntry<string> configLayerMaskStringFG;
+    internal static ConfigEntry<string> configLayerMaskStringOP;
     internal static ConfigEntry<int> configClipBehaviour;
 
     Plugin plug;
@@ -61,6 +63,8 @@ public class BepOatPlugin : BaseUnityPlugin
 
         configProtoMinorVer = Config.Bind("OAT_MMF_Data","ProtocolMinorVersion", (ushort)1);
         configLayerMaskString = Config.Bind("RenderPasses", "LayerMaskString", "00000000000000000000000000000000");
+        configLayerMaskStringFG = Config.Bind("RenderPasses", "LayerMaskFG", "00000000000000000000000000000000");
+        configLayerMaskStringOP = Config.Bind("RenderPasses", "LayerMaskOP", "00000000000000000000000000000000");
         configClipBehaviour = Config.Bind("ClipPlanes", "ClipBehaviour", 0);
     }
 
@@ -72,9 +76,14 @@ public class BepOatPlugin : BaseUnityPlugin
             configResY.Value = (int) configResY.DefaultValue;
         }
 
-        if (!ConfigValidation.LayerMaskString(configLayerMaskString.Value))
-        {
+        if (!ConfigValidation.LayerMaskString(configLayerMaskString.Value)) {
             configLayerMaskString.Value = (string) configLayerMaskString.DefaultValue;
+        }
+        if (!ConfigValidation.LayerMaskString(configLayerMaskStringFG.Value)) {
+            configLayerMaskStringFG.Value = (string) configLayerMaskStringFG.DefaultValue;
+        }
+        if (!ConfigValidation.LayerMaskString(configLayerMaskStringOP.Value)) {
+            configLayerMaskStringOP.Value = (string) configLayerMaskStringOP.DefaultValue;
         }
     }
 
@@ -104,13 +113,22 @@ public class BepOatPlugin : BaseUnityPlugin
         
         cfg.ProtoMinorVer = configProtoMinorVer.Value;
         
-        if (configLayerMaskString.Value == "")
-        {
+        if (configLayerMaskString.Value == "") {
             cfg.LayerMask = 0;
-        }
-        else
-        {
+        } else {
             cfg.LayerMask = Convert.ToInt32(configLayerMaskString.Value, 2);
+        }
+
+        if (configLayerMaskStringFG.Value == "") {
+            cfg.LayerMaskFG = 0;
+        } else {
+            cfg.LayerMaskFG = Convert.ToInt32(configLayerMaskStringFG.Value, 2);
+        }
+
+        if (configLayerMaskStringOP.Value == "") {
+            cfg.LayerMaskOP = 0;
+        } else {
+            cfg.LayerMaskOP = Convert.ToInt32(configLayerMaskStringOP.Value, 2);
         }
 
         cfg.ClipBehaviour = configClipBehaviour.Value;

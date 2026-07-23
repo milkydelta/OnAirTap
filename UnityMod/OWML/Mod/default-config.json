@@ -53,6 +53,16 @@
       "type": "text",
       "value": "00000000000000000000000000000000"
     },
+    "layerMaskStringFG": {
+      "title": "Layer Mask (FG)",
+      "type": "text",
+      "value": "00000000000000000000000000000000"
+    },
+    "layerMaskStringOP": {
+      "title": "Layer Mask (Op)",
+      "type": "text",
+      "value": "00000000000000000000000000000000"
+    },
     "clipSeparator": {"type": "separator"},
     "groundOn": {
       "title": "Ground Plane",
