@@ -50,6 +50,25 @@ class RenderingPatches {
         Plugin.hmdPos = __instance.stage.worldToLocalMatrix.MultiplyPoint3x4(__instance.hmdCamera.transform.position);
     }
 
+
+    static bool waspress= false;
+    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "InvokePreRender")]
+    [HarmonyPostfix]
+    static void PrintMaskDefault( ref SDKRender __instance) {
+        bool ispress = UnityEngine.Input.GetKeyDown(KeyCode.F9);
+
+        if (ispress && !waspress){
+            Plugin.logger.Info(
+                String.Concat(  "Default LayerMask: ",
+                                Convert.ToString(__instance.spectatorLayerMask, 2).PadLeft(32,'0'),
+                                " (", Convert.ToString(__instance.spectatorLayerMask), ")"
+                )
+            );
+        }
+
+        waspress = ispress;
+    }
+
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "Dispose")]
     [HarmonyPrefix]
     static void DisposeSpoutSenders() {
