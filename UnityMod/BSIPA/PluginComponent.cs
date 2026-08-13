@@ -32,6 +32,14 @@ internal class BSIPA_OatComponent : MonoBehaviour
         {
             PluginConfig.Instance.LayerMaskString = defaultValues.LayerMaskString;
         }
+        if (!ConfigValidation.LayerMaskString(PluginConfig.Instance.LayerMaskFG))
+        {
+            PluginConfig.Instance.LayerMaskFG = defaultValues.LayerMaskFG;
+        }
+        if (!ConfigValidation.LayerMaskString(PluginConfig.Instance.LayerMaskOP))
+        {
+            PluginConfig.Instance.LayerMaskOP = defaultValues.LayerMaskOP;
+        }
     }
 
     private void SendConfigs()
