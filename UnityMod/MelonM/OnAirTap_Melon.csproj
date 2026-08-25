@@ -84,9 +84,5 @@
       <HintPath>$(GameManagedDirectory)/Assembly-CSharp.dll</HintPath>
       <Private>false</Private>
     </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>$(GameManagedDirectory)/UnityEngine.InputLegacyModule.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
   </ItemGroup>
 </Project>

@@ -51,22 +51,16 @@ class RenderingPatches {
     }
 
 
-    static bool waspress= false;
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "InvokePreRender")]
+
+    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateAssets")]
     [HarmonyPostfix]
     static void PrintMaskDefault( ref SDKRender __instance) {
-        bool ispress = UnityEngine.Input.GetKeyDown(KeyCode.F9);
-
-        if (ispress && !waspress){
             Plugin.logger.Info(
                 String.Concat(  "Default LayerMask: ",
                                 Convert.ToString(__instance.spectatorLayerMask, 2).PadLeft(32,'0'),
                                 " (", Convert.ToString(__instance.spectatorLayerMask), ")"
                 )
             );
-        }
-
-        waspress = ispress;
     }
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "Dispose")]
