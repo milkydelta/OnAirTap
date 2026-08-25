@@ -1,4 +1,6 @@
 
+using System.Diagnostics.Eventing.Reader;
+
 namespace OnAirTap;
 
 internal class Config
@@ -8,6 +10,7 @@ internal class Config
     internal bool RenderBG;
     internal bool RenderFG;
     internal bool RenderOP;
+    internal bool RenderEX;
     internal bool GroundPlaneOn;
     internal float GroundPlaneHeight;
     internal bool ReadResFromShm;
@@ -22,6 +25,7 @@ internal class Config
     internal int LayerMask;
     internal int LayerMaskFG;
     internal int LayerMaskOP;
+    internal int LayerMaskEX;
     internal int ClipBehaviour;
     internal string MemoryPath="uk.lum.vrnyan.cameradata";
 }

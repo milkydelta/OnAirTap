@@ -11,6 +11,8 @@ namespace OnAirTap;
 
 class RenderingPatches {
 
+    static internal RenderTexture ExtraRenderTexture;
+
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateBackgroundTexture")]
     [HarmonyPostfix]
     static void HookSpoutBG(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____backgroundRenderTexture) {
@@ -27,12 +29,29 @@ class RenderingPatches {
         Plugin.spoutFG.captureMethod = CaptureMethod.Texture;
     }
 
+    // Add an additional render during the Optimised stage, that uses the EX layer mask
+    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "InvokePreRenderBackground")]
+    [HarmonyPostfix]
+    static void BodgeSpoutEX(ref LIV.SDK.Unity.SDKRender __instance) {
+        if (currentPass >= RenPass.OP && Plugin.cfg.RenderEX == true) { 
+            __instance.cameraInstance.Render();
+            SDKUtils.SetCamera(__instance.cameraInstance, __instance.cameraInstance.transform, __instance.inputFrame, __instance.localToWorldMatrix, Plugin.cfg.LayerMaskEX);
+            __instance.cameraInstance.targetTexture = ExtraRenderTexture;
+        }
+    }
+
+    // Add creation of the additional texture for the EX render
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateOptimizedTexture")]
     [HarmonyPostfix]
-    static void HookSpoutOp(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____optimizedRenderTexture) {
+    static void HookSpoutOp(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____optimizedRenderTexture, SDKResolution ____resolution) {
         if (Plugin.cfg.RenderOP == false) {return;}
         Plugin.spoutOptimised.sourceTexture = ____optimizedRenderTexture;
         Plugin.spoutOptimised.captureMethod = CaptureMethod.Texture;
+        if (Plugin.cfg.RenderEX == true) {
+            SDKUtils.CreateTexture(ref ExtraRenderTexture, ____resolution.width, ____resolution.height, 24, RenderTextureFormat.ARGB32);
+            Plugin.spoutExtra.sourceTexture = ExtraRenderTexture;
+            Plugin.spoutExtra.captureMethod = CaptureMethod.Texture;
+        }
     }
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "Render")]
@@ -40,6 +59,7 @@ class RenderingPatches {
     static void UpdateSpoutSenders( ref SDKRender __instance) {
         Plugin.spoutBG.CaptureFrame();
         Plugin.spoutFG.CaptureFrame();
+        Plugin.spoutExtra.CaptureFrame();
         Plugin.spoutOptimised.CaptureFrame();
     }
 
@@ -77,10 +97,12 @@ class RenderingPatches {
         Plugin.spoutBG.sourceTexture = new RenderTexture(res.x,res.y,24);
         Plugin.spoutFG.sourceTexture = new RenderTexture(res.x,res.y,24);
         Plugin.spoutOptimised.sourceTexture = new RenderTexture(res.x,res.y,24);
+        Plugin.spoutExtra.sourceTexture = new RenderTexture(res.x, res.y, 24);
 
         Plugin.spoutBG.CaptureFrame();
         Plugin.spoutFG.CaptureFrame();
         Plugin.spoutOptimised.CaptureFrame();
+        Plugin.spoutExtra.CaptureFrame();
     }
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKUtils), "SetCamera")]

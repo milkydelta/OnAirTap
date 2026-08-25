@@ -19,6 +19,7 @@ public class Plugin
     internal static SpoutSender spoutFG;
     internal static SpoutSender spoutBG;
     internal static SpoutSender spoutOptimised;
+    internal static SpoutSender spoutExtra;
     internal static AbComms nyanShm;
     internal static LIVnyan_dat camDat;
     internal static Vector3 hmdPos;
@@ -107,6 +108,7 @@ public class Plugin
             if (!cfg.RenderBG){spoutBG.captureMethod = CaptureMethod.GameView;}
             if (!cfg.RenderFG){spoutFG.captureMethod = CaptureMethod.GameView;}
             if (!cfg.RenderOP){spoutOptimised.captureMethod = CaptureMethod.GameView;}
+            if (!cfg.RenderEX){spoutExtra.captureMethod = CaptureMethod.GameView; }
         }
     }
 
@@ -133,6 +135,9 @@ public class Plugin
                 //spoutOptimised.enabled=false;
                 spoutOptimised = new SpoutSender();
                 spoutOptimised.spoutName = "OnAirTap Foreground [Optimised]";
+
+                spoutExtra = new SpoutSender();
+                spoutExtra.spoutName = "OnAirTap Extra [Optimised]";
 
                 logger.Info("Successfully made Spout Holding Object.");
             }

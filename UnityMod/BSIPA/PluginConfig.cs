@@ -17,6 +17,8 @@ public class PluginConfig
 
     public bool ShouldRenderOptimised { get; set; } = true;
 
+    public bool ShouldRenderExtra { get; set; } = false;
+
     public bool GroundClipPlaneEnabled { get; set; } = true;
 
     public float GroundClipPlaneElevation { get; set; } = 0.01f;
@@ -41,6 +43,7 @@ public class PluginConfig
     public string LayerMaskString {get; set;} = "00000000000000000000000000000000";
     public string LayerMaskFG {get; set;} = "00000000000000000000000000000000";
     public string LayerMaskOP {get; set;} = "00000000000000000000000000000000";
+    public string LayerMaskEX {get; set;} = "00000000000000000000000000000000";
     public int ClipPlaneBehaviour {get; set;} = 0;
 
     public virtual void OnReload()

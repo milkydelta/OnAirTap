@@ -50,6 +50,7 @@ internal class BSIPA_OatComponent : MonoBehaviour
         Plugin.cfg.RenderBG = PluginConfig.Instance.ShouldRenderBG;
         Plugin.cfg.RenderFG = PluginConfig.Instance.ShouldRenderFG;
         Plugin.cfg.RenderOP = PluginConfig.Instance.ShouldRenderOptimised;
+        Plugin.cfg.RenderEX = PluginConfig.Instance.ShouldRenderExtra;
 
         Plugin.cfg.GroundPlaneOn = PluginConfig.Instance.GroundClipPlaneEnabled;
         Plugin.cfg.GroundPlaneHeight = PluginConfig.Instance.GroundClipPlaneElevation;
@@ -84,13 +85,20 @@ internal class BSIPA_OatComponent : MonoBehaviour
             Plugin.cfg.LayerMaskFG = Convert.ToInt32(PluginConfig.Instance.LayerMaskFG, 2);
         }
 
-        if (PluginConfig.Instance.LayerMaskOP == "")
+        if (PluginConfig.Instance.LayerMaskOP == "") 
         {
             Plugin.cfg.LayerMaskOP = 0;
-        }
+        } 
         else
         {
             Plugin.cfg.LayerMaskOP = Convert.ToInt32(PluginConfig.Instance.LayerMaskOP, 2);
+        }
+
+        if (PluginConfig.Instance.LayerMaskEX == "") 
+        {
+            Plugin.cfg.LayerMaskEX = 0;
+        } else {
+            Plugin.cfg.LayerMaskEX = Convert.ToInt32(PluginConfig.Instance.LayerMaskEX, 2);
         }
 
         Plugin.cfg.ClipBehaviour = PluginConfig.Instance.ClipPlaneBehaviour;

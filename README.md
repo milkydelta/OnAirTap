@@ -1,6 +1,57 @@
+### OnAirTap Personal Fork - for translucent walls w/ distortion in BeatSaber
+Do not bug MilkyDelta with any issues in this fork!
+
+<img src="https://github.com/LumKitty/VRnyan/blob/master/VRnyan-demo.gif?raw=true">
+
+This is my experimental fork of [OnAirTap](https://github.com/milkydelta/OnAirTap). The difference is the ability to run a second "Optimised" layer with a different LayerMask setting.
+This is mainly useful for BeatSaber, you can set it up with these settings:
+```
+"ShouldRenderExtra": true,
+"LayerMaskString": "01111111111111101111101111111111",
+"LayerMaskFG": "00000000000000000000000000000000",
+"LayerMaskOP": "00000000000000000000000000000000",
+"LayerMaskEX": "00000010000000000000100000000000",   
+```
+You'll get a fourth spout sender that is only foreground walls. You can then use this with an advanced mask filter in OBS to separate your model into two depending on whether it's occluded by a wall, and apply a distortion filter to the occluded parts
+
+For Beat Saber 1.44.1 use `"LayerMaskEX": "00000000000000100000100000000000",` instead
+
+These instructions accume you're starting from a working OnAirTap setup. If not follow the instuctions for setting up [OnAirTap - All3 - Shader](https://github.com/milkydelta/OnAirTap/wiki/Compositing#all-three-1) compositing in OBS, and get that working before continuing
+
+1) Add a new spout2 receiver for "OnAirTap Extra", put it behind the background layer
+   * If necessary add a Render Delay filter that is the same as your other OnAirTap layers
+2) Move the OnAirTap FG and OP layers behind your background layer (and double check they have Render Delay set)
+3) Move your normal VNyan source behind the background layer
+4) Source clone VNyan as "VNyan - NoDistort", place this behind your VNyan layer
+   * Add some nice shaders to show a distortion effect as this version is what will get shown when you're behind a wall.
+   * Personally I use [OBS ShaderFilter](https://github.com/exeldro/obs-shaderfilter)'s included Heat-Wave-Simple and Colour-Grade-Filter shaders
+5) Edit your "OnAirTap BG" source
+   * Remove or disable any existing filters except for Render Delay
+   * Add a "User Defined Shader" filter that uses MilkyDelta's [OAT-All3-BS-Distortion.shader](https://github.com/LumKitty/OnAirTap/releases/download/v1.1-lum1/OAT-All3-BS-Distortion.shader)
+   * Fill in all the details of your sources (see images below)
+    
+Your model should now distort when a Beat Saber wall passes in front.  
+
+Linux warning: When feeding Pipewire captures into a shader input, apparently they [ignore any filters you have applied](https://github.com/exeldro/obs-shaderfilter/issues/105). If you are using Render Delay, you'll need to Source Clone the OnAirTap FG, OP and EX sources, then feed those into the All3 shader instead. Just put the source clones behind the background so they aren't seen!  
+
+Your OBS sources should look something like this:  
+<img width="171" height="119" alt="image" src="https://github.com/user-attachments/assets/739f73c4-6bf7-426e-b726-d86a0a212439" />
+
+Shader settings:  
+
+VNyan - Distort  
+<img width="588" height="242" alt="image" src="https://github.com/user-attachments/assets/47adc349-7fdb-4fc2-a0a2-f07cf3789f9f" />
+<img width="625" height="308" alt="image" src="https://github.com/user-attachments/assets/107ef655-adb7-4bbe-939f-3bc19fcb761a" />
+
+OnAirTap-BG  
+<img width="612" height="427" alt="image" src="https://github.com/user-attachments/assets/5b9823b3-a8e2-49e8-859b-4312bc45c6bc" />
+
+
+Original readme below:
+
 # OnAirTap
 An alternative to the LIV application for Unity games using the LIV Unity SDK.<br>
-Intended for use with the LIVnyan plugin for VNyan.
+Intended for use with the VRnyan plugin for VNyan.
 
 
 LIV -> live -> On Air<br>

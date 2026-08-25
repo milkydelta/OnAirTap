@@ -5,3 +5,5 @@ obj
 *.dll
 *.so
 *.pdb
+/.vs
+/UnityMod/BSIPA/OnAirTap_BSIPA.csproj.usr
