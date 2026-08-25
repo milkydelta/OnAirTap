@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="OnAirTap_BSIPA.csproj.usr" Condition="Exists('OnAirTap_BSIPA.csproj.usr')" />
+  <Import Project="OnAirTap_BSIPA.csproj.user" Condition="Exists('OnAirTap_BSIPA.csproj.user')" />
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
