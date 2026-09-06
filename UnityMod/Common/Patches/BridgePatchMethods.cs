@@ -16,30 +16,25 @@ class BridgePatchMethods {
     internal static SDKResolution Res = SDKResolution.zero;
 
     internal static void SetInputFrame(ref SDKInputFrame ____inputFrame) {
-        LIVnyan_dat camDat = Plugin.camDat;
-        ____inputFrame.pose.localPosition.x = camDat.x;
-        ____inputFrame.pose.localPosition.y = camDat.y;
-        ____inputFrame.pose.localPosition.z = camDat.z;
+        ICameraData camDat = Plugin.camDat;
+        ____inputFrame.pose.localPosition = camDat.camPos;
 
-        ____inputFrame.pose.localRotation.w = camDat.qw;
-        ____inputFrame.pose.localRotation.x = camDat.qx;
-        ____inputFrame.pose.localRotation.y = camDat.qy;
-        ____inputFrame.pose.localRotation.z = camDat.qz;
+        ____inputFrame.pose.localRotation = camDat.camRot;
 
         ____inputFrame.pose.farClipPlane = Plugin.cfg.FarClip;
         Vector2Int res = Plugin.resolution;
 
-        ____inputFrame.pose.projectionMatrix = SDKMatrix4x4.Perspective(camDat.fov, ((float)res.x)/res.y, 0.01f, Plugin.cfg.FarClip);
+        ____inputFrame.pose.projectionMatrix = SDKMatrix4x4.Perspective(camDat.vFov, ((float)res.x)/res.y, 0.01f, Plugin.cfg.FarClip);
 
         // In SDK 2, the projection matrix above is unused. As such, we do now need to set the frame fov separately.
-        ____inputFrame.pose.verticalFieldOfView = camDat.fov;
+        ____inputFrame.pose.verticalFieldOfView = camDat.vFov;
 
 
         Vector3 clipTarget;
         Vector3 camPos = ____inputFrame.pose.localPosition;
 
-        if (Plugin.cfg.ReadClipFromShm && camDat.HasSetting(LIVnyan_cfg.OAT_READCLIP)){
-            clipTarget = new Vector3(camDat.clipX, camDat.clipY, camDat.clipZ);
+        if (Plugin.cfg.ReadClipFromShm && camDat.HasSetting(CamDatCfg.OAT_READCLIP)){
+            clipTarget = camDat.clipPos;
         }else {
             clipTarget = Plugin.hmdPos;
         }
@@ -86,14 +81,14 @@ class BridgePatchMethods {
     internal static void UpdateResolution(ref SDKResolution ____resolution) {
         if (Plugin.cfg.ReadResFromShm != true) {return;}
 
-        LIVnyan_dat camDat = Plugin.camDat;
+        ICameraData camDat = Plugin.camDat;
+        Vector2Int r = camDat.resolution;
 
-        if ( camDat.resX == 0 || camDat.resY == 0){
+        if ( r.x == 0 || r.y == 0){
             Plugin.resolution.x = Plugin.cfg.ResX;
             Plugin.resolution.y = Plugin.cfg.ResY;
         } else {
-            Plugin.resolution.x = camDat.resX;
-            Plugin.resolution.y = camDat.resY;
+            Plugin.resolution = r;
         }
 
         ____resolution.width = Plugin.resolution.x;
