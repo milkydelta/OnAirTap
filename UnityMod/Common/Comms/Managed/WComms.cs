@@ -6,8 +6,6 @@ public class WComms : AbComms {
     protected MemoryMappedFile mmf;
     protected MemoryMappedViewAccessor mmfView;
 
-    private float[] cameraData = new float[9];
-
     protected ushort pMV;
 
     public override bool Open(string targetName, ushort protocolMinorVersion){
@@ -29,34 +27,24 @@ public class WComms : AbComms {
         return true;
     }
 
-    public override LIVnyan_dat Read() {
-        LIVnyan_dat dat = new LIVnyan_dat();
-        if (!isOpen){dat.cfg = LIVnyan_cfg.LOG_ON; return dat;}
+    public override ICameraData Read() {
+        if (!isOpen) {
+            var s = new ShmStruct1_0();
+            s.cfg = CamDatCfg.LOG_ON;
+            return s;
+        }
 
-        mmfView.ReadArray<float>(0,cameraData,0,8);
-
-        dat.x = cameraData[0];
-        dat.y = cameraData[1];
-        dat.z = cameraData[2];
-        dat.qw = cameraData[3];
-        dat.qx = cameraData[4];
-        dat.qy = cameraData[5];
-        dat.qz = cameraData[6];
-        dat.fov = cameraData[7];
-
-        dat.cfg = (LIVnyan_cfg)mmfView.ReadInt32(sizeof(float)*8);
-
-        
-        if (pMV >= 1) {
-            dat.resX = mmfView.ReadInt32(sizeof(float)*8 + sizeof(int));
-            dat.resY = mmfView.ReadInt32(sizeof(float)*8 + sizeof(int)*2);
-
-            dat.clipX = mmfView.ReadSingle(sizeof(float)*8 + sizeof(int)*3);
-            dat.clipY = mmfView.ReadSingle(sizeof(float)*9 + sizeof(int)*3);
-            dat.clipZ = mmfView.ReadSingle(sizeof(float)*10 + sizeof(int)*3);
-        }       
-        
-        return dat;
+        switch (pMV) {
+            case 0:
+                ShmStruct1_0 s;
+                mmfView.Read<ShmStruct1_0>(0, out s);
+                return s;
+            case 1:
+            default:
+                ShmStruct1_1 s1;
+                mmfView.Read<ShmStruct1_1>(0, out s1);
+                return s1;
+        }
     }
 
     public override void Close()
