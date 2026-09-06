@@ -3,14 +3,15 @@ using System.IO.MemoryMappedFiles;
 namespace OnAirTap;
 
 public class WComms : AbComms {
-    private MemoryMappedFile mmf;
-    private MemoryMappedViewAccessor mmfView;
+    protected MemoryMappedFile mmf;
+    protected MemoryMappedViewAccessor mmfView;
 
     private float[] cameraData = new float[9];
 
-    private ushort pMV;
+    protected ushort pMV;
 
     public override bool Open(string targetName, ushort protocolMinorVersion){
+        Plugin.logger.Info("Managed Windows Comms!");
         if (isOpen){return false;}
         string name = targetName + ".v1." + protocolMinorVersion.ToString();
         pMV = protocolMinorVersion;

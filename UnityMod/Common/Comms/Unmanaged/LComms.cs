@@ -40,7 +40,7 @@ public class LComms : AbComms {
             dat.resX = Marshal.ReadInt32(shm.data, sizeof(float)*8 + sizeof(int));
             dat.resY = Marshal.ReadInt32(shm.data, sizeof(float)*8 + sizeof(int)*2);
 
-            Marshal.Copy(shm.data + (sizeof(float)*8 + sizeof(int)*3), clipVec, 0, 3);
+            Marshal.Copy(new IntPtr(shm.data.ToInt64() + (sizeof(float)*8 + sizeof(int)*3)), clipVec, 0, 3);
 
             dat.clipX = clipVec[0];
             dat.clipY = clipVec[1];
@@ -51,6 +51,7 @@ public class LComms : AbComms {
     }
 
     public override bool Open(string targetName, ushort protocolMinorVersion) {
+        Plugin.logger.Info("Unmanaged Wine Comms!");
         if (isOpen){return false;}
         if (shm.fd != 0 || shm.data != IntPtr.Zero) { return false;}
 
@@ -64,7 +65,7 @@ public class LComms : AbComms {
         pMV = protocolMinorVersion;
 
         
-        if (NativeMethods.LOpen(ref shm) == 0) {
+        if (LOpen(ref shm) == 0) {
             isOpen = true;
             return true;
         }
@@ -78,10 +79,24 @@ public class LComms : AbComms {
 
         isOpen = false;
 
-        NativeMethods.LClose(ref shm);
+        LClose(ref shm);
         shm = new dataBlock();
 
         return;
     }
+
+    [DllImport("lincomm", EntryPoint="open")]
+    private static extern int LOpen(ref dataBlock dst);
+
+    [DllImport("lincomm", EntryPoint="close")]
+    private static extern int LClose(ref dataBlock dst);
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    private struct dataBlock{
+        public string name;
+        public int length;
+        public IntPtr data;
+        public int fd;
+    };
 
 }
