@@ -4,7 +4,7 @@
             <OutputTargetFolder>$(OutputPath)Out/Folder</OutputTargetFolder>
         </PropertyGroup>
         <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(OutputTargetFolder)/Mods" />
-        <Copy SourceFiles="../../Native/ShmWinelibDll/lincomm.dll" DestinationFolder="$(OutputTargetFolder)" />
+        <Copy SourceFiles="../../Native/ShmWinelibDll/lincomm.dll" DestinationFolder="$(OutputTargetFolder)/UserLibs" />
         <Copy SourceFiles="$(GameDataDirectory)/Plugins/x86_64/OAT_KlakSpout.dll" DestinationFolder="$(OutputTargetFolder)/$(GameName)_Data/Plugins/x86_64" />
         <Copy SourceFiles="../../KLAKSPOUT-DLL-LICENSE.txt" DestinationFolder="$(OutputTargetFolder)/$(GameName)_Data/Plugins/x86_64" />
     </Target>
