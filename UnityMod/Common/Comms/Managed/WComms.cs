@@ -14,11 +14,23 @@ public class WComms : AbComms {
         string name = targetName + ".v1." + protocolMinorVersion.ToString();
         pMV = protocolMinorVersion;
 
-        int size = (sizeof(float) * 8)+sizeof(int);
-        if (protocolMinorVersion >= 1) {
-            size += sizeof(int) * 2;
-            size += sizeof(float) * 3;
+        int size;
+        switch (protocolMinorVersion)
+        {
+            case 0:
+                size = System.Runtime.InteropServices.Marshal.SizeOf(typeof(ShmStruct1_0));
+                break;
+            case 1:
+            default:
+                size = System.Runtime.InteropServices.Marshal.SizeOf(typeof(ShmStruct1_1));
+                break;
         }
+
+        // int size = (sizeof(float) * 8)+sizeof(int);
+        // if (protocolMinorVersion >= 1) {
+        //     size += sizeof(int) * 2;
+        //     size += sizeof(float) * 3;
+        // }
 
         mmf = MemoryMappedFile.CreateOrOpen(name, size);
         mmfView = mmf.CreateViewAccessor(0, size, MemoryMappedFileAccess.Read);

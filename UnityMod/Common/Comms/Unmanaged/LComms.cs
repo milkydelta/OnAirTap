@@ -35,12 +35,22 @@ public class LComms : AbComms {
         if (shm.fd != 0 || shm.data != IntPtr.Zero) { return false;}
 
         shm.name = "/" + targetName + ".v1." + protocolMinorVersion.ToString();
-        shm.length = (sizeof(float) * 8)+sizeof(int);
-
-        if (protocolMinorVersion >= 1) {
-            shm.length += sizeof(int) * 2;
-            shm.length += sizeof(float) * 3;
+        switch (protocolMinorVersion)
+        {
+            case 0:
+                shm.length = Marshal.SizeOf(typeof(ShmStruct1_0));
+                break;
+            case 1:
+            default:
+                shm.length = Marshal.SizeOf(typeof(ShmStruct1_1));
+                break;
         }
+        // shm.length = (sizeof(float) * 8)+sizeof(int);
+
+        // if (protocolMinorVersion >= 1) {
+        //     shm.length += sizeof(int) * 2;
+        //     shm.length += sizeof(float) * 3;
+        // }
         pMV = protocolMinorVersion;
 
         
