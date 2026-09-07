@@ -74,13 +74,18 @@ class RenderingPatches {
 
         //For now, the only solution I can think of is keeping the senders around and just blanking them out.
         Vector2Int res = Plugin.resolution;
-        Plugin.spoutBG.sourceTexture = new RenderTexture(res.x,res.y,24);
-        Plugin.spoutFG.sourceTexture = new RenderTexture(res.x,res.y,24);
-        Plugin.spoutOptimised.sourceTexture = new RenderTexture(res.x,res.y,24);
+
+        RenderTexture rt = RenderTexture.GetTemporary(res.x,res.y,24, RenderTextureFormat.ARGB32);
+        
+        Plugin.spoutBG.sourceTexture = rt;
+        Plugin.spoutFG.sourceTexture = rt;
+        Plugin.spoutOptimised.sourceTexture = rt;
 
         Plugin.spoutBG.CaptureFrame();
         Plugin.spoutFG.CaptureFrame();
         Plugin.spoutOptimised.CaptureFrame();
+
+        RenderTexture.ReleaseTemporary(rt);
     }
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKUtils), "SetCamera")]
