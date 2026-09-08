@@ -1,40 +1,52 @@
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using BeatSaberMarkupLanguage.Attributes;
-using UnityEngine.UIElements;
 
 namespace OnAirTap.BSIPA;
 
 
 public class SettingsUI
 {
+    /* 
+    I'm documenting this for myself - in code rather than in git, so I actually know it later.
+
+    For menus in the Mod Settings menu, the getter is called automatically, each time 
+    you enter the Mod Settings menu. The setters are also called automatically, but only
+    when the "OK" button is pressed. Each control will remember it's value between
+    screens on the Mod Settings menu, but that value is only pushed to the backing
+    variable/property on "OK".
+
+    You can have the Setters called more often, by changing apply-on-change or set-event,
+    but, if that setter updates a value in your plugin config, or causes any sort of
+    persistent change, your mod will break from the convention/expectation established
+    above. That would confuse users.
+    */
+
     #region RegularSettings
 
-    public int ResX {get =>PluginConfig.Instance.ResolutionX; set{Plugin.logger.Info("SET!!");}}
-    public int ResY { get; set; } = 1080;
-    public bool RenderBG { get; set; } = true;
-    public bool RenderFG { get; set; } = true;
-    public bool RenderOP { get; set; } = true;
-    public bool GCPEnabled { get; set; } = true;
-    public float GCPElevation { get; set; } = 0.01f;
-    public bool ClipPlaneVertical { get; set; } = true;
-    public bool ReadResMMF { get; set; } = false;
-    public bool ReadClipMMF { get; set; } = false;
-    public bool BlankSpout { get; set; } = false;
-    public float FarClip { get; set; } = 5000f;
+    public int ResX {get => PluginConfig.Instance.ResolutionX; set {PluginConfig.Instance.ResolutionX=value;}}
+    public int ResY {get => PluginConfig.Instance.ResolutionY; set {PluginConfig.Instance.ResolutionY=value;}}
+    public bool RenderBG {get => PluginConfig.Instance.ShouldRenderBG; set {PluginConfig.Instance.ShouldRenderBG=value;}}
+    public bool RenderFG {get => PluginConfig.Instance.ShouldRenderFG; set {PluginConfig.Instance.ShouldRenderFG=value;}}
+    public bool RenderOP {get => PluginConfig.Instance.ShouldRenderOptimised; set {PluginConfig.Instance.ShouldRenderOptimised=value;}}
+    public bool GCPEnabled {get => PluginConfig.Instance.GroundClipPlaneEnabled; set {PluginConfig.Instance.GroundClipPlaneEnabled=value;}}
+    public float GCPElevation {get => PluginConfig.Instance.GroundClipPlaneElevation; set {PluginConfig.Instance.GroundClipPlaneElevation=value;}}
+    public bool ClipPlaneVertical {get => PluginConfig.Instance.ClipPlaneShouldBeVertical; set {PluginConfig.Instance.ClipPlaneShouldBeVertical=value;}}
+    public bool ReadResMMF {get => PluginConfig.Instance.ShouldReadResolutionFromMMF; set {PluginConfig.Instance.ShouldReadResolutionFromMMF=value;}}
+    public bool ReadClipMMF {get => PluginConfig.Instance.ShouldReadTrackerFromMMF; set {PluginConfig.Instance.ShouldReadTrackerFromMMF=value;}}
+    public bool BlankSpout {get => PluginConfig.Instance.BlankSpoutOnRenderDispose; set {PluginConfig.Instance.BlankSpoutOnRenderDispose=value;}}
+    public float FarClip {get => PluginConfig.Instance.CameraFarClip; set {PluginConfig.Instance.CameraFarClip=value;}}
+    public int ClipPlaneBehaviour {get => PluginConfig.Instance.ClipPlaneBehaviour; set {PluginConfig.Instance.ClipPlaneBehaviour=value;}}
 
     #endregion
     #region LayerSettings
 
     string fgStorage {get =>"This should be hidden."; set{Plugin.logger.Info("SET AGAIN!!");}}
 
-    [UIValue("pass-options")]
-    private List<string> passOptions = new string[] { "Foreground", "Background", "Optimised", }.ToList();
+    private List<string> passOptions = new string[] { "Background", "Foreground", "Optimised", }.ToList();
 
-    [UIValue("pass-choice")]
-    private string passChoice = "Foreground";
+    private string passChoice = "Background";
 
     public bool Layer00 { get { return GetConfigLayer(0, passChoice); } set { SetConfigLayer(value, 0, passChoice); } }
     public bool Layer01 { get { return GetConfigLayer(1, passChoice); } set { SetConfigLayer(value, 1, passChoice); } }

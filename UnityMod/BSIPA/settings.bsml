@@ -3,20 +3,20 @@
 
 
     <slider-setting text="Resolution X" min="1" max="7680" integer-only="true" increment="1" value="ResX"/>
-    <slider-setting text="Resolution Y" min="1" max="4320" integer-only="true" increment="1" />
-    <toggle-setting text="Render Background Pass" hover-hint="" />
-    <toggle-setting text="Render Foreground Pass" hover-hint="" />
-    <toggle-setting text="Render Optimised Pass" hover-hint="" />
-    <toggle-setting text="Ground Clip Plane" hover-hint="" />
-    <slider-setting text="GCP Elevation" min="-1" max="1" integer-only="false"
-        increment="0.01" />
-    <toggle-setting text="ClipPlaneShouldBeVertical" />
-    <toggle-setting text="Read Resolution from MMF" />
-    <toggle-setting text="Read Clip Target from MMF" />
-    <toggle-setting text="Blank Senders on Render Dispose" />
-    <slider-setting text="Camera Far Clip Distance" min="0" max="10000" increment="0.1" />
+    <slider-setting text="Resolution Y" min="1" max="4320" integer-only="true" increment="1" value="ResY"/>
+    <toggle-setting text="Render Background Pass" hover-hint="" value="RenderBG"/>
+    <toggle-setting text="Render Foreground Pass" hover-hint="" value="RenderFG"/>
+    <toggle-setting text="Render Optimised Pass" hover-hint="" value="RenderOP"/>
+    <toggle-setting text="Ground Clip Plane" hover-hint="" value="GCPEnabled"/>
+    <slider-setting text="GCP Elevation" min="-1" max="1" integer-only="false" increment="0.01" value="GCPElevation"/>
+    <toggle-setting text="Clip Plane should be Vertical" value="ClipPlaneVertical"/>
+    <toggle-setting text="Read Resolution from MMF" value="ReadResMMF"/>
+    <toggle-setting text="Read Clip Target from MMF" value="ReadClipMMF"/>
+    <toggle-setting text="Blank Senders on Render Dispose" value="BlankSpout"/>
+    <slider-setting text="Camera Far Clip Distance" min="0" max="10000" increment="0.1" value="FarClip"/>
+    <increment-setting text= "Clip Plane Behaviour" min="0" max="1" increment="1" integer-only="true" value="ClipPlaneBehaviour"/>
 
-    <list-setting text="Configure mask for" value="pass-choice" choices="pass-options" apply-on-change="true"/>
+    <list-setting text="Configure mask for" value="passChoice" choices="passOptions" apply-on-change="true"/>
     <settings-submenu text="Click to configure Layer Mask" align="Right" click-event="reloadLayerSubmenu">
         <settings-container>
             <horizontal pref-height="12">
