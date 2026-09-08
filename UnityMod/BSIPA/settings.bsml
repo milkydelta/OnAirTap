@@ -1,6 +1,8 @@
 <settings-container xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
     xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
 
+    <checkbox-setting active="false" text="Fake, Hidden Setting That Does Nothing" hover-hint="for real" value="FakeSetting"/>
+
 
     <slider-setting text="Resolution X" min="1" max="7680" integer-only="true" increment="1" value="ResX"/>
     <slider-setting text="Resolution Y" min="1" max="4320" integer-only="true" increment="1" value="ResY"/>

@@ -15,6 +15,7 @@ internal class BSIPA_OatComponent : MonoBehaviour
     private Plugin plug;
 
     internal SettingsUI settingsObj = new SettingsUI();
+    internal bool ShouldReloadSettings = false;
 
     bool hasAwoken = false;
 
@@ -148,6 +149,11 @@ internal class BSIPA_OatComponent : MonoBehaviour
 
     void Update()
     {
+        if (ShouldReloadSettings)
+        {
+            ReloadConfig();
+            ShouldReloadSettings=false;
+        }
         plug.Update();
     }
 

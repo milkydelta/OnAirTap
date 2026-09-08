@@ -40,6 +40,14 @@ public class SettingsUI
     public int ClipPlaneBehaviour {get => PluginConfig.Instance.ClipPlaneBehaviour; set {PluginConfig.Instance.ClipPlaneBehaviour=value;}}
 
     #endregion
+
+    #region Shenanigans
+    //I need a way to detect the "OK" press, so this is a hidden setting.
+    bool FakeSetting {get{return false;} set{BSIPA_OatComponent.instance.ShouldReloadSettings = true;}}
+    #endregion
+
+
+
     #region LayerSettings
 
     string fgStorage {get =>"This should be hidden."; set{Plugin.logger.Info("SET AGAIN!!");}}
