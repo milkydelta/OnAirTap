@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -11,21 +12,24 @@ public class SettingsUI
 {
     #region RegularSettings
 
-    public int resX { get; set; } = 1920;
-    public int resY { get; set; } = 1080;
+    public int ResX {get =>PluginConfig.Instance.ResolutionX; set{Plugin.logger.Info("SET!!");}}
+    public int ResY { get; set; } = 1080;
     public bool RenderBG { get; set; } = true;
     public bool RenderFG { get; set; } = true;
-    public bool RenderOptimised { get; set; } = true;
-    public bool GroundClipPlaneEnabled { get; set; } = true;
-    public float GroundClipPlaneElevation { get; set; } = 0.01f;
-    public bool ClipPlaneShouldBeVertical { get; set; } = true;
-    public bool ReadResolutionFromMMF { get; set; } = false;
-    public bool ReadTrackerFromMMF { get; set; } = false;
-    public bool BlankSpoutOnRenderDispose { get; set; } = false;
-    public float CameraFarClip { get; set; } = 5000f;
+    public bool RenderOP { get; set; } = true;
+    public bool GCPEnabled { get; set; } = true;
+    public float GCPElevation { get; set; } = 0.01f;
+    public bool ClipPlaneVertical { get; set; } = true;
+    public bool ReadResMMF { get; set; } = false;
+    public bool ReadClipMMF { get; set; } = false;
+    public bool BlankSpout { get; set; } = false;
+    public float FarClip { get; set; } = 5000f;
 
     #endregion
     #region LayerSettings
+
+    string fgStorage {get =>"This should be hidden."; set{Plugin.logger.Info("SET AGAIN!!");}}
+
     [UIValue("pass-options")]
     private List<string> passOptions = new string[] { "Foreground", "Background", "Optimised", }.ToList();
 
@@ -66,10 +70,35 @@ public class SettingsUI
     public bool Layer31 { get { return GetConfigLayer(31, passChoice); } set { SetConfigLayer(value, 31, passChoice); } }
     #endregion
 
-    [UIAction("pass-menu-pressed")]
+    [UIAction("SetCurrentMaskToDefault")]
     private void ButtonPress()
     {
-        BSIPAPlugin.Log.Info(passChoice);
+        if (Plugin.defaultLayerMask != 0){
+            SetConfigLayerMask(Plugin.defaultLayerMask, passChoice);
+        }
+    }
+
+    [UIAction("SaveCurrentMask")]
+    private void OtherButtonPress()
+    {
+        Plugin.logger.Info("BUTTON");
+        int mask = GetConfigLayerMask(passChoice);
+        string maskString = Convert.ToString(mask, 2).PadLeft(32,'0');
+        switch (passChoice)
+        {
+            case "Foreground":
+                PluginConfig.Instance.LayerMaskFG = maskString;
+                break;
+            case "Background":
+                PluginConfig.Instance.LayerMaskString = maskString;
+                break;
+            case "Optimised":
+                PluginConfig.Instance.LayerMaskOP = maskString;
+                break;
+            default:
+                break;
+        }
+
     }
 
     private int GetConfigLayerMask(string pass)
