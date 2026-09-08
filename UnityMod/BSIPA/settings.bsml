@@ -1,3 +1,63 @@
-<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
-    <text text="BAZINGA"/>
-</bg>
+<settings-container xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
+
+
+    <slider-setting text="Resolution X" min="1" max="7680" integer-only="true"
+        increment="1" />
+    <slider-setting text="Resolution Y" min="1" max="4320" integer-only="true"
+        increment="1" />
+    <toggle-setting text="Render Background Pass" hover-hint="" />
+    <toggle-setting text="Render Foreground Pass" hover-hint="" />
+    <toggle-setting text="Render Optimised Pass" hover-hint="" />
+    <toggle-setting text="Ground Clip Plane" hover-hint="" />
+    <slider-setting text="GCP Elevation" min="-1" max="1" integer-only="false"
+        increment="0.01" />
+    <toggle-setting text="ClipPlaneShouldBeVertical" />
+    <toggle-setting text="Read Resolution from MMF" />
+    <toggle-setting text="Read Clip Target from MMF" />
+    <toggle-setting text="Blank Senders on Render Dispose" />
+    <slider-setting text="Camera Far Clip Distance" min="0" max="10000" increment="0.1" />
+
+    <list-setting text="Configure mask for" value="pass-choice" choices="pass-options" apply-on-change="true"/>
+    <settings-submenu text="Click to configure Layer Mask" align="Right"
+        on-click="pass-menu-pressed">
+        <settings-container>
+            <button text="Back" click-event="back" />
+            <toggle-setting apply-on-change="true" text="Default" value="Layer00" />
+            <toggle-setting apply-on-change="true" text="TransparentFX" value="Layer01" />
+            <toggle-setting apply-on-change="true" text="IgnoreRaycast" value="Layer02" />
+            <toggle-setting apply-on-change="true" text="ThirdPerson" value="Layer03" />
+            <toggle-setting apply-on-change="true" text="Water" value="Layer04" />
+            <toggle-setting apply-on-change="true" text="UI" value="Layer05" />
+            <toggle-setting apply-on-change="true" text="FirstPerson" value="Layer06" />
+            <toggle-setting apply-on-change="true" text="Layer 7" value="Layer07" />
+            <toggle-setting apply-on-change="true" text="Note" value="Layer08" />
+            <toggle-setting apply-on-change="true" text="NoteDebris" value="Layer09" />
+            <toggle-setting apply-on-change="true" text="Avatar" value="Layer10" />
+            <toggle-setting apply-on-change="true" text="Obstacle" value="Layer11" />
+            <toggle-setting apply-on-change="true" text="Saber" value="Layer12" />
+            <toggle-setting apply-on-change="true" text="NeonLight" value="Layer13" />
+            <toggle-setting apply-on-change="true" text="Environment" value="Layer14" />
+            <toggle-setting apply-on-change="true" text="GrabPassTexture1" value="Layer15" />
+            <toggle-setting apply-on-change="true" text="CutEffectParticles" value="Layer16" />
+            <toggle-setting apply-on-change="true" text="Layer 17" value="Layer17" />
+            <toggle-setting apply-on-change="true" text="Layer 18" value="Layer18" />
+            <toggle-setting apply-on-change="true" text="NonReflectedParticles" value="Layer19" />
+            <toggle-setting apply-on-change="true" text="EnvironmentPhysics" value="Layer20" />
+            <toggle-setting apply-on-change="true" text="Layer 21" value="Layer21" />
+            <toggle-setting apply-on-change="true" text="Event" value="Layer22" />
+            <toggle-setting apply-on-change="true" text="Layer 23" value="Layer23" />
+            <toggle-setting apply-on-change="true" text="Layer 24" value="Layer24" />
+            <toggle-setting apply-on-change="true" text="FixMRAlpha" value="Layer25" />
+            <toggle-setting apply-on-change="true" text="Layer 26" value="Layer26" />
+            <toggle-setting apply-on-change="true" text="DontShowInExternalMRCamera" value="Layer27" />
+            <toggle-setting apply-on-change="true" text="PlayersPlace" value="Layer28" />
+            <toggle-setting apply-on-change="true" text="Skybox" value="Layer29" />
+            <toggle-setting apply-on-change="true" text="MRForegroundClipPlane" value="Layer30" />
+            <toggle-setting apply-on-change="true" text="Reserved" value="Layer31" />
+            <button text="Back" click-event="back" />
+        </settings-container>
+    </settings-submenu>
+
+
+</settings-container>
