@@ -14,7 +14,7 @@ internal class BSIPA_OatComponent : MonoBehaviour
 
     private Plugin plug;
 
-    internal SettingsUI settingsObj = new SettingsUI();
+    internal SettingsUI settingsObj;
     internal bool ShouldReloadSettings = false;
 
     bool hasAwoken = false;
@@ -144,6 +144,7 @@ internal class BSIPA_OatComponent : MonoBehaviour
     public void AddSettingsMenu()
     {
         BSIPAPlugin.Log.Info("MENU LOAD");
+        settingsObj = new SettingsUI();
         BSMLSettings.Instance.AddSettingsMenu("OnAirTap", "OnAirTap.BSIPA.settings.bsml",settingsObj);
     }
 

@@ -3,7 +3,6 @@
 
     <checkbox-setting active="false" text="Fake, Hidden Setting That Does Nothing" hover-hint="for real" value="FakeSetting"/>
 
-
     <slider-setting text="Resolution X" min="1" max="7680" integer-only="true" increment="1" value="ResX"/>
     <slider-setting text="Resolution Y" min="1" max="4320" integer-only="true" increment="1" value="ResY"/>
     <toggle-setting text="Render Background Pass" hover-hint="" value="RenderBG"/>
@@ -21,9 +20,6 @@
     <list-setting text="Configure mask for" value="passChoice" choices="passOptions" apply-on-change="true"/>
     <settings-submenu text="Click to configure Layer Mask" align="Right" click-event="reloadLayerSubmenu">
         <settings-container>
-            <horizontal pref-height="12">
-                <text text="These update live, but do not save live."/>
-            </horizontal>
             <toggle-setting get-event="reloadLayerSubmenu" apply-on-change="true" text="Default" value="Layer00" />
             <toggle-setting get-event="reloadLayerSubmenu" apply-on-change="true" text="TransparentFX" value="Layer01" />
             <toggle-setting get-event="reloadLayerSubmenu" apply-on-change="true" text="IgnoreRaycast" value="Layer02" />
@@ -58,10 +54,8 @@
             <toggle-setting get-event="reloadLayerSubmenu" apply-on-change="true" text="Reserved" value="Layer31" />
             <horizontal>
                 <button text="Back" click-event="back" />
-                <button text="Import Default" click-event="back" on-click="SetCurrentMaskToDefault"/>
-                <button text="Save" on-click="SaveCurrentMask" />
+                <button text="Import Default" click-event="reloadLayerSubmenu" on-click="SetCurrentMaskToDefault"/>
             </horizontal>
-            <string-setting text="Hidden Mask Storage B" active="false" value="fgStorage"/>
             
         </settings-container>
     </settings-submenu>
