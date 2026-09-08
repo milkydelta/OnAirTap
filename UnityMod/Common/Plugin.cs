@@ -27,6 +27,8 @@ public class Plugin
 
     internal static HarmonyLib.Harmony harmony;
 
+    internal static int defaultLayerMask = 0;
+
     private string[] testedSDKVersions = ["2.1.2", "1.5.4"];
 
 
