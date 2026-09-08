@@ -2,6 +2,8 @@ using UnityEngine;
 using IPA.Config;
 using IPA.Config.Stores;
 using System;
+using BeatSaberMarkupLanguage.Util;
+using BeatSaberMarkupLanguage.Settings;
 
 
 namespace OnAirTap.BSIPA;
@@ -11,6 +13,8 @@ internal class BSIPA_OatComponent : MonoBehaviour
     internal static BSIPA_OatComponent instance;
 
     private Plugin plug;
+
+    internal SettingsUI settingsObj = new SettingsUI();
 
     bool hasAwoken = false;
 
@@ -133,6 +137,13 @@ internal class BSIPA_OatComponent : MonoBehaviour
         plug.Awake();
 
         hasAwoken = true;
+        MainMenuAwaiter.MainMenuInitializing += AddSettingsMenu;
+    }
+
+    public void AddSettingsMenu()
+    {
+        BSIPAPlugin.Log.Info("MENU LOAD");
+        BSMLSettings.Instance.AddSettingsMenu("OnAirTap", "OnAirTap.BSIPA.settings.bsml",settingsObj);
     }
 
     void Update()
