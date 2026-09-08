@@ -55,6 +55,7 @@ class RenderingPatches {
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateAssets")]
     [HarmonyPostfix]
     static void PrintMaskDefault( ref SDKRender __instance) {
+            Plugin.defaultLayerMask = __instance.spectatorLayerMask;
             Plugin.logger.Info(
                 String.Concat(  "Default LayerMask: ",
                                 Convert.ToString(__instance.spectatorLayerMask, 2).PadLeft(32,'0'),
