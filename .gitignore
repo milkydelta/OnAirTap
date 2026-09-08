@@ -5,3 +5,6 @@ obj
 *.dll
 *.so
 *.pdb
+
+*.csproj.usr
+*.csproj.user
