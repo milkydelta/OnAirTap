@@ -1,5 +1,3 @@
-#include "../header.h"
-
 //shm_open and mmap
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -10,6 +8,13 @@
 #include <sys/types.h>
 
 #include <windef.h>
+
+typedef struct _dataBlock{
+    char* name;
+    int length;
+    void* data;
+    int fd;
+} dataBlock;
 
 int WINAPI lopen(dataBlock* dst){
 

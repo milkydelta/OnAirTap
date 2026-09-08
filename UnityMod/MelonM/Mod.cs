@@ -1,4 +1,5 @@
-﻿using MelonLoader;
+﻿using HarmonyLib.Tools;
+using MelonLoader;
 
 namespace OnAirTap.Melon;
 
@@ -73,6 +74,11 @@ public class Mod : MelonMod
         categoryPasses.LoadFromFile(false);
         categoryClip.LoadFromFile(false);
         categoryMMF.LoadFromFile(false);
+
+        categoryRes.SaveToFile();
+        categoryPasses.SaveToFile(false);
+        categoryClip.SaveToFile(false);
+        categoryMMF.SaveToFile(false);
     }
 
     private void ValidateConfigs()

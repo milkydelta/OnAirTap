@@ -20,7 +20,7 @@ public class Plugin
     internal static SpoutSender spoutBG;
     internal static SpoutSender spoutOptimised;
     internal static AbComms nyanShm;
-    internal static LIVnyan_dat camDat;
+    internal static ICameraData camDat;
     internal static Vector3 hmdPos;
 
     internal static Vector2Int resolution;
@@ -142,7 +142,7 @@ public class Plugin
     internal void LateUpdate() {
         camDat = nyanShm.Read();
 
-        logger.enabled = camDat.HasSetting(LIVnyan_cfg.LOG_ON);
-        if (camDat.HasSetting(LIVnyan_cfg.LOGSPM)) {logger.Info(camDat.ToString());}
+        logger.enabled = camDat.HasSetting(CamDatCfg.LOG_ON);
+        if (camDat.HasSetting(CamDatCfg.LOGSPM)) {logger.Info(camDat.ToString());}
     }
 }

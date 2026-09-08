@@ -10,7 +10,7 @@ class Patch_IsConnected
 {
     static bool Prefix(ref bool __result)
     {
-        __result = Plugin.camDat.HasSetting(LIVnyan_cfg.CAM_ON);
+        __result = Plugin.camDat.HasSetting(CamDatCfg.CAM_ON);
         return false;
     }
 }
