@@ -45,7 +45,6 @@ public class PluginConfig
 
     public virtual void OnReload()
     {
-        BSIPAPlugin.Log.Info("RELOAD EVENT AAAA");
         BSIPA_OatComponent.instance.ReloadConfig();
     }
 }

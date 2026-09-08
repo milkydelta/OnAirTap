@@ -46,7 +46,6 @@ public class SettingsUI
     bool FakeSetting { 
         get { return false; }
         set { 
-            Plugin.logger.Info("SAVING!");
             BSIPA_OatComponent.instance.ShouldReloadSettings = true; 
             foreach (var pass in passOptions)
             {
@@ -119,7 +118,6 @@ public class SettingsUI
 
     private void SaveMask( string choice)
     {
-        Plugin.logger.Info("BUTTON");
         int mask = GetLayerMask(choice);
         string maskString = Convert.ToString(mask, 2).PadLeft(32,'0');
         switch (choice)

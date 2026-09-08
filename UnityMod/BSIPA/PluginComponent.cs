@@ -143,7 +143,6 @@ internal class BSIPA_OatComponent : MonoBehaviour
 
     public void AddSettingsMenu()
     {
-        BSIPAPlugin.Log.Info("MENU LOAD");
         settingsObj = new SettingsUI();
         BSMLSettings.Instance.AddSettingsMenu("OnAirTap", "OnAirTap.BSIPA.settings.bsml",settingsObj);
     }
