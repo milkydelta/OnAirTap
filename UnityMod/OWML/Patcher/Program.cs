@@ -27,20 +27,6 @@ class Program
             return;
         }
 
-        if (!File.Exists(gamePath + "lincomm.dll"))
-        {
-            
-            if (File.Exists(modPath + "/lincomm.dll.so"))
-            {
-                System.Console.WriteLine("Copying Linux communication library");
-                File.Copy(modPath + "/lincomm.dll.so", gamePath + "lincomm.dll");
-            }
-            else
-            {
-                System.Console.WriteLine("Writing Linux communication library");
-                CopyResourceToPath("lincomm.dll.so", gamePath + "lincomm.dll");
-            }
-        }
 
         if (!File.Exists(gameDataPath + "/Plugins/x86_64/OAT_KlakSpout.dll"))
         {

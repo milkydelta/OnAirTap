@@ -20,7 +20,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="$(lincomm_Path)" LogicalName="lincomm.dll.so" Condition="Exists($(lincomm_Path))"/>
     <EmbeddedResource Include="$(KlakSpout_Path)" LogicalName="KlakSpout.dll" Condition="Exists($(KlakSpout_Path))"/>
     <None Include="../../../KLAKSPOUT-DLL-LICENSE.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
