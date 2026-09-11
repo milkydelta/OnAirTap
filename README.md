@@ -20,19 +20,9 @@ Support for MelonLoader was developed using version `0.7.3`.
 
 IL2CPP games can work, but only with MelonLoader, and only when the LIV support is added through a mod. There is currently no support for IL2CPP games with native LIV support, although I am looking into it.
 
-## Basic Setup
+## Setup
 
-Go to Releases and download a build that's appropriate for your chosen mod loader, which you should already have set up.
-
-Releases are named in a specific way: `OnAirTap-[Version]-[Loader]-[BuiltAgainst]-[BuiltAgainstVer].zip`
-
-Extract that onto your game folder. As long as the loader is the same, builds made for another game *should* work. You will just need to rename the `GameName_Data` folder to put the KlakSpout plugin in the correct location.
-
-You will then need to run the game once, to create a config file.
-
-The mod will read information from VRnyan's MemoryMappedFile and should activate when you press the VRnyan button inside VNyan.
-
-**For further instructions, consult the [wiki](https://github.com/milkydelta/OnAirTap/wiki).**
+**For instructions, consult the [wiki](https://github.com/milkydelta/OnAirTap/wiki).**
 
 ## Building
 
