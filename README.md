@@ -1,6 +1,6 @@
 # OnAirTap
 An alternative to the LIV application for Unity games using the LIV Unity SDK.<br>
-Intended for use with the LIVnyan plugin for VNyan.
+Intended for use with the VRnyan plugin for VNyan.
 
 
 LIV -> live -> On Air<br>
