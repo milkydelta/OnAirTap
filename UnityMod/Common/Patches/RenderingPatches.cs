@@ -73,7 +73,7 @@ class RenderingPatches {
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "Dispose")]
     [HarmonyPrefix]
     static void DisposeSpoutSenders() {
-        if (Plugin.cfg.BlankSpoutSenders == false) {return;}
+        if (Plugin.cfg.BlankSpoutSenders == false) { return; }
 
         /*For some reason, the Spout senders just stop working permanently if I disable them.
         The senders still appear in OBS, but there's no frames.
@@ -81,15 +81,19 @@ class RenderingPatches {
 
         //For now, the only solution I can think of is keeping the senders around and just blanking them out.
         Vector2Int res = Plugin.resolution;
-        Plugin.spoutBG.sourceTexture = new RenderTexture(res.x,res.y,24);
-        Plugin.spoutFG.sourceTexture = new RenderTexture(res.x,res.y,24);
-        Plugin.spoutOptimised.sourceTexture = new RenderTexture(res.x,res.y,24);
-        Plugin.spoutExtra.sourceTexture = new RenderTexture(res.x, res.y, 24);
+        RenderTexture rt = RenderTexture.GetTemporary(res.x, res.y, 24, RenderTextureFormat.ARGB32);
+
+        Plugin.spoutBG.sourceTexture = rt;
+        Plugin.spoutFG.sourceTexture = rt;
+        Plugin.spoutOptimised.sourceTexture = rt;
+        Plugin.spoutExtra.sourceTexture = rt;
 
         Plugin.spoutBG.CaptureFrame();
         Plugin.spoutFG.CaptureFrame();
         Plugin.spoutOptimised.CaptureFrame();
         Plugin.spoutExtra.CaptureFrame();
+
+        RenderTexture.ReleaseTemporary(rt);
     }
 
     [HarmonyPatch(typeof(LIV.SDK.Unity.SDKUtils), "SetCamera")]
