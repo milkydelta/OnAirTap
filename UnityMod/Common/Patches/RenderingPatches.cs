@@ -16,7 +16,7 @@ class RenderingPatches {
     static void HookSpoutBG(ref SDKRender __instance, RenderTexture ____backgroundRenderTexture) {
         if (Plugin.cfg.RenderBG == false) {return;}
         Plugin.spoutBG.sourceTexture = ____backgroundRenderTexture;
-        Plugin.spoutBG.captureMethod = CaptureMethod.Texture;
+        Plugin.spoutBG.enabled = true;
     }
 
     [HarmonyPatch(typeof(SDKRender), "CreateForegroundTexture")]
@@ -24,7 +24,7 @@ class RenderingPatches {
     static void HookSpoutFG(ref SDKRender __instance, RenderTexture ____foregroundRenderTexture) {
         if (Plugin.cfg.RenderFG == false) {return;}
         Plugin.spoutFG.sourceTexture = ____foregroundRenderTexture;
-        Plugin.spoutFG.captureMethod = CaptureMethod.Texture;
+        Plugin.spoutFG.enabled = true;
     }
 
     [HarmonyPatch(typeof(SDKRender), "CreateOptimizedTexture")]
@@ -32,7 +32,7 @@ class RenderingPatches {
     static void HookSpoutOp(ref SDKRender __instance, RenderTexture ____optimizedRenderTexture) {
         if (Plugin.cfg.RenderOP == false) {return;}
         Plugin.spoutOptimised.sourceTexture = ____optimizedRenderTexture;
-        Plugin.spoutOptimised.captureMethod = CaptureMethod.Texture;
+        Plugin.spoutOptimised.enabled = true;
     }
 
     [HarmonyPatch(typeof(SDKRender), "Render")]

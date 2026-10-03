@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <Compile Include="../../Common/*.cs" />
-    <Compile Include="../../Common/KlakSpout/*.cs" />
+    <!-- <Compile Include="../../Common/KlakSpout/*.cs" /> -->
     <Compile Include="../../Common/Comms/*.cs" />
     <Compile Include="../../Common/Comms/Managed/*.cs"/>
     <Compile Include="../../Common/Patches/*.cs" />
@@ -47,6 +47,13 @@
   <ItemGroup>
     <Reference Include="LIV">
       <HintPath>$(OWMLPath)/Mods/Raicuparta.OwLiv/LIV.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="OAT.Klak.Spout.Runtime">
+      <HintPath>../../../OAT.Klak.Spout.Runtime.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>

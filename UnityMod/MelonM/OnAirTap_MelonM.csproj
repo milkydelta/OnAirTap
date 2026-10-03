@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <Compile Include = "../Common/*.cs"/>
-    <Compile Include = "../Common/KlakSpout/*.cs"/>
+    <!--<Compile Include = "../Common/KlakSpout/*.cs"/>-->
     <Compile Include = "../Common/Comms/*.cs"/>
     <Compile Include = "../Common/Comms/Unmanaged/*.cs"/>
     <Compile Include = "../Common/Patches/*.cs"/>
@@ -56,6 +56,13 @@
     </Reference>
     <Reference Include="LIV">
       <HintPath>$(GameManagedDirectory)/Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="OAT.Klak.Spout.Runtime">
+      <HintPath>../../OAT.Klak.Spout.Runtime.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>
