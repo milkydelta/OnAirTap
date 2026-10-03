@@ -1,10 +1,10 @@
-using LIV.SDK.Unity;
+//using LIV.SDK.Unity;
 using HarmonyLib;
 using System;
 
 namespace OnAirTap.InjectionPatches2;
 
-[HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
+[HarmonyPatch(typeof(SDKBridge))]
 [HarmonyPatch("IsConnected")]
 class Patch_IsConnected
 {
@@ -15,7 +15,7 @@ class Patch_IsConnected
     }
 }
 
-[HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
+[HarmonyPatch(typeof(SDKBridge))]
 [HarmonyPatch("AddTexture")]
 class Patch_DisableAddTexture
 {
@@ -25,7 +25,7 @@ class Patch_DisableAddTexture
     }
 }
 
-[HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
+[HarmonyPatch(typeof(SDKBridge))]
 [HarmonyPatch("GetResolution")]
 class Patch_SDKResolution
 {
@@ -39,7 +39,7 @@ class Patch_SDKResolution
     }
 }
 
-[HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
+[HarmonyPatch(typeof(SDKBridge))]
 [HarmonyPatch("UpdateInputFrame")]
 class Patch_SDKInputFrame
 {
@@ -54,7 +54,7 @@ class Patch_SDKInputFrame
 
 //SDK2 New Method
 
-[HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
+[HarmonyPatch(typeof(SDKBridge))]
 [HarmonyPatch("CreateCaptureProtocol")]
 class Patch_CreateCaptureProtocol
 {
@@ -68,7 +68,7 @@ class Patch_CreateCaptureProtocol
     }
 }
 
-[HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender))]
+[HarmonyPatch(typeof(SDKRender))]
 [HarmonyPatch("UpdateBridgeInputFrame")]
 class Patch_UpdateBridgeInputFrame
 {

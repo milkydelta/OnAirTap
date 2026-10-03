@@ -1,5 +1,5 @@
 using UnityEngine;
-using LIV.SDK.Unity;
+//using LIV.SDK.Unity;
 using OnAirTap.Spout;
 using HarmonyLib;
 using System;
@@ -11,31 +11,31 @@ namespace OnAirTap;
 
 class RenderingPatches {
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateBackgroundTexture")]
+    [HarmonyPatch(typeof(SDKRender), "CreateBackgroundTexture")]
     [HarmonyPostfix]
-    static void HookSpoutBG(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____backgroundRenderTexture) {
+    static void HookSpoutBG(ref SDKRender __instance, RenderTexture ____backgroundRenderTexture) {
         if (Plugin.cfg.RenderBG == false) {return;}
         Plugin.spoutBG.sourceTexture = ____backgroundRenderTexture;
         Plugin.spoutBG.captureMethod = CaptureMethod.Texture;
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateForegroundTexture")]
+    [HarmonyPatch(typeof(SDKRender), "CreateForegroundTexture")]
     [HarmonyPostfix]
-    static void HookSpoutFG(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____foregroundRenderTexture) {
+    static void HookSpoutFG(ref SDKRender __instance, RenderTexture ____foregroundRenderTexture) {
         if (Plugin.cfg.RenderFG == false) {return;}
         Plugin.spoutFG.sourceTexture = ____foregroundRenderTexture;
         Plugin.spoutFG.captureMethod = CaptureMethod.Texture;
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateOptimizedTexture")]
+    [HarmonyPatch(typeof(SDKRender), "CreateOptimizedTexture")]
     [HarmonyPostfix]
-    static void HookSpoutOp(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____optimizedRenderTexture) {
+    static void HookSpoutOp(ref SDKRender __instance, RenderTexture ____optimizedRenderTexture) {
         if (Plugin.cfg.RenderOP == false) {return;}
         Plugin.spoutOptimised.sourceTexture = ____optimizedRenderTexture;
         Plugin.spoutOptimised.captureMethod = CaptureMethod.Texture;
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "Render")]
+    [HarmonyPatch(typeof(SDKRender), "Render")]
     [HarmonyPostfix]
     static void UpdateSpoutSenders( ref SDKRender __instance) {
         Plugin.spoutBG.CaptureFrame();
@@ -43,7 +43,7 @@ class RenderingPatches {
         Plugin.spoutOptimised.CaptureFrame();
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "InvokePreRender")]
+    [HarmonyPatch(typeof(SDKRender), "InvokePreRender")]
     [HarmonyPostfix]
     static void GetCameraForClipPlane( ref SDKRender __instance) {
         if (__instance.stage == null || __instance.hmdCamera == null) {return;}
@@ -52,7 +52,7 @@ class RenderingPatches {
 
 
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateAssets")]
+    [HarmonyPatch(typeof(SDKRender), "CreateAssets")]
     [HarmonyPostfix]
     static void PrintMaskDefault( ref SDKRender __instance) {
             Plugin.defaultLayerMask = __instance.spectatorLayerMask;
@@ -64,7 +64,7 @@ class RenderingPatches {
             );
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "Dispose")]
+    [HarmonyPatch(typeof(SDKRender), "Dispose")]
     [HarmonyPrefix]
     static void DisposeSpoutSenders() {
         if (Plugin.cfg.BlankSpoutSenders == false) {return;}
@@ -89,7 +89,7 @@ class RenderingPatches {
         RenderTexture.ReleaseTemporary(rt);
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKUtils), "SetCamera")]
+    [HarmonyPatch(typeof(SDKUtils), "SetCamera")]
     [HarmonyPrefix]
     static void DoLayerMasks( ref int layerMask) {
         int mask = Plugin.cfg.LayerMask;
@@ -107,19 +107,19 @@ class RenderingPatches {
 
     static RenPass currentPass;
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "RenderBackground")]
+    [HarmonyPatch(typeof(SDKRender), "RenderBackground")]
     [HarmonyPrefix]
     static void IsPassBG() {
         currentPass = RenPass.BG;
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "RenderForeground")]
+    [HarmonyPatch(typeof(SDKRender), "RenderForeground")]
     [HarmonyPrefix]
     static void IsPassFG() {
         currentPass = RenPass.FG;
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "RenderOptimized")]
+    [HarmonyPatch(typeof(SDKRender), "RenderOptimized")]
     [HarmonyPrefix]
     static void IsPassOP() {
         currentPass = RenPass.OP;
