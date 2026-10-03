@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net6</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyName>OnAirTap.MelonM</AssemblyName>
+    <AssemblyName>OnAirTap.MelonI</AssemblyName>
     <RootNamespace>OnAirTap.Melon</RootNamespace>
     <LangVersion>latest</LangVersion>
     <Version>1.2.0</Version>
@@ -17,8 +17,9 @@
     <Compile Include = "../Common/*.cs"/>
     <Compile Include = "../Common/KlakSpout/*.cs"/>
     <Compile Include = "../Common/Comms/*.cs"/>
-    <Compile Include = "../Common/Comms/Unmanaged/*.cs"/>
+    <Compile Include = "../Common/Comms/Managed/*.cs"/>
     <Compile Include = "../Common/Patches/*.cs"/>
+    <Compile Include = "../MelonCommon/*.cs"/>
   </ItemGroup>
 
   <PropertyGroup>
@@ -55,7 +56,7 @@
       <Private>false</Private>
     </Reference>
     <Reference Include="Il2CppInterop.Runtime">
-      <HintPath>$(MLPath)/net6/Il2CppInterop.Common.dll</HintPath>
+      <HintPath>$(MLPath)/net6/Il2CppInterop.Runtime.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>
@@ -82,7 +83,7 @@
       <Private>false</Private>
     </Reference>
     <Reference Include="LIV">
-      <HintPath>$(GameManagedDirectory)/Assembly-CSharp.dll</HintPath>
+      <HintPath>$(GameManagedDirectory)/Il2CppLIV.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>
