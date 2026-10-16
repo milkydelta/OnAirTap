@@ -45,7 +45,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="LIV">
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="LIV" Publicize="true">
       <HintPath>$(OWMLPath)/Mods/Raicuparta.OwLiv/LIV.dll</HintPath>
       <Private>false</Private>
     </Reference>

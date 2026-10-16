@@ -35,6 +35,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="UnityEngine">
       <HintPath>$(GameDataDirectory)/Managed/UnityEngine.dll</HintPath>
       <Private>false</Private>
@@ -43,7 +47,7 @@
       <HintPath>$(GameDataDirectory)/Managed/UnityEngine.CoreModule.dll</HintPath>
       <Private>false</Private>
     </Reference>
-    <Reference Include="LIV">
+    <Reference Include="LIV" Publicize="true">
       <HintPath>$(GameDataDirectory)/Managed/Assembly-CSharp.dll</HintPath>
       <Private>false</Private>
     </Reference>

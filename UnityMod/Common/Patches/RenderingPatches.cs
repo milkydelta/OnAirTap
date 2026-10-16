@@ -13,25 +13,25 @@ class RenderingPatches {
 
     [HarmonyPatch(typeof(SDKRender), "CreateBackgroundTexture")]
     [HarmonyPostfix]
-    static void HookSpoutBG(ref SDKRender __instance, RenderTexture ____backgroundRenderTexture) {
+    internal static void HookSpoutBG(ref SDKRender __instance) {
         if (Plugin.cfg.RenderBG == false) {return;}
-        Plugin.spoutBG.sourceTexture = ____backgroundRenderTexture;
+        Plugin.spoutBG.sourceTexture = __instance._backgroundRenderTexture;
         Plugin.spoutBG.enabled = true;
     }
 
     [HarmonyPatch(typeof(SDKRender), "CreateForegroundTexture")]
     [HarmonyPostfix]
-    static void HookSpoutFG(ref SDKRender __instance, RenderTexture ____foregroundRenderTexture) {
+    internal static void HookSpoutFG(ref SDKRender __instance) {
         if (Plugin.cfg.RenderFG == false) {return;}
-        Plugin.spoutFG.sourceTexture = ____foregroundRenderTexture;
+        Plugin.spoutFG.sourceTexture = __instance._foregroundRenderTexture;
         Plugin.spoutFG.enabled = true;
     }
 
     [HarmonyPatch(typeof(SDKRender), "CreateOptimizedTexture")]
     [HarmonyPostfix]
-    static void HookSpoutOp(ref SDKRender __instance, RenderTexture ____optimizedRenderTexture) {
+    internal static void HookSpoutOp(ref SDKRender __instance) {
         if (Plugin.cfg.RenderOP == false) {return;}
-        Plugin.spoutOptimised.sourceTexture = ____optimizedRenderTexture;
+        Plugin.spoutOptimised.sourceTexture = __instance._optimizedRenderTexture;
         Plugin.spoutOptimised.enabled = true;
     }
 
