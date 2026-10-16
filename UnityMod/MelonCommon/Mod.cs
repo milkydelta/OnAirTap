@@ -171,6 +171,7 @@ public class Mod : MelonMod
         }
 
         Plugin.logger = new MelonLogger(LoggerInstance);
+        Plugin.harmony = this.HarmonyInstance;
 
         plug = new Plugin();
 

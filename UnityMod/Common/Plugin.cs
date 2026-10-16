@@ -34,7 +34,9 @@ public class Plugin
 
     internal void Awake()
     {
-        harmony = new HarmonyLib.Harmony("OnAirTap");
+        if (harmony == null){
+            harmony = new HarmonyLib.Harmony("OnAirTap");
+        }
 
         var t = typeof(SDKBridge);
 
