@@ -20,7 +20,7 @@ public class Plugin
     internal static SpoutSender spoutBG;
     internal static SpoutSender spoutOptimised;
     internal static AbComms nyanShm;
-    internal static ICameraData camDat;
+    internal static ICameraData camDat = new ShmStruct1_0{cfg = CamDatCfg.LOG_ON};
     internal static Vector3 hmdPos;
 
     internal static Vector2Int resolution;
