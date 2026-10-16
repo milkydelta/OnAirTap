@@ -3,6 +3,7 @@ using UnityEngine;
 using OnAirTap.Spout;
 using HarmonyLib;
 using System;
+using System.Linq;
 
 
 namespace OnAirTap;
@@ -54,14 +55,27 @@ class RenderingPatches {
 
     [HarmonyPatch(typeof(SDKRender), "CreateAssets")]
     [HarmonyPostfix]
-    static void PrintMaskDefault( ref SDKRender __instance) {
-            Plugin.defaultLayerMask = __instance.spectatorLayerMask;
-            Plugin.logger.Info(
-                String.Concat(  "Default LayerMask: ",
-                                Convert.ToString(__instance.spectatorLayerMask, 2).PadLeft(32,'0'),
-                                " (", Convert.ToString(__instance.spectatorLayerMask), ")"
-                )
-            );
+    static void PrintMaskDefault(ref SDKRender __instance)
+    {
+        Type t = __instance.GetType();
+
+        var propGetter = t.GetProperties().Where((a) => { return a.Name == "spectatorLayerMask" || a.Name == "renderingLayerMask"; }).First().GetGetMethod();
+        object prop = propGetter.Invoke(__instance, []);
+
+        if (prop.GetType().Name.EndsWith("LayerMask"))
+        {
+            Plugin.defaultLayerMask = (int)prop.GetType().GetProperty("value").GetGetMethod().Invoke(prop, []);
+        } else
+        {
+            Plugin.defaultLayerMask = (int)prop;
+        }
+
+        Plugin.logger.Info(
+            String.Concat("Default LayerMask: ",
+                            Convert.ToString(Plugin.defaultLayerMask, 2).PadLeft(32, '0'),
+                            " (", Convert.ToString(Plugin.defaultLayerMask), ")"
+            )
+        );
     }
 
     [HarmonyPatch(typeof(SDKRender), "Dispose")]
