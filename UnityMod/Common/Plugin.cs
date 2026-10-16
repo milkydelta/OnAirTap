@@ -29,7 +29,11 @@ public class Plugin
 
     internal static int defaultLayerMask = 0;
 
+    #if OAT_IL2CPP
+    private string[] testedSDKVersions = ["2.1.0"];
+    #else
     private string[] testedSDKVersions = ["2.1.2", "1.5.4"];
+    #endif
 
 
     internal void Awake()
@@ -71,6 +75,12 @@ public class Plugin
 
                 harmony.PatchAll(typeof(InjectionPatches2.Patch_CreateCaptureProtocol));
                 harmony.PatchAll(typeof(InjectionPatches2.Patch_UpdateBridgeInputFrame));
+#if OAT_IL2CPP
+                {
+                    logger.Info("Harmony patches completed. Performing extra setup.");
+                    SDKSettings.instance._captureProtocolType = SDKBridge.CaptureProtocolType.MOCK;
+                }
+#endif
             }
             else {
                 harmony.PatchAll(typeof(InjectionPatches1.Patch_IsActive));
