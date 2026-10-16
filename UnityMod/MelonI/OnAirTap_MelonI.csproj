@@ -9,6 +9,10 @@
     <Version>1.2.0</Version>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DefineConstants>OAT_IL2CPP</DefineConstants>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DebugType>none</DebugType>
   </PropertyGroup>
