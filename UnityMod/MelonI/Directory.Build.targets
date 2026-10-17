@@ -4,8 +4,6 @@
             <OutputTargetFolder>$(OutputPath)Out/Folder</OutputTargetFolder>
         </PropertyGroup>
         <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(OutputTargetFolder)/Mods" />
-        <Copy SourceFiles="$(GameDataDirectory)/Plugins/x86_64/OAT_KlakSpout.dll" DestinationFolder="$(OutputTargetFolder)/$(GameName)_Data/Plugins/x86_64" />
-        <Copy SourceFiles="../../KLAKSPOUT-DLL-LICENSE.txt" DestinationFolder="$(OutputTargetFolder)/$(GameName)_Data/Plugins/x86_64" />
     </Target>
 
     <Target Name="GetGit" AfterTargets="MakeOutputFolder" Condition="$(Configuration) == Release">
@@ -16,7 +14,7 @@
 
     <Target Name="ZipOutputFolder" AfterTargets="GetGit" Condition="$(Configuration) == Release">
         <PropertyGroup>
-            <ZipOutputFilename>$(OutputPath)/Out/OnAirTap-$(Version)-MelonM-$(GameName)-$(GitHash).zip</ZipOutputFilename>
+            <ZipOutputFilename>$(OutputPath)/Out/OnAirTap-$(Version)-MelonI-$(GameName)-$(GitHash).zip</ZipOutputFilename>
         </PropertyGroup>
         <Delete Files="$(ZipOutputFilename)" Condition="Exists($(ZipOutputFilename))" />
         <ZipDirectory SourceDirectory="$(OutputTargetFolder)" DestinationFile="$(ZipOutputFilename)" />
