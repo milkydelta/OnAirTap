@@ -59,12 +59,15 @@ class RenderingPatches {
     {
         Type t = __instance.GetType();
 
-        var propGetter = t.GetProperties().Where((a) => { return a.Name == "spectatorLayerMask" || a.Name == "renderingLayerMask"; }).First().GetGetMethod();
-        object prop = propGetter.Invoke(__instance, []);
+        //var propGetter = t.GetProperties().Where((a) => { return a.Name == "spectatorLayerMask" || a.Name == "renderingLayerMask"; }).First().GetGetMethod();
+        //object prop = propGetter.Invoke(__instance, []);
+        object prop =  t.GetProperties()
+                        .Where((a) => { return a.Name == "spectatorLayerMask" || a.Name == "renderingLayerMask"; })
+                        .First().GetValue(__instance, null);
 
         if (prop.GetType().Name.EndsWith("LayerMask"))
         {
-            Plugin.defaultLayerMask = (int)prop.GetType().GetProperty("value").GetGetMethod().Invoke(prop, []);
+            Plugin.defaultLayerMask = (int)prop.GetType().GetProperty("value").GetValue(prop, null);
         } else
         {
             Plugin.defaultLayerMask = (int)prop;

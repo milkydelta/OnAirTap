@@ -5,8 +5,16 @@ using System;
 
 namespace OnAirTap.InjectionPatches2;
 
-[HarmonyPatch(typeof(CaptureProtocolMock))]
-[HarmonyPatch("IsConnected")]
+class CPM
+{
+    #if OAT_IL2CPP
+    public const string cPM = "Il2Cpp.CaptureProtocolMock";
+    #else
+    public const string cPM = "CaptureProtocolMock";
+    #endif
+}
+
+[HarmonyPatch(CPM.cPM,"IsConnected")]
 class Patch_IsConnected
 {
     static void Postfix(ref bool __result)
@@ -25,8 +33,7 @@ class Patch_DisableAddTexture
     }
 }
 
-[HarmonyPatch(typeof(CaptureProtocolMock))]
-[HarmonyPatch("GetResolution")]
+[HarmonyPatch(CPM.cPM,"GetResolution")]
 class Patch_SDKResolution
 {
     static bool Prefix(ref SDKResolution sdkResolution)
@@ -39,8 +46,7 @@ class Patch_SDKResolution
     }
 }
 
-[HarmonyPatch(typeof(CaptureProtocolMock))]
-[HarmonyPatch("UpdateInputFrame")]
+[HarmonyPatch(CPM.cPM,"UpdateInputFrame")]
 class Patch_SDKInputFrame
 {
     static bool Prefix(ref SDKInputFrame __0)

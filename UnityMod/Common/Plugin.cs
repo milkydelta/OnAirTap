@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-//using LIV.SDK.Unity;
 using OnAirTap.Spout;
 
 using HarmonyLib;
@@ -37,6 +36,26 @@ public class Plugin
     private string[] testedSDKVersions = ["2.1.2", "1.5.4"];
     #endif
 
+    private Type GetTypeFromName(string name)
+    {
+        foreach (Assembly assem in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            try {
+                foreach (Type t in assem.GetTypes())
+                {
+                    if (t.FullName == name)
+                    {
+                        return t;
+                    }
+                }
+            } catch {
+                logger.Info("Assembly.GetTypes threw an exception for the following assembly.");
+                logger.Info(assem.FullName);
+            }
+
+        }
+        return null;
+    }
 
     internal void Awake()
     {
@@ -44,7 +63,7 @@ public class Plugin
             harmony = new HarmonyLib.Harmony("OnAirTap");
         }
 
-        var t = typeof(SDKBridge);
+        //var t = typeof(SDKBridge);
 
         NativeMethods.Platform plat = NativeMethods.GetPlatform();
         logger.Info("Detected platform: "+plat.ToString()+". Making Comms.");
@@ -80,7 +99,16 @@ public class Plugin
 #if OAT_IL2CPP
                 {
                     logger.Info("Harmony patches completed. Performing extra setup.");
-                    SDKSettings.instance._captureProtocolType = SDKBridge.CaptureProtocolType.MOCK;
+
+                    //SDKSettings.instance._captureProtocolType = SDKBridge.CaptureProtocolType.MOCK;
+
+                    Type t = GetTypeFromName("Il2CppLIV.SDK.Unity.SDKSettings");
+                    object o = t?.GetProperty("instance")?.GetValue(null);
+                    if (o != null)
+                    {
+                        PropertyInfo p = t.GetProperty("_captureProtocolType");
+                        p?.SetValue(o, Convert.ChangeType(1, p.PropertyType));
+                    }
                 }
 #endif
             }
