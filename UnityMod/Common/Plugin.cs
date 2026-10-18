@@ -77,8 +77,19 @@ public class Plugin
 
         harmony.PatchAll(typeof(RenderingPatches));
 
-        logger.Info("Reported LIV SDK version: "+ SDKConstants.SDK_VERSION);
-        if (!testedSDKVersions.Contains(SDKConstants.SDK_VERSION))
+        string ver = "";
+        //I need to do reflection because it's a const.
+        {
+            Type t = typeof(SDKConstants);
+            ver = (string)t.GetField("SDK_VERSION")?.GetValue(null);
+            if (ver == "")
+            {
+                ver = (string)t.GetProperty("SDK_VERSION")?.GetValue(null,null);
+            }
+        }
+
+        logger.Info("Reported LIV SDK version: "+ ver);
+        if (!testedSDKVersions.Contains(ver))
         {
             logger.Warn("OnAirTap has not been tested with this SDK version. You may encounter problems.");
         }
@@ -88,7 +99,7 @@ public class Plugin
             harmony.PatchAll(typeof(InjectionPatchesCommon.Patch_DisableSubmit));
             harmony.PatchAll(typeof(InjectionPatchesCommon.Patch_DisableSubmitApplicationOutput));
 
-            if (SDKConstants.SDK_VERSION.StartsWith("2.")) {
+            if (ver.StartsWith("2.")) {
                 harmony.PatchAll(typeof(InjectionPatches2.Patch_IsConnected));
                 harmony.PatchAll(typeof(InjectionPatches2.Patch_DisableAddTexture));
                 harmony.PatchAll(typeof(InjectionPatches2.Patch_SDKInputFrame));
