@@ -58,7 +58,6 @@
   <ItemGroup>
     <Reference Include="OAT.Klak.Spout.Runtime">
       <HintPath>../../../OAT.Klak.Spout.Runtime.dll</HintPath>
-      <Private>false</Private>
     </Reference>
   </ItemGroup>
 </Project>

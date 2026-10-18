@@ -106,7 +106,7 @@
 
   <ItemGroup>
     <Reference Include="OAT.Klak.Spout.Runtime">
-      <HintPath>../../OAT.Klak.Spout.Runtime.dll</HintPath>
+      <HintPath>$(BeatSaberDir)\Libs\OAT.Klak.Spout.Runtime.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>
