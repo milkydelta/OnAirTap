@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>OnAirTap.MelonM</AssemblyName>
+    <RootNamespace>OnAirTap.Melon</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Version>1.2.0</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include = "../Common/*.cs"/>
+    <!--<Compile Include = "../Common/KlakSpout/*.cs"/>-->
+    <Compile Include = "../Common/Comms/*.cs"/>
+    <Compile Include = "../Common/Comms/Unmanaged/*.cs"/>
+    <Compile Include = "../Common/Patches/*.cs"/>
+    <Compile Include = "../MelonCommon/*.cs"/>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <MLPath>$(GameBaseDirectory)/MelonLoader</MLPath>
+    <MLAssembliesPath Condition="!Exists('$(MLPath)/net6')">$(MLPath)</MLAssembliesPath>
+    <MLAssembliesPath Condition="Exists('$(MLPath)/net6')">$(MLPath)/$(TargetFramework)</MLAssembliesPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="MelonLoader">
+      <HintPath>$(MLAssembliesPath)/MelonLoader.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(MLAssembliesPath)/0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <GameManagedDirectory>$(GameDataDirectory)/Managed</GameManagedDirectory>
+    <GameManagedDirectory Condition="Exists('$(MLPath)/Managed')">$(MLPath)/Managed</GameManagedDirectory>
+    <GameManagedDirectory Condition="Exists('$(MLPath)/Il2CppAssemblies')">$(MLPath)/Il2CppAssemblies</GameManagedDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="UnityEngine">
+      <HintPath>$(GameManagedDirectory)/UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(GameManagedDirectory)/UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="LIV" Publicize="true">
+      <HintPath>$(GameManagedDirectory)/Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="OAT.Klak.Spout.Runtime">
+      <HintPath>$(GameBaseDirectory)/UserLibs/OAT.Klak.Spout.Runtime.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

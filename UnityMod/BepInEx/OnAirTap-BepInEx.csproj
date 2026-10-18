@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <Compile Include = "../Common/*.cs"/>
-    <Compile Include = "../Common/KlakSpout/*.cs"/>
+    <!--<Compile Include = "../Common/KlakSpout/*.cs"/>-->
     <Compile Include = "../Common/Comms/*.cs"/>
     <Compile Include = "../Common/Comms/Unmanaged/*.cs"/>
     <Compile Include = "../Common/Patches/*.cs"/>
@@ -35,6 +35,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="UnityEngine">
       <HintPath>$(GameDataDirectory)/Managed/UnityEngine.dll</HintPath>
       <Private>false</Private>
@@ -43,8 +47,15 @@
       <HintPath>$(GameDataDirectory)/Managed/UnityEngine.CoreModule.dll</HintPath>
       <Private>false</Private>
     </Reference>
-    <Reference Include="LIV">
+    <Reference Include="LIV" Publicize="true">
       <HintPath>$(GameDataDirectory)/Managed/Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="OAT.Klak.Spout.Runtime">
+      <HintPath>$(BepInExBaseDirectory)/BepInEx/plugins/OAT.Klak.Spout.Runtime.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>

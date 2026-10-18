@@ -1,0 +1,7 @@
+<Project>
+    <PropertyGroup>
+        <GameBaseDirectory>/mnt/spinning/SteamGameFolder/steamapps/common/SynthRiders</GameBaseDirectory>
+        <GameName>SynthRiders</GameName>
+        <GameDataDirectory>$(GameBaseDirectory)/$(GameName)_Data</GameDataDirectory>
+    </PropertyGroup>
+</Project>

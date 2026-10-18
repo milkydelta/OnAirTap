@@ -1,12 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyName>OnAirTap.MelonM</AssemblyName>
+    <TargetFramework>net6</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>OnAirTap.MelonI</AssemblyName>
     <RootNamespace>OnAirTap.Melon</RootNamespace>
     <LangVersion>latest</LangVersion>
     <Version>1.2.0</Version>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>OAT_IL2CPP</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
@@ -15,10 +19,11 @@
 
   <ItemGroup>
     <Compile Include = "../Common/*.cs"/>
-    <Compile Include = "../Common/KlakSpout/*.cs"/>
+    <!--<Compile Include = "../Common/KlakSpout/*.cs"/>-->
     <Compile Include = "../Common/Comms/*.cs"/>
-    <Compile Include = "../Common/Comms/Unmanaged/*.cs"/>
+    <Compile Include = "../Common/Comms/Managed/*.cs"/>
     <Compile Include = "../Common/Patches/*.cs"/>
+    <Compile Include = "../MelonCommon/*.cs"/>
   </ItemGroup>
 
   <PropertyGroup>
@@ -55,7 +60,7 @@
       <Private>false</Private>
     </Reference>
     <Reference Include="Il2CppInterop.Runtime">
-      <HintPath>$(MLPath)/net6/Il2CppInterop.Common.dll</HintPath>
+      <HintPath>$(MLPath)/net6/Il2CppInterop.Runtime.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>
@@ -82,7 +87,14 @@
       <Private>false</Private>
     </Reference>
     <Reference Include="LIV">
-      <HintPath>$(GameManagedDirectory)/Assembly-CSharp.dll</HintPath>
+      <HintPath>$(GameManagedDirectory)/Il2CppLIV.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="OAT.Klak.Spout.Runtime">
+      <HintPath>$(GameBaseDirectory)/UserLibs/OAT.Klak.Spout.Runtime.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>

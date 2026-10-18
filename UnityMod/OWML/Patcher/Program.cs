@@ -28,19 +28,19 @@ class Program
         }
 
 
-        if (!File.Exists(gameDataPath + "/Plugins/x86_64/OAT_KlakSpout.dll"))
+        if (!File.Exists(gameDataPath + "/Plugins/x86_64/OAT_KlakSpout_2.dll"))
         {
             Directory.CreateDirectory(gameDataPath + "/Plugins/x86_64");
 
-            if (File.Exists(modPath + "/KlakSpout.dll"))
+            if (File.Exists(modPath + "/OAT_KlakSpout_2.dll"))
             {
                 System.Console.WriteLine("Copying KlakSpout Plugin");
-                File.Copy(modPath + "/KlakSpout.dll", gameDataPath + "/Plugins/x86_64/OAT_KlakSpout.dll");
+                File.Copy(modPath + "/OAT_KlakSpout_2.dll", gameDataPath + "/Plugins/x86_64/OAT_KlakSpout_2.dll");
             }
             else
             {
                 System.Console.WriteLine("Writing KlakSpout Plugin");
-                CopyResourceToPath("KlakSpout.dll", gameDataPath + "/Plugins/x86_64/OAT_KlakSpout.dll");
+                CopyResourceToPath("KlakSpout.dll", gameDataPath + "/Plugins/x86_64/OAT_KlakSpout_2.dll");
             }
 
             if (File.Exists(modPath + "/KLAKSPOUT-DLL-LICENSE.txt")){

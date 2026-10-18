@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
-using LIV.SDK.Unity;
 using OnAirTap.Spout;
 
 using HarmonyLib;
 using System.Linq;
+using System;
+using System.Reflection;
 
 
 namespace OnAirTap;
@@ -20,7 +21,7 @@ public class Plugin
     internal static SpoutSender spoutBG;
     internal static SpoutSender spoutOptimised;
     internal static AbComms nyanShm;
-    internal static ICameraData camDat;
+    internal static ICameraData camDat = new ShmStruct1_0{cfg = CamDatCfg.LOG_ON};
     internal static Vector3 hmdPos;
 
     internal static Vector2Int resolution;
@@ -29,14 +30,40 @@ public class Plugin
 
     internal static int defaultLayerMask = 0;
 
+    #if OAT_IL2CPP
+    private string[] testedSDKVersions = ["2.1.0"];
+    #else
     private string[] testedSDKVersions = ["2.1.2", "1.5.4"];
+    #endif
 
+    private Type GetTypeFromName(string name)
+    {
+        foreach (Assembly assem in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            try {
+                foreach (Type t in assem.GetTypes())
+                {
+                    if (t.FullName == name)
+                    {
+                        return t;
+                    }
+                }
+            } catch {
+                logger.Info("Assembly.GetTypes threw an exception for the following assembly.");
+                logger.Info(assem.FullName);
+            }
+
+        }
+        return null;
+    }
 
     internal void Awake()
     {
-        harmony = new HarmonyLib.Harmony("OnAirTap");
+        if (harmony == null){
+            harmony = new HarmonyLib.Harmony("OnAirTap");
+        }
 
-        var t = typeof(SDKBridge);
+        //var t = typeof(SDKBridge);
 
         NativeMethods.Platform plat = NativeMethods.GetPlatform();
         logger.Info("Detected platform: "+plat.ToString()+". Making Comms.");
@@ -50,8 +77,19 @@ public class Plugin
 
         harmony.PatchAll(typeof(RenderingPatches));
 
-        logger.Info("Reported LIV SDK version: "+ SDKConstants.SDK_VERSION);
-        if (!testedSDKVersions.Contains(SDKConstants.SDK_VERSION))
+        string ver = "";
+        //I need to do reflection because it's a const.
+        {
+            Type t = typeof(SDKConstants);
+            ver = (string)t.GetField("SDK_VERSION")?.GetValue(null);
+            if (ver == "")
+            {
+                ver = (string)t.GetProperty("SDK_VERSION")?.GetValue(null,null);
+            }
+        }
+
+        logger.Info("Reported LIV SDK version: "+ ver);
+        if (!testedSDKVersions.Contains(ver))
         {
             logger.Warn("OnAirTap has not been tested with this SDK version. You may encounter problems.");
         }
@@ -61,7 +99,7 @@ public class Plugin
             harmony.PatchAll(typeof(InjectionPatchesCommon.Patch_DisableSubmit));
             harmony.PatchAll(typeof(InjectionPatchesCommon.Patch_DisableSubmitApplicationOutput));
 
-            if (SDKConstants.SDK_VERSION.StartsWith("2.")) {
+            if (ver.StartsWith("2.")) {
                 harmony.PatchAll(typeof(InjectionPatches2.Patch_IsConnected));
                 harmony.PatchAll(typeof(InjectionPatches2.Patch_DisableAddTexture));
                 harmony.PatchAll(typeof(InjectionPatches2.Patch_SDKInputFrame));
@@ -69,6 +107,21 @@ public class Plugin
 
                 harmony.PatchAll(typeof(InjectionPatches2.Patch_CreateCaptureProtocol));
                 harmony.PatchAll(typeof(InjectionPatches2.Patch_UpdateBridgeInputFrame));
+#if OAT_IL2CPP
+                {
+                    logger.Info("Harmony patches completed. Performing extra setup.");
+
+                    //SDKSettings.instance._captureProtocolType = SDKBridge.CaptureProtocolType.MOCK;
+
+                    Type t = GetTypeFromName("Il2CppLIV.SDK.Unity.SDKSettings");
+                    object o = t?.GetProperty("instance")?.GetValue(null);
+                    if (o != null)
+                    {
+                        PropertyInfo p = t.GetProperty("_captureProtocolType");
+                        p?.SetValue(o, Convert.ChangeType(1, p.PropertyType));
+                    }
+                }
+#endif
             }
             else {
                 harmony.PatchAll(typeof(InjectionPatches1.Patch_IsActive));
@@ -106,9 +159,9 @@ public class Plugin
         BridgePatchMethods.Res = new SDKResolution{width=cfg.ResX, height=cfg.ResY};
 
         if (notInitial){
-            if (!cfg.RenderBG){spoutBG.captureMethod = CaptureMethod.GameView;}
-            if (!cfg.RenderFG){spoutFG.captureMethod = CaptureMethod.GameView;}
-            if (!cfg.RenderOP){spoutOptimised.captureMethod = CaptureMethod.GameView;}
+            if (!cfg.RenderBG){spoutBG.enabled = false;}
+            if (!cfg.RenderFG){spoutFG.enabled = false;}
+            if (!cfg.RenderOP){spoutOptimised.enabled = false;}
         }
     }
 
@@ -125,16 +178,19 @@ public class Plugin
                 //spoutBG.enabled=false;
                 spoutBG = new SpoutSender();
                 spoutBG.spoutName="OnAirTap Background";
+                spoutBG.verticalFlip = true;
 
                 //spoutFG = spoutObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
                 //spoutFG.enabled=false;
                 spoutFG = new SpoutSender();
                 spoutFG.spoutName = "OnAirTap Foreground";
+                spoutFG.verticalFlip = true;
 
                 //spoutOptimised = spoutObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
                 //spoutOptimised.enabled=false;
                 spoutOptimised = new SpoutSender();
                 spoutOptimised.spoutName = "OnAirTap Foreground [Optimised]";
+                spoutOptimised.verticalFlip = true;
 
                 logger.Info("Successfully made Spout Holding Object.");
             }
