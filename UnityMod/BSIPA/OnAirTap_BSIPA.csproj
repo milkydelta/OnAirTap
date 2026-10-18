@@ -27,6 +27,10 @@
     <DebugType>none</DebugType>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DefineConstants>OAT_BSML</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="BeatSaberModdingTools.Tasks" Version="2.0.0-beta7">
       <PrivateAssets>all</PrivateAssets>

@@ -1,3 +1,4 @@
+#if OAT_BSML
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -194,3 +195,4 @@ public class SettingsUI
         SetLayerMask(layerMask, pass);
     }
 }
+#endif
