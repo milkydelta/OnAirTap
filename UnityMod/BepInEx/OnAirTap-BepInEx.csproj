@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net35</TargetFramework>
     <AssemblyName>OnAirTap.BepInEx5</AssemblyName>
     <Product>OnAirTap</Product>
     <Version>1.2.0</Version>
@@ -48,7 +48,7 @@
       <Private>false</Private>
     </Reference>
     <Reference Include="LIV" Publicize="true">
-      <HintPath>$(GameDataDirectory)/Managed/Assembly-CSharp.dll</HintPath>
+      <HintPath>$(BepInExBaseDirectory)/BepInEx/plugins/TwoForksVr.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>
