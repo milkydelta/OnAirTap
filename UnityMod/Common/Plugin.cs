@@ -131,6 +131,8 @@ public class Plugin
             }
         }
 
+        Spout.Misc.RawLog = logger.Info;
+
         MakeSpoutSenders();
 
         logger.Info("Core Plugin has completed Awake().");
@@ -169,6 +171,10 @@ public class Plugin
 
     internal void MakeSpoutSenders() {
         logger.Info("Making Spout Senders...");
+        
+        spoutBG?.Dispose();
+        spoutFG?.Dispose();
+        spoutOptimised?.Dispose();
 
         spoutBG = new SpoutSender();
         spoutBG.spoutName = "OnAirTap Background";
