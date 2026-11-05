@@ -82,7 +82,7 @@ public class Plugin
         {
             Type t = typeof(SDKConstants);
             ver = (string)t.GetField("SDK_VERSION")?.GetValue(null);
-            if (ver == "")
+            if (ver == "" || ver == null)
             {
                 ver = (string)t.GetProperty("SDK_VERSION")?.GetValue(null,null);
             }
@@ -118,7 +118,18 @@ public class Plugin
                     if (o != null)
                     {
                         PropertyInfo p = t.GetProperty("_captureProtocolType");
-                        p?.SetValue(o, Convert.ChangeType(1, p.PropertyType));
+                        Array pValues = p?.PropertyType?.GetEnumValues();
+                        if (pValues == null){pValues = new object[]{};}
+
+                        foreach (var item in pValues)
+                        {
+                            if (item.ToString().ToLower() == "mock")
+                            {
+                                p?.SetValue(o,item);
+                            }
+                        }
+
+                        //p?.SetValue(o, Convert.ChangeType((uint)1, p.PropertyType)); // Apparently this is no good.
                     }
                 }
 #endif
