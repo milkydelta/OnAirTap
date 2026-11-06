@@ -1,5 +1,6 @@
 ﻿using HarmonyLib.Tools;
 using MelonLoader;
+using System;
 
 namespace OnAirTap.Melon;
 
@@ -171,6 +172,7 @@ public class Mod : MelonMod
         }
 
         Plugin.logger = new MelonLogger(LoggerInstance);
+        Plugin.harmony = this.HarmonyInstance;
 
         plug = new Plugin();
 

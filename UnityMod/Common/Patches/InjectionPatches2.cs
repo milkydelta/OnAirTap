@@ -1,21 +1,29 @@
-using LIV.SDK.Unity;
+//using LIV.SDK.Unity;
 using HarmonyLib;
+using HarmonyLib.Tools;
 using System;
 
 namespace OnAirTap.InjectionPatches2;
 
-[HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
-[HarmonyPatch("IsConnected")]
+class CPM
+{
+    #if OAT_IL2CPP
+    public const string cPM = "Il2Cpp.CaptureProtocolMock";
+    #else
+    public const string cPM = "CaptureProtocolMock";
+    #endif
+}
+
+[HarmonyPatch(CPM.cPM,"IsConnected")]
 class Patch_IsConnected
 {
-    static bool Prefix(ref bool __result)
+    static void Postfix(ref bool __result)
     {
         __result = Plugin.camDat.HasSetting(CamDatCfg.CAM_ON);
-        return false;
     }
 }
 
-[HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
+[HarmonyPatch(typeof(SDKBridge))]
 [HarmonyPatch("AddTexture")]
 class Patch_DisableAddTexture
 {
@@ -25,8 +33,7 @@ class Patch_DisableAddTexture
     }
 }
 
-[HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
-[HarmonyPatch("GetResolution")]
+[HarmonyPatch(CPM.cPM,"GetResolution")]
 class Patch_SDKResolution
 {
     static bool Prefix(ref SDKResolution sdkResolution)
@@ -39,8 +46,7 @@ class Patch_SDKResolution
     }
 }
 
-[HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
-[HarmonyPatch("UpdateInputFrame")]
+[HarmonyPatch(CPM.cPM,"UpdateInputFrame")]
 class Patch_SDKInputFrame
 {
     static bool Prefix(ref SDKInputFrame __0)
@@ -54,7 +60,7 @@ class Patch_SDKInputFrame
 
 //SDK2 New Method
 
-[HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
+[HarmonyPatch(typeof(SDKBridge))]
 [HarmonyPatch("CreateCaptureProtocol")]
 class Patch_CreateCaptureProtocol
 {
@@ -62,13 +68,15 @@ class Patch_CreateCaptureProtocol
     //The value comes from SDKSettings, which is loaded from a resource.
     //No numerical values are assigned in the enum, so it's automatic. Bridge is 0 and Mock is 1. 
     //We want Mock, because it doesn't complain about the main application not being installed.
+
+    //This actually isn't called on IL2CPP. I presume it's some inlining problem.
     static void Prefix(ref uint __0)
     {
         __0 = 1;
     }
 }
 
-[HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender))]
+[HarmonyPatch(typeof(SDKRender))]
 [HarmonyPatch("UpdateBridgeInputFrame")]
 class Patch_UpdateBridgeInputFrame
 {
@@ -79,9 +87,25 @@ class Patch_UpdateBridgeInputFrame
     Because of that, near and far clip are stuck at the default values of 0.01 and 1000, which is not sufficient for beat saber.
     This should revert it to the 1.5 behaviour
     */
-    static bool Prefix(SDKRender __instance, ref SDKInputFrame ____inputFrame)
+    static bool Prefix(SDKRender __instance)
     {
-        SDKBridge.UpdateInputFrame(ref ____inputFrame);
+        //var inpF = __instance._inputFrame;
+        //SDKBridge.UpdateInputFrame(ref inpF);
+        //__instance._inputFrame = inpF;
+        
+        BridgePatchMethods.SetInputFrame(ref BridgePatchMethods.Frame);
+        __instance._inputFrame = BridgePatchMethods.Frame;
+        
+
+        #if OAT_IL2CPP
+        //On IL2CPP, something prevents the rendering patches below from being called.
+        //So I have to call them manually here, from a patch that does work, for some reason.
+        RenderingPatches.HookSpoutBG(ref __instance);
+        RenderingPatches.HookSpoutFG(ref __instance);
+        RenderingPatches.HookSpoutOp(ref __instance);
+        RenderingPatches.GetCameraForClipPlane(ref __instance);
+        #endif
+
         return false;
     }
 }

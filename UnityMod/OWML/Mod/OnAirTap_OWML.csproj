@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <Compile Include="../../Common/*.cs" />
-    <Compile Include="../../Common/KlakSpout/*.cs" />
+    <!-- <Compile Include="../../Common/KlakSpout/*.cs" /> -->
     <Compile Include="../../Common/Comms/*.cs" />
     <Compile Include="../../Common/Comms/Managed/*.cs"/>
     <Compile Include="../../Common/Patches/*.cs" />
@@ -45,9 +45,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="LIV">
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="LIV" Publicize="true">
       <HintPath>$(OWMLPath)/Mods/Raicuparta.OwLiv/LIV.dll</HintPath>
       <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="OAT.Klak.Spout.Runtime">
+      <HintPath>../../../OAT.Klak.Spout.Runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

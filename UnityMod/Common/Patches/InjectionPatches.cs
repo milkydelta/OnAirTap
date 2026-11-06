@@ -1,4 +1,4 @@
-using LIV.SDK.Unity;
+//using LIV.SDK.Unity;
 using HarmonyLib;
 using System;
 
@@ -7,7 +7,7 @@ using System;
 
 namespace OnAirTap.InjectionPatchesCommon
 {
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
+    [HarmonyPatch(typeof(SDKBridge))]
     [HarmonyPatch("IssuePluginEvent")]
     class Patch_DisableSubmit
     {
@@ -17,7 +17,7 @@ namespace OnAirTap.InjectionPatchesCommon
         }
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
+    [HarmonyPatch(typeof(SDKBridge))]
     [HarmonyPatch("SubmitApplicationOutput")]
     class Patch_DisableSubmitApplicationOutput
     {
@@ -27,7 +27,7 @@ namespace OnAirTap.InjectionPatchesCommon
         }
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
+    [HarmonyPatch(typeof(SDKBridge))]
     [HarmonyPatch("CreateFrame")]
     class Patch_DisableCreateFrame
     {
@@ -41,7 +41,7 @@ namespace OnAirTap.InjectionPatchesCommon
 namespace OnAirTap.InjectionPatches1
 {
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
+    [HarmonyPatch(typeof(SDKBridge))]
     [HarmonyPatch("IsActive", MethodType.Getter)]
     class Patch_IsActive
     {
@@ -53,7 +53,7 @@ namespace OnAirTap.InjectionPatches1
     }
 
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
+    [HarmonyPatch(typeof(SDKBridge))]
     [HarmonyPatch("AddTexture", [typeof(SDKTexture)])]
     class Patch_DisableAddTexture
     {
@@ -64,7 +64,7 @@ namespace OnAirTap.InjectionPatches1
     }
 
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
+    [HarmonyPatch(typeof(SDKBridge))]
     [HarmonyPatch("GetResolution")]
     class Patch_SDKResolution
     {
@@ -79,7 +79,7 @@ namespace OnAirTap.InjectionPatches1
         }
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKBridge))]
+    [HarmonyPatch(typeof(SDKBridge))]
     [HarmonyPatch("UpdateInputFrame")]
     class Patch_SDKInputFrame
     {

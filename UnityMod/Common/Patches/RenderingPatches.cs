@@ -1,8 +1,9 @@
 using UnityEngine;
-using LIV.SDK.Unity;
+//using LIV.SDK.Unity;
 using OnAirTap.Spout;
 using HarmonyLib;
 using System;
+using System.Linq;
 
 
 namespace OnAirTap;
@@ -11,31 +12,31 @@ namespace OnAirTap;
 
 class RenderingPatches {
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateBackgroundTexture")]
+    [HarmonyPatch(typeof(SDKRender), "CreateBackgroundTexture")]
     [HarmonyPostfix]
-    static void HookSpoutBG(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____backgroundRenderTexture) {
+    internal static void HookSpoutBG(ref SDKRender __instance) {
         if (Plugin.cfg.RenderBG == false) {return;}
-        Plugin.spoutBG.sourceTexture = ____backgroundRenderTexture;
-        Plugin.spoutBG.captureMethod = CaptureMethod.Texture;
+        Plugin.spoutBG.sourceTexture = __instance._backgroundRenderTexture;
+        Plugin.spoutBG.enabled = true;
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateForegroundTexture")]
+    [HarmonyPatch(typeof(SDKRender), "CreateForegroundTexture")]
     [HarmonyPostfix]
-    static void HookSpoutFG(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____foregroundRenderTexture) {
+    internal static void HookSpoutFG(ref SDKRender __instance) {
         if (Plugin.cfg.RenderFG == false) {return;}
-        Plugin.spoutFG.sourceTexture = ____foregroundRenderTexture;
-        Plugin.spoutFG.captureMethod = CaptureMethod.Texture;
+        Plugin.spoutFG.sourceTexture = __instance._foregroundRenderTexture;
+        Plugin.spoutFG.enabled = true;
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateOptimizedTexture")]
+    [HarmonyPatch(typeof(SDKRender), "CreateOptimizedTexture")]
     [HarmonyPostfix]
-    static void HookSpoutOp(ref LIV.SDK.Unity.SDKRender __instance, RenderTexture ____optimizedRenderTexture) {
+    internal static void HookSpoutOp(ref SDKRender __instance) {
         if (Plugin.cfg.RenderOP == false) {return;}
-        Plugin.spoutOptimised.sourceTexture = ____optimizedRenderTexture;
-        Plugin.spoutOptimised.captureMethod = CaptureMethod.Texture;
+        Plugin.spoutOptimised.sourceTexture = __instance._optimizedRenderTexture;
+        Plugin.spoutOptimised.enabled = true;
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "Render")]
+    [HarmonyPatch(typeof(SDKRender), "Render")]
     [HarmonyPostfix]
     static void UpdateSpoutSenders( ref SDKRender __instance) {
         Plugin.spoutBG.CaptureFrame();
@@ -43,28 +44,44 @@ class RenderingPatches {
         Plugin.spoutOptimised.CaptureFrame();
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "InvokePreRender")]
+    [HarmonyPatch(typeof(SDKRender), "InvokePreRender")]
     [HarmonyPostfix]
-    static void GetCameraForClipPlane( ref SDKRender __instance) {
+    internal static void GetCameraForClipPlane( ref SDKRender __instance) {
         if (__instance.stage == null || __instance.hmdCamera == null) {return;}
         Plugin.hmdPos = __instance.stage.worldToLocalMatrix.MultiplyPoint3x4(__instance.hmdCamera.transform.position);
     }
 
 
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "CreateAssets")]
+    [HarmonyPatch(typeof(SDKRender), "CreateAssets")]
     [HarmonyPostfix]
-    static void PrintMaskDefault( ref SDKRender __instance) {
-            Plugin.defaultLayerMask = __instance.spectatorLayerMask;
-            Plugin.logger.Info(
-                String.Concat(  "Default LayerMask: ",
-                                Convert.ToString(__instance.spectatorLayerMask, 2).PadLeft(32,'0'),
-                                " (", Convert.ToString(__instance.spectatorLayerMask), ")"
-                )
-            );
+    static void PrintMaskDefault(ref SDKRender __instance)
+    {
+        Type t = __instance.GetType();
+
+        //var propGetter = t.GetProperties().Where((a) => { return a.Name == "spectatorLayerMask" || a.Name == "renderingLayerMask"; }).First().GetGetMethod();
+        //object prop = propGetter.Invoke(__instance, []);
+        object prop =  t.GetProperties()
+                        .Where((a) => { return a.Name == "spectatorLayerMask" || a.Name == "renderingLayerMask"; })
+                        .First().GetValue(__instance, null);
+
+        if (prop.GetType().Name.EndsWith("LayerMask"))
+        {
+            Plugin.defaultLayerMask = (int)prop.GetType().GetProperty("value").GetValue(prop, null);
+        } else
+        {
+            Plugin.defaultLayerMask = (int)prop;
+        }
+
+        Plugin.logger.Info(
+            String.Concat("Default LayerMask: ",
+                            Convert.ToString(Plugin.defaultLayerMask, 2).PadLeft(32, '0'),
+                            " (", Convert.ToString(Plugin.defaultLayerMask), ")"
+            )
+        );
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "Dispose")]
+    [HarmonyPatch(typeof(SDKRender), "Dispose")]
     [HarmonyPrefix]
     static void DisposeSpoutSenders() {
         if (Plugin.cfg.BlankSpoutSenders == false) {return;}
@@ -89,7 +106,7 @@ class RenderingPatches {
         RenderTexture.ReleaseTemporary(rt);
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKUtils), "SetCamera")]
+    [HarmonyPatch(typeof(SDKUtils), "SetCamera")]
     [HarmonyPrefix]
     static void DoLayerMasks( ref int layerMask) {
         int mask = Plugin.cfg.LayerMask;
@@ -107,19 +124,19 @@ class RenderingPatches {
 
     static RenPass currentPass;
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "RenderBackground")]
+    [HarmonyPatch(typeof(SDKRender), "RenderBackground")]
     [HarmonyPrefix]
     static void IsPassBG() {
         currentPass = RenPass.BG;
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "RenderForeground")]
+    [HarmonyPatch(typeof(SDKRender), "RenderForeground")]
     [HarmonyPrefix]
     static void IsPassFG() {
         currentPass = RenPass.FG;
     }
 
-    [HarmonyPatch(typeof(LIV.SDK.Unity.SDKRender), "RenderOptimized")]
+    [HarmonyPatch(typeof(SDKRender), "RenderOptimized")]
     [HarmonyPrefix]
     static void IsPassOP() {
         currentPass = RenPass.OP;

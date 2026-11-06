@@ -27,6 +27,10 @@
     <DebugType>none</DebugType>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DefineConstants>OAT_BSML</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="BeatSaberModdingTools.Tasks" Version="2.0.0-beta7">
       <PrivateAssets>all</PrivateAssets>
@@ -36,7 +40,7 @@
 
   <ItemGroup>
     <Compile Include = "../Common/*.cs"/>
-    <Compile Include = "../Common/KlakSpout/*.cs"/>
+    <!-- <Compile Include = "../Common/KlakSpout/*.cs"/> -->
     <Compile Include = "../Common/Comms/*.cs"/>
     <Compile Include = "../Common/Comms/Managed/*.cs"/>
     <Compile Include = "../Common/Patches/*.cs"/>
@@ -92,12 +96,21 @@
       <Private>False</Private>
     </Reference>
 
-    <Reference Include="LIV">
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
+
+    <Reference Include="LIV" Publicize="true">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\LIV.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="0Harmony">
       <HintPath>$(BeatSaberDir)\Libs\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="OAT.Klak.Spout.Runtime">
+      <HintPath>$(BeatSaberDir)\Libs\OAT.Klak.Spout.Runtime.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>
