@@ -8,6 +8,7 @@ using System;
 namespace OnAirTap.BepInEx5;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
+[BepInDependency("raicuparta.twoforksvr", BepInDependency.DependencyFlags.SoftDependency)]
 public class BepOatPlugin : BaseUnityPlugin
 {
     internal static new ManualLogSource Logger;

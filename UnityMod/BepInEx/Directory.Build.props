@@ -1,7 +1,8 @@
 <Project>
     <PropertyGroup>
-        <GameBaseDirectory>/mnt/solidus/SteamLibrary/steamapps/common/Open Brush</GameBaseDirectory>
-        <GameName>OpenBrush</GameName>
+        <GameBaseDirectory>/mnt/solidus/SteamLibrary/steamapps/common/Firewatch</GameBaseDirectory>
+        <GameName>Firewatch</GameName>
         <GameDataDirectory>$(GameBaseDirectory)/$(GameName)_Data</GameDataDirectory>
+        <BepInExBaseDirectory>$(HOME)/Games/SpinningGames/Lutris/itchio/two-forks-vr/drive_c/two-forks-vr/Mod</BepInExBaseDirectory>
     </PropertyGroup>
 </Project>
