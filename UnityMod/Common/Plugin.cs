@@ -16,7 +16,6 @@ public class Plugin
 
     internal static Config cfg = new Config();
     
-    internal static GameObject spoutObject;
     internal static SpoutSender spoutFG;
     internal static SpoutSender spoutBG;
     internal static SpoutSender spoutOptimised;
@@ -57,13 +56,27 @@ public class Plugin
         return null;
     }
 
+    internal string GetSDKVersion()
+    {
+        string ver = "";
+        //I need to do reflection because it's a const.
+
+        Type t = typeof(SDKConstants);
+        ver = (string)t.GetField("SDK_VERSION")?.GetValue(null);
+        if (ver == "" || ver == null)
+        {
+            ver = (string)t.GetProperty("SDK_VERSION")?.GetValue(null, null);
+        }
+
+        return ver;
+    }
+
     internal void Awake()
     {
         if (harmony == null){
             harmony = new HarmonyLib.Harmony("OnAirTap");
         }
 
-        //var t = typeof(SDKBridge);
 
         NativeMethods.Platform plat = NativeMethods.GetPlatform();
         logger.Info("Detected platform: "+plat.ToString()+". Making Comms.");
@@ -77,16 +90,7 @@ public class Plugin
 
         harmony.PatchAll(typeof(RenderingPatches));
 
-        string ver = "";
-        //I need to do reflection because it's a const.
-        {
-            Type t = typeof(SDKConstants);
-            ver = (string)t.GetField("SDK_VERSION")?.GetValue(null);
-            if (ver == "" || ver == null)
-            {
-                ver = (string)t.GetProperty("SDK_VERSION")?.GetValue(null,null);
-            }
-        }
+        string ver = GetSDKVersion();
 
         logger.Info("Reported LIV SDK version: "+ ver);
         if (!testedSDKVersions.Contains(ver))
