@@ -5,6 +5,8 @@
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <AssemblyName>OnAirTap.OWML</AssemblyName>
     <RootNamespace>OnAirTap.OWML</RootNamespace>
+    <Product>OnAirTap</Product>
+    <Version>1.3.0</Version>
     <BaseOutputPath>../bin</BaseOutputPath>
   </PropertyGroup>
 

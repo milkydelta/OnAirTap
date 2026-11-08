@@ -4,7 +4,7 @@
   "author": "milkydelta",
   "name": "OnAirTap",
   "uniqueName": "milkydelta.OnAirTap",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "owmlVersion": "2.15.1",
   "dependencies": [ "Raicuparta.OwLiv" ],
   "patcher": "OnAirTap.OWML.Patcher.exe"

@@ -6,7 +6,7 @@
     <AssemblyName>OnAirTap.MelonI</AssemblyName>
     <RootNamespace>OnAirTap.Melon</RootNamespace>
     <LangVersion>latest</LangVersion>
-    <Version>1.2.0</Version>
+    <Version>1.3.0</Version>
   </PropertyGroup>
 
   <PropertyGroup>
