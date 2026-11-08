@@ -180,4 +180,34 @@ public class BepOatPlugin : BaseUnityPlugin
     void LateUpdate(){
         plug.LateUpdate();
     }
+
+    public BepOatPlugin()
+    {
+        AppDomain.CurrentDomain.AssemblyResolve += ResolveSDKAssem;
+    }
+
+    private static System.Reflection.Assembly SDKAssembly = null;
+
+    private static System.Reflection.Assembly ResolveSDKAssem(object sender, ResolveEventArgs args) {
+        //Logger.LogInfo("Couldn't Find Assembly " + args.Name);
+        
+        //For now, assume that the DLL was built against Firewatch. Building against other games would eliminate the issue, since most of them have the SDK in Assembly-CSharp.
+        if (args.Name.ToLower().StartsWith("twoforksvr")) {
+            try {
+                if (SDKAssembly != null) { return SDKAssembly; }
+                
+                foreach (var a in AppDomain.CurrentDomain.GetAssemblies()) {
+                    foreach (var t in a.GetTypes()) {
+                        if (t.Namespace == "LIV.SDK.Unity") {
+                            SDKAssembly = a;
+                            return a;
+                }}}
+            }
+            catch (Exception e) {
+                Logger.LogError("BepOatPlugin.ResolveSDKAssem: EXCEPTION!");
+                Logger.LogError(e);
+            }
+        }
+        return null;
+    }
 }
