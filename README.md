@@ -24,7 +24,7 @@ IL2CPP games can work, but only with MelonLoader, and only when the LIV support 
 
 **For instructions, consult the [wiki](https://github.com/milkydelta/OnAirTap/wiki).**
 
-## Building
+## Building (needs rewriting)
 
 ### Native Linux Components
 
@@ -48,7 +48,7 @@ This repo includes the C# code for KlakSpout, but some of the backend Spout logi
 
 ## Thanks Very Much To These People For These Reasons
 
- - [LumKitty](https://github.com/LumKitty) - Inspiration, Beta Testing
+ - [LumKitty](https://github.com/LumKitty) - Inspiration, Beta Testing, Gifting me Firewatch
  - [Empoleon](https://github.com/mercurialworld) - Beta Testing
 
 Your assistance has been invaluable.

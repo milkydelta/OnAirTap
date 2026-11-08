@@ -142,6 +142,10 @@ public class Plugin
             }
         }
 
+        Spout.Misc.RawLog = logger.Info;
+
+        MakeSpoutSenders();
+
         logger.Info("Core Plugin has completed Awake().");
 
     }
@@ -176,36 +180,30 @@ public class Plugin
         }
     }
 
+    internal void MakeSpoutSenders() {
+        logger.Info("Making Spout Senders...");
+        
+        spoutBG?.Dispose();
+        spoutFG?.Dispose();
+        spoutOptimised?.Dispose();
+
+        spoutBG = new SpoutSender();
+        spoutBG.spoutName = "OnAirTap Background";
+        spoutBG.verticalFlip = true;
+
+        spoutFG = new SpoutSender();
+        spoutFG.spoutName = "OnAirTap Foreground";
+        spoutFG.verticalFlip = true;
+
+        spoutOptimised = new SpoutSender();
+        spoutOptimised.spoutName = "OnAirTap Foreground [Optimised]";
+        spoutOptimised.verticalFlip = true;
+
+        logger.Info("Made Spout Senders.");
+    }
+
     internal void Update() {
-        if (!spoutObject){
-
-            spoutObject = new GameObject();
-            spoutObject.name = "Acrylonitrile Butadiene Styrene";
-            GameObject.DontDestroyOnLoad(spoutObject);
-
-            if (spoutObject)
-            {
-                //spoutBG = spoutObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
-                //spoutBG.enabled=false;
-                spoutBG = new SpoutSender();
-                spoutBG.spoutName="OnAirTap Background";
-                spoutBG.verticalFlip = true;
-
-                //spoutFG = spoutObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
-                //spoutFG.enabled=false;
-                spoutFG = new SpoutSender();
-                spoutFG.spoutName = "OnAirTap Foreground";
-                spoutFG.verticalFlip = true;
-
-                //spoutOptimised = spoutObject.AddComponent(typeof(SpoutSender)) as SpoutSender;
-                //spoutOptimised.enabled=false;
-                spoutOptimised = new SpoutSender();
-                spoutOptimised.spoutName = "OnAirTap Foreground [Optimised]";
-                spoutOptimised.verticalFlip = true;
-
-                logger.Info("Successfully made Spout Holding Object.");
-            }
-        }
+        //Not technically necessary, but I'll keep the funciton around in case the future needs it.
     }
 
     internal void LateUpdate() {
