@@ -50,6 +50,11 @@ internal class BSIPA_OatComponent : MonoBehaviour
         {
             PluginConfig.Instance.LayerMaskOP = defaultValues.LayerMaskOP;
         }
+
+        if (!ConfigValidation.MemoryPath(PluginConfig.Instance.MemoryPath))
+        {
+            PluginConfig.Instance.MemoryPath = defaultValues.MemoryPath;
+        }
     }
 
     private void SendConfigs()
@@ -104,6 +109,8 @@ internal class BSIPA_OatComponent : MonoBehaviour
         }
 
         Plugin.cfg.ClipBehaviour = PluginConfig.Instance.ClipPlaneBehaviour;
+
+        Plugin.cfg.MemoryPath = PluginConfig.Instance.MemoryPath;
 
     }
 

@@ -32,15 +32,15 @@ internal static class ConfigValidation
 
     public static bool MemoryPath(string path)
     {
-        if (path == null || path == ""){return false;}
+        if (path == null || path == ""){Plugin.logger.Warn("MemoryPath - empty");return false;}
 
         // This is probably unnecesssary, but it's good to be safe.
         // .NET documentation does not specify a length limit, and
         // Linux manpages for shm_open say it's "up to NAME_MAX
         // (i.e., 255) characters". I'm not sure where I got 32 from.
-        if (path.Length > (32-".v1.1".Length)){return false;}
+        if (path.Length > (32-".v1.1".Length)){Plugin.logger.Warn("MemoryPath - long");return false;}
 
-        if (path.Contains("/") || path.Contains("\\")){return false;}
+        if (path.Contains("/") || path.Contains("\\")){Plugin.logger.Warn("MemoryPath - shenanigans");return false;}
 
         return true;
     }

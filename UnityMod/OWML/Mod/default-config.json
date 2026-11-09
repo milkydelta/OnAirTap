@@ -77,7 +77,7 @@
     },
     "mmfSeparator": {"type": "separator"},
     "protoMinorVer": {
-      "title": "LIVnyan Protocol Version",
+      "title": "VRnyan Protocol Version",
       "type": "selector",
       "value": "1",
       "options": ["0","1"]
@@ -91,6 +91,11 @@
       "title": "Read Clip Location from MMF",
       "type": "toggle",
       "value": false
+    },
+    "memoryPath": {
+      "title": "Shared Memory Name",
+      "type": "text",
+      "value": "uk.lum.vrnyan.cameradata"
     }
   }
 }

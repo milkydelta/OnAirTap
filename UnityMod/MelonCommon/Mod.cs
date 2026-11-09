@@ -32,6 +32,7 @@ public class Mod : MelonMod
     MelonPreferences_Entry<bool> configReadResFromShm;
     MelonPreferences_Entry<bool> configReadClipFromShm;
     MelonPreferences_Entry<ushort> configProtoMinorVer;
+    MelonPreferences_Entry<string> configMemoryPath;
 
     OnAirTap.Plugin plug;
 
@@ -70,6 +71,7 @@ public class Mod : MelonMod
         configReadResFromShm = categoryMMF.CreateEntry<bool>("ReadRes", false);
         configReadClipFromShm = categoryMMF.CreateEntry<bool>("ReadClip", true);
         configProtoMinorVer = categoryMMF.CreateEntry<ushort>("ProtocolMinorVersion", 1);
+        configMemoryPath = categoryMMF.CreateEntry<string>("MemoryPath","uk.lum.vrnyan.cameradata",description: "You should probably keep this default.");
 
         categoryRes.LoadFromFile();
         categoryPasses.LoadFromFile(false);
@@ -98,6 +100,10 @@ public class Mod : MelonMod
         }
         if (!ConfigValidation.LayerMaskString(configLMS_O.Value)) {
             configLMS_O.ResetToDefault();
+        }
+
+        if (!ConfigValidation.MemoryPath(configMemoryPath.Value)) {
+            configMemoryPath.ResetToDefault();
         }
     }
 
@@ -146,6 +152,8 @@ public class Mod : MelonMod
         }
 
         cfg.ClipBehaviour = configClipBehaviour.Value;
+
+        cfg.MemoryPath = configMemoryPath.Value;
     }
 
     public void ReloadEvent(string path)

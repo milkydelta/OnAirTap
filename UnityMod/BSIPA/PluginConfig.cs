@@ -43,6 +43,8 @@ public class PluginConfig
     public string LayerMaskOP {get; set;} = "00000000000000000000000000000000";
     public int ClipPlaneBehaviour {get; set;} = 0;
 
+    public string MemoryPath {get; set;} = "uk.lum.vrnyan.cameradata";
+
     public virtual void OnReload()
     {
         BSIPA_OatComponent.instance.ReloadConfig();

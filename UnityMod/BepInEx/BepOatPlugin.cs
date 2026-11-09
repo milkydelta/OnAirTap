@@ -38,6 +38,8 @@ public class BepOatPlugin : BaseUnityPlugin
     internal static ConfigEntry<string> configLayerMaskStringOP;
     internal static ConfigEntry<int> configClipBehaviour;
 
+    internal static ConfigEntry<string> configMemoryPath;
+
     Plugin plug;
 
     private void BindConfigs(){
@@ -67,6 +69,8 @@ public class BepOatPlugin : BaseUnityPlugin
         configLayerMaskStringFG = Config.Bind("RenderPasses", "LayerMaskFG", "00000000000000000000000000000000");
         configLayerMaskStringOP = Config.Bind("RenderPasses", "LayerMaskOP", "00000000000000000000000000000000");
         configClipBehaviour = Config.Bind("ClipPlanes", "ClipBehaviour", 0);
+
+        configMemoryPath = Config.Bind("OAT_MMF_Data","MemoryPath","uk.lum.vrnyan.cameradata", "You should probably keep this default.");
     }
 
     private void ValidateConfigs()
@@ -85,6 +89,10 @@ public class BepOatPlugin : BaseUnityPlugin
         }
         if (!ConfigValidation.LayerMaskString(configLayerMaskStringOP.Value)) {
             configLayerMaskStringOP.Value = (string) configLayerMaskStringOP.DefaultValue;
+        }
+
+        if (!ConfigValidation.MemoryPath(configMemoryPath.Value)) {
+            configMemoryPath.Value = (string) configMemoryPath.DefaultValue;
         }
     }
 
@@ -133,6 +141,8 @@ public class BepOatPlugin : BaseUnityPlugin
         }
 
         cfg.ClipBehaviour = configClipBehaviour.Value;
+
+        cfg.MemoryPath = configMemoryPath.Value;
     }
 
     private void Awake()

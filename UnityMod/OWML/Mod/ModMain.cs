@@ -36,6 +36,10 @@ public class ModMain : ModBehaviour
 		if (!ConfigValidation.LayerMaskString(cfg.GetSettingsValue<string>("layerMaskStringOP"))) {
 			cfg.SetSettingsValue("layerMaskStringOP", "00000000000000000000000000000000");
 		}
+
+		if (!ConfigValidation.MemoryPath(cfg.GetSettingsValue<string>("memoryPath"))) {
+			cfg.SetSettingsValue("memoryPath", "uk.lum.vrnyan.cameradata");
+		}
 	}
 	public void SendConfigs()
 	{
@@ -98,6 +102,8 @@ public class ModMain : ModBehaviour
 
 		conf.ReadResFromShm = cfg.GetSettingsValue<bool>("readRes");
 		conf.ReadClipFromShm = cfg.GetSettingsValue<bool>("readClip");
+
+		conf.MemoryPath = cfg.GetSettingsValue<string>("memoryPath");
 
 	}
 
