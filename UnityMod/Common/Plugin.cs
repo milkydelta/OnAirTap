@@ -86,8 +86,6 @@ public class Plugin
         logger.Info("Opening Comms.");
         nyanShm.Open(cfg.MemoryPath, cfg.ProtoMinorVer);
 
-        ReloadConfig(false);
-
         harmony.PatchAll(typeof(RenderingPatches));
 
         string ver = GetSDKVersion();
@@ -149,6 +147,7 @@ public class Plugin
         Spout.Misc.RawLog = logger.Info;
 
         MakeSpoutSenders();
+        ReloadConfig();
 
         logger.Info("Core Plugin has completed Awake().");
 
@@ -177,11 +176,9 @@ public class Plugin
 
         BridgePatchMethods.Res = new SDKResolution{width=cfg.ResX, height=cfg.ResY};
 
-        if (notInitial){
-            if (!cfg.RenderBG){spoutBG.enabled = false;}
-            if (!cfg.RenderFG){spoutFG.enabled = false;}
-            if (!cfg.RenderOP){spoutOptimised.enabled = false;}
-        }
+        spoutBG.enabled = cfg.RenderBG;
+        spoutFG.enabled = cfg.RenderFG;
+        spoutOptimised.enabled = cfg.RenderOP;        
     }
 
     internal void MakeSpoutSenders() {
