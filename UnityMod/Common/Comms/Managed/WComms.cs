@@ -31,6 +31,8 @@ public class WComms : AbComms {
         //     size += sizeof(int) * 2;
         //     size += sizeof(float) * 3;
         // }
+        
+        Plugin.logger.Info(name);
 
         mmf = MemoryMappedFile.CreateOrOpen(name, size);
         mmfView = mmf.CreateViewAccessor(0, size, MemoryMappedFileAccess.Read);

@@ -53,6 +53,8 @@ public class LComms : AbComms {
         // }
         pMV = protocolMinorVersion;
 
+        Plugin.logger.Info(shm.name);
+
         
         if (LOpen(ref shm) == 0) {
             isOpen = true;
