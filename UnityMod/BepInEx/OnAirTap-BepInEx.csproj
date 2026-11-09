@@ -47,8 +47,18 @@
       <HintPath>$(GameDataDirectory)/Managed/UnityEngine.CoreModule.dll</HintPath>
       <Private>false</Private>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(GameName)' == 'Firewatch'">
     <Reference Include="LIV" Publicize="true">
       <HintPath>$(BepInExBaseDirectory)/BepInEx/plugins/TwoForksVr.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(GameName)' != 'Firewatch'">
+    <Reference Include="LIV" Publicize="true">
+      <HintPath>$(GameDataDirectory)/Managed/Assembly-CSharp.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>
